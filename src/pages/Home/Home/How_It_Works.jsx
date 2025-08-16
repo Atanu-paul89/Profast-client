@@ -40,7 +40,7 @@ const How_It_Works = () => {
         <div
             data-aos="fade-up"
             data-aos-offset="200"
-            data-aos-delay="10"
+            data-aos-delay="20"
             data-aos-duration="600"
             data-aos-easing="ease-in-out"
             data-aos-mirror="true"
@@ -48,7 +48,7 @@ const How_It_Works = () => {
             data-aos-anchor-placement="top-center"
         >
 
-            <section className='my-10 lg:px-15'>
+            <section className='my-8 lg:px-15'>
                 <h2 className='text-center lg:text-start mb-5 text-[32px] text-[#03373D] font-bold'>How it works</h2>
 
                 {/* parent div of cards */}

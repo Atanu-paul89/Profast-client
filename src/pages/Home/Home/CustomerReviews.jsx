@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import customertop from "../../../assets/customer-top.png"
 import AOS from 'aos';
@@ -33,46 +33,46 @@ AOS.init({
 });
 
 const SAMPLE_TESTIMONIALS = [
-    {
-        id: 1,
-        quote:
-            "A posture corrector works by providing support and gentle alignment to your shoulders, back, and spine, encouraging you to maintain proper posture throughout the day.",
-        name: "Rasel Ahamed",
-        title: "CTO",
-        avatar: "https://i.pravatar.cc/100?img=12",
-    },
-    {
-        id: 2,
-        quote:
-            "A posture corrector works by providing support and gentle alignment to your shoulders, back, and spine, encouraging you to maintain proper posture throughout the day.",
-        name: "Awlad Hossin",
-        title: "Senior Product Designer",
-        avatar: "https://i.pravatar.cc/100?img=32",
-    },
-    {
-        id: 3,
-        quote:
-            "A posture corrector works by providing support and gentle alignment to your shoulders, back, and spine, encouraging you to maintain proper posture throughout the day.",
-        name: "Nasir Uddin",
-        title: "CEO",
-        avatar: "https://i.pravatar.cc/100?img=4",
-    },
-    {
-        id: 4,
-        quote:
-            "Wearing it a few hours daily made a visible difference in my desk posture and reduced neck tension a lot.",
-        name: "Maria K.",
-        title: "Software Engineer",
-        avatar: "https://i.pravatar.cc/100?img=15",
-    },
-    {
-        id: 5,
-        quote:
-            "Lightweight, discreet under my hoodie, and the reminder I needed to sit tall during long edits.",
-        name: "Kevin Tran",
-        title: "Video Editor",
-        avatar: "https://i.pravatar.cc/100?img=55",
-    },
+  {
+    id: 1,
+    quote:
+      "Express delivery was a lifesaver for my business in Dhaka — parcels reached within just a few hours. Reliable and fast!",
+    name: "Rasel Ahamed",
+    title: "CTO",
+    avatar: "https://i.pravatar.cc/100?img=12",
+  },
+  {
+    id: 2,
+    quote:
+      "Nationwide delivery ensured my products reached customers in remote districts on time. Very dependable service!",
+    name: "Nazia Sultana",
+    title: "Senior Product Designer",
+    avatar: "https://i.pravatar.cc/100?img=32",
+  },
+  {
+    id: 3,
+    quote:
+      "The fulfillment solution made my life easier — from inventory to packaging, everything was handled smoothly.",
+    name: "Nasir Uddin",
+    title: "CEO",
+    avatar: "https://i.pravatar.cc/100?img=4",
+  },
+  {
+    id: 4,
+    quote:
+      "Cash on delivery gave my customers confidence. Payments were secure and the service was trustworthy.",
+    name: "Maria K.",
+    title: "Software Engineer",
+    avatar: "https://i.pravatar.cc/100?img=15",
+  },
+  {
+    id: 5,
+    quote:
+      "Parcel return service is a big plus! It helped me build trust with my online customers knowing returns were hassle‑free.",
+    name: "Kevin Tran",
+    title: "Video Editor",
+    avatar: "https://i.pravatar.cc/100?img=55",
+  },
 ];
 
 function classNames(...classes) {
@@ -177,10 +177,10 @@ export default function CustomerReviews({
                         />
                     ) : null}
 
-                    <h2 className="text-center text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">
+                    <h2 className="text-center text-3xl md:text-4xl font-bold tracking-tight text-[#03373D]">
                         {heading}
                     </h2>
-                    <p className="mx-auto mt-3 max-w-3xl text-center text-gray-600">
+                    <p className="mx-auto mt-3 max-w-3xl text-center text-[#606060]">
                         {subheading}
                     </p>
 
@@ -207,9 +207,9 @@ export default function CustomerReviews({
                         <button
                             onClick={() => select(index - 1)}
                             aria-label="Previous testimonial"
-                            className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-white shadow ring-1 ring-black/5 transition hover:shadow-md"
+                            className="group inline-flex h-10 w-10 items-center justify-center rounded-full bg-white hover:bg-[#CAEB66] shadow ring-1 ring-black/5 transition hover:shadow-md cursor-pointer"
                         >
-                            <ChevronLeft className="h-5 w-5" />
+                            <ArrowLeft className="h-5 w-5"/>
                         </button>
 
                         <div className="flex items-center gap-2">
@@ -226,9 +226,9 @@ export default function CustomerReviews({
                         <button
                             onClick={() => select(index + 1)}
                             aria-label="Next testimonial"
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-400 text-white shadow ring-1 ring-emerald-300/50 transition hover:bg-emerald-500 hover:shadow-md"
+                            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#CAEB66] text-black shadow ring-1 ring-emerald-300/50 transition hover:bg-white cursor-pointer hover:shadow-md"
                         >
-                            <ChevronRight className="h-5 w-5" />
+                            <ArrowRight className="h-5 w-5"  />
                         </button>
                     </div>
                 </div>

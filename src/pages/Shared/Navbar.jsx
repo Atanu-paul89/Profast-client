@@ -17,18 +17,16 @@ const Navbar = () => {
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                         <ul className="menu menu-vertical px-1 gap-5">
-                            <Link to="/services"><a>Services</a></Link>
-                            <Link to="/coverage"><a>Coverage</a></Link>
-                            <Link to="/aboutus"><a>About us</a></Link>
-                            <Link to="/pricing"><a>Pricing</a></Link>
-                            <Link to="/be-a-rider"><a>Be a Rider</a></Link>
+                            <Link className="text-[#03373D]" to="/services"><a>Services</a></Link>
+                            <Link className="text-[#03373D]" to="/coverage"><a>Coverage</a></Link>
+                            <Link className="text-[#03373D]" to="/aboutus"><a>About us</a></Link>
+                            <Link className="text-[#03373D]" to="/pricing"><a>Pricing</a></Link>
+                            <Link className="text-[#03373D]" to="/be-a-rider"><a>Be a Rider</a></Link>
                         </ul>
                     </ul>
                 </div>
-                <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div className='flex items-center'>
-                        {/* <img src="logo.png" alt="Profast Logo" className="h-8 w-auto" />
-                        <span className="text-xl font-extrabold text-black">Profast</span> */}
+                <Link to="/" className="flex items-center text-[#03373D] gap-2 hover:opacity-80 transition-opacity">
+                    <div className='flex items-center text-[#03373D]'>
                         <ProfastLogo></ProfastLogo>
                     </div>
                 </Link>
@@ -38,11 +36,11 @@ const Navbar = () => {
             {/* Mid Section */}
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-5 ">
-                    <Link className='font-semibold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/services"><a>Services</a></Link>
-                    <Link className='font-semibold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/coverage"><a>Coverage</a></Link>
-                    <Link className='font-semibold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/aboutus"><a>About us</a></Link>
-                    <Link className='font-semibold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/pricing"><a>Pricing</a></Link>
-                    <Link className='font-semibold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/be-a-rider"><a>Be a Rider</a></Link>
+                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/services"><a>Services</a></Link>
+                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/coverage"><a>Coverage</a></Link>
+                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/aboutus"><a>About us</a></Link>
+                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/pricing"><a>Pricing</a></Link>
+                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/be-a-rider"><a>Be a Rider</a></Link>
                 </ul>
             </div>
 

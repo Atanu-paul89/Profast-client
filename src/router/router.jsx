@@ -7,6 +7,9 @@ import Services from "../pages/Services/Services";
 import Pricing from "../pages/Pricing/Pricing";
 import BeARider from "../pages/Be a Rider/BeARider";
 import AboutUs from "../pages/About_Us/AboutUs";
+import FaqPage from "../pages/FAQ/FaqPage";
+import SignIn from "../Auth/SignIn";
+import Register from "../Auth/Register";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +39,18 @@ export const router = createBrowserRouter([
       {
         path: "aboutus",
         Component: AboutUs,
+      },
+      {
+        path: "faq",
+        Component: FaqPage,
+      },
+      {
+        path: "signin",
+        Component: SignIn,
+      },
+      {
+        path: "register",
+        Component: Register,
       },
     ],
   },
