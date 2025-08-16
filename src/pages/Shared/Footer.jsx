@@ -6,13 +6,16 @@ const Footer = () => {
     return (
         <footer className="place-items-center rounded-2xl footer-horizontal footer-center bg-black text-[#C0C0C0] p-5">
             {/* top section */}
+            <Link to="/">
             <div className='border-b border-dashed place-items-center text-center border-gray-600 w-full '>
-                <ProfastLogo />
+                    <ProfastLogo />
+
                 <p className="mb-5 max-w-2xl">
                     Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to
-                     business shipments — we deliver on time, every time.
+                    business shipments — we deliver on time, every time.
                 </p>
             </div>
+            </Link>
             {/* middle section */}
             <div className="text-center place-items-center border-b border-dashed border-gray-600 w-full py-2 mb-5">
                 <div className="menu lg:menu-horizontal px-1 gap-5">

@@ -62,7 +62,7 @@ const CalculateFare = () => {
     return (
         <section className="bg-white my-5 rounded-3xl py-10 px-5 lg:px-20">
             <div className="text-center mb-10">
-                <h2 className="text-[#03373D] lg:text-start lg:font-extrabold lg:text-5xl text-3xl font-bold mb-3">Pricing Calculator</h2>
+                <h2 className="text-[#03373D] lg:text-start lg:font-bold lg:text-5xl text-3xl font-bold mb-3">Pricing Calculator</h2>
 
                 <p className="text-[#606060] hidden lg:flex max-w-xl lg:text-start font-semibold text-sm mb-3">  Enjoy fast, reliable parcel delivery with real-time tracking and zero hassle. From personal packages to business shipments — we deliver on time, every time.</p>
 
