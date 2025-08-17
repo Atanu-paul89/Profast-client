@@ -10,6 +10,8 @@ import AboutUs from "../pages/About_Us/AboutUs";
 import FaqPage from "../pages/FAQ/FaqPage";
 import SignIn from "../Auth/SignIn";
 import Register from "../Auth/Register";
+import AuthLayout from "../Auth/AuthLayout";
+import ForgotPass from "../Auth/ForgotPass";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +28,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "services",
-        Component: Services, 
+        Component: Services,
       },
       {
         path: "pricing",
@@ -44,6 +46,20 @@ export const router = createBrowserRouter([
         path: "faq",
         Component: FaqPage,
       },
+    ],
+  },
+
+  // error page outcome
+  {
+    path: "*",
+    Component: ErrorPage,
+  },
+
+  //authentication page layout 
+  {
+    path: "/auth",
+    Component: AuthLayout,
+    children: [
       {
         path: "signin",
         Component: SignIn,
@@ -52,10 +68,10 @@ export const router = createBrowserRouter([
         path: "register",
         Component: Register,
       },
-    ],
-  },
-  {
-    path: "*",
-    Component: ErrorPage,
+      {
+        path: "forgot-password",
+        Component: ForgotPass,
+      },
+    ]
   }
 ]);

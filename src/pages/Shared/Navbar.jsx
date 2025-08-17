@@ -46,8 +46,8 @@ const Navbar = () => {
 
             {/* Right section */}
             <div className="navbar-end gap-1">
-                <Link to="/signin" className="btn rounded-lg">Sign in </Link>
-                <Link to="/register" className="btn hidden lg:flex bg-[#CAEB66] rounded-lg font-bold">Register</Link>
+                <Link to="/auth/signin" className="btn rounded-lg">Sign in </Link>
+                <Link to="/auth/register" className="btn hidden lg:flex bg-[#CAEB66] rounded-lg font-bold">Register</Link>
                 <Link to="/be-a-rider" className="btn p-2 rounded-full bg-black"><MdArrowOutward color='#CAEB66' size={25} /></Link>
             </div>
         </div>
