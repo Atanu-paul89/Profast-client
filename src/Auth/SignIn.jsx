@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
+import { useForm } from 'react-hook-form';
 // ..
 AOS.init();
 
@@ -33,6 +34,12 @@ AOS.init({
 
 
 const SignIn = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const onSubmit = data => {
+        console.log(data);
+    }
+
     return (
         <div
             data-aos="zoom-out"
@@ -57,24 +64,54 @@ const SignIn = () => {
                         <p className="text-[#606060] font-semibold text-sm">Login with Profast</p>
                     </div>
 
-                    <form className="space-y-2">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
                         <div>
                             <label className="text-sm">Email</label>
                             <input
                                 type="email"
                                 placeholder="Email"
-                                required
+                                //from react-hook-form //
+                                {...register('email',
+                                    {
+                                        required: true,
+                                        pattern: {
+                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            message: "Invalid email type"
+                                        }
+                                    }
+                                )}
                                 className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
                             />
+                            {/* errors type from react hook forms */}
+                            {
+                                errors.email?.type === 'required' &&
+                                <p className='text-red-500'>Please insert the email</p>
+                            }
+                            {
+                                errors.email?.type === 'pattern' &&
+                                <p className='text-red-500'>Invalid email type</p>
+                            }
                         </div>
                         <div>
                             <label className="text-sm">Password</label>
                             <input
                                 type="password"
                                 placeholder="Password"
-                                required
+                                {...register('password', {
+                                    required: true,
+                                    minLength: 8
+                                })}
                                 className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
                             />
+                            {/* erros showsing message */}
+                            {
+                                errors.password?.type === 'required' &&
+                                <p className='text-red-500'>password is required</p>
+                            }
+                            {
+                                errors.password?.type === 'minLength' &&
+                                <p className='text-red-500'>Minimum length is 8</p>
+                            }
                         </div>
                         <div className="text-right">
                             <Link to="/auth/forgot-password" className="text-sm text-[#03373D] hover:underline">

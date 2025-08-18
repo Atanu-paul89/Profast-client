@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
+import { useForm } from 'react-hook-form';
 // ..
 AOS.init();
 
@@ -33,6 +34,12 @@ AOS.init({
 
 
 const Register = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const onSubmit = data => {
+        console.log(data);
+    }
+
 
     return (
         <div
@@ -58,20 +65,38 @@ const Register = () => {
                         <p className="text-[#606060] font-semibold text-sm">Register with Profast</p>
                     </div>
 
-                    <form className="space-y-2">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
                         <div className="">
                             <label className="text-sm">Profile Photo</label>
                             <input
                                 type="file"
                                 accept="image/*"
                                 required
-                                //  className=" cursor-pointer w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
+                                {...register('file', {
+                                    required: "Profile photo is required",
+                                    validate: {
+                                        acceptedFormats: (files) => {
+                                            if (!files || !files[0]) return "Profile photo is required";
+                                            const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+                                            return allowedTypes.includes(files[0].type)
+                                                ? true
+                                                : "Only JPG, JPEG, PNG files are allowed";
+                                        },
+                                        fileSize: (files) => {
+                                            if (!files || !files[0]) return "Profile photo is required";
+                                            return files[0].size < 5 * 1024 * 1024
+                                                ? true
+                                                : "File size must be less than 5MB";
+                                        }
+                                    }
+                                })}
                                 className="block w-full text-sm text-[#606060] file:mr-4 file:py-2 file:px-4
                file:rounded-md file:border-0
                file:text-sm file:font-semibold
                file:bg-[#CAEB66] file:text-[#03373D]
                hover:file:bg-[#b6d95c] cursor-pointer border border-[#E0E0E0] rounded-md"
                             />
+                            {errors.file && <p className='text-red-500'>{errors.file.message}</p>}
                         </div>
                         <div>
                             <label className="text-sm">Name</label>
@@ -79,17 +104,42 @@ const Register = () => {
                                 type="text"
                                 placeholder="full Name"
                                 required
+                                {...register('name', {
+                                    required: "Name is required",
+                                    minLength: {
+                                        value: 2,
+                                        message: "Name must be at least 2 characters"
+                                    },
+                                    pattern: {
+                                        value: /^[A-Za-z\s]+$/,
+                                        message: "Name can only contain letters and spaces"
+                                    }
+                                })}
                                 className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
                             />
+                            {errors.name && <p className='text-red-500'>{errors.name.message}</p>}
                         </div>
                         <div>
+                            {/* Email */}
                             <label className="text-sm">Email</label>
                             <input
                                 type="email"
                                 placeholder="Email"
                                 required
+                                {...register('email',
+                                    {
+                                        pattern: {
+                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                            message: "Invalid email type"
+                                        }
+                                    }
+                                )}
                                 className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
                             />
+                            {
+                                errors.email?.type === 'pattern' &&
+                                <p className='text-red-500'>Invalid email type</p>
+                            }
                         </div>
                         <div>
                             <label className="text-sm">Password</label>
@@ -97,8 +147,24 @@ const Register = () => {
                                 type="password"
                                 placeholder="Password"
                                 required
+                                {...register('password', {
+                                    minLength: {
+                                        value: 8,
+                                        message: "Password must be at least 8 characters"
+                                    },
+                                    pattern: {
+                                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+                                        message: "Password must include uppercase, lowercase, number, and special character"
+                                    }
+                                })}
                                 className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
                             />
+                            {errors.password?.type === 'minLength' && (
+                                <p className='text-red-500'>{errors.password.message}</p>
+                            )}
+                            {errors.password?.type === 'pattern' && (
+                                <p className='text-red-500'>{errors.password.message}</p>
+                            )}
                         </div>
 
                         <button
