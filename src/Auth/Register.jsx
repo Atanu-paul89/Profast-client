@@ -1,11 +1,12 @@
 import React from 'react';
 import Lottie from "lottie-react";
 import registerAnimation from "../../src/assets/json/register.json";
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 import { useForm } from 'react-hook-form';
+import useAuth from '../hooks/useAuth';
 // ..
 AOS.init();
 
@@ -35,9 +36,26 @@ AOS.init({
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const { createUser, signinGoogle } = useAuth();
+    const navigate = useNavigate();
 
     const onSubmit = data => {
         console.log(data);
+        createUser(data.email, data.password)
+        .then(() => {
+            navigate("/");
+        })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
+    const handleGoogleRegister = () => {
+        signinGoogle()
+                    .then(() => {
+            navigate("/");
+        })
+            .catch(error => { console.error(error) })
     }
 
 
@@ -184,7 +202,7 @@ const Register = () => {
 
                     <p className='text-gray-500 text-sm my-0 pb-3 text-center'>Or</p>
 
-                    <button className="w-full cursor-pointer flex items-center justify-center gap-2  bg-[#E9ECF1] py-2 rounded-md hover:bg-gray-100 transition">
+                    <button onClick={handleGoogleRegister} className="w-full cursor-pointer flex items-center justify-center gap-2  bg-[#E9ECF1] py-2 rounded-md hover:bg-gray-100 transition">
                         <span>
                             <FcGoogle size={24} />
                         </span>

@@ -1,11 +1,12 @@
 import React from 'react';
 import Lottie from "lottie-react";
 import signInAnimation from "../../src/assets/json/login.json";
-import { Link } from 'react-router';
+import { Link, Navigate, useNavigate } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 import { useForm } from 'react-hook-form';
+import useAuth from '../hooks/useAuth';
 // ..
 AOS.init();
 
@@ -35,9 +36,25 @@ AOS.init({
 
 const SignIn = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const {signinUser,signinGoogle} = useAuth();
+    const navigate = useNavigate();
 
     const onSubmit = data => {
         console.log(data);
+        signinUser(data.email, data.password)
+        .then(() => {
+            navigate("/");
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }
+    const handleGoogleSignin =() => {
+        signinGoogle()
+                .then(() => {
+            navigate("/");
+        })
+        .catch(error => {console.error(error)})
     }
 
     return (
@@ -122,7 +139,7 @@ const SignIn = () => {
                             type="submit"
                             className="w-full bg-[#CAEB66] text-[#03373D] font-semibold cursor-pointer py-2 rounded-md hover:opacity-90 transition"
                         >
-                            Login
+                            Sign In
                         </button>
                     </form>
 
@@ -135,7 +152,7 @@ const SignIn = () => {
 
                     <p className='text-gray-500 text-sm my-0 pb-3 text-center'>Or</p>
 
-                    <button className="w-full flex items-center justify-center gap-2  bg-[#E9ECF1] py-2 rounded-md hover:bg-gray-100 transition">
+                    <button onClick={handleGoogleSignin} className="cursor-pointer w-full flex items-center justify-center gap-2  bg-[#E9ECF1] py-2 rounded-md hover:bg-gray-100 transition">
                         <span>
                             <FcGoogle size={24} />
                         </span>

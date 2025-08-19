@@ -2,10 +2,32 @@ import React from 'react';
 import { MdArrowOutward } from 'react-icons/md';
 import { Link } from 'react-router';
 import ProfastLogo from './ProfastLogo';
+import useAuth from '../../hooks/useAuth';
+import { Slide, ToastContainer, toast } from 'react-toastify';
 
 const Navbar = () => {
+    const { user, logOut } = useAuth();
+
+    const logoutToast = () =>
+        toast.success('Successfully Signed OUt!', {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide,
+        });
+
+    const handleLogout = () => {
+        logOut()
+            .then(() => logoutToast())
+    }
+
     return (
-        <div className="rounded-xl navbar bg-base-100 shadow-sm">
+        <div className="rounded-xl lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
             {/* Left section */}
             <div className="navbar-start">
                 {/* dropdown for mobile/small device */}
@@ -45,12 +67,28 @@ const Navbar = () => {
             </div>
 
             {/* Right section */}
-            <div className="navbar-end gap-1">
+            {
+                user ?
+                    (
+                        <div className="navbar-end gap-1">
+                            <button onClick={handleLogout} className="btn bg-[#CAEB66] rounded-lg">Sign Out </button>
+                        </div>
+                    )
+                    :
+                    (<div className="navbar-end gap-1">
+                        <Link to="/auth/signin" className="btn rounded-lg">Sign in </Link>
+                        <Link to="/auth/register" className="btn hidden lg:flex bg-[#CAEB66] rounded-lg font-bold">Register</Link>
+                        <Link to="/be-a-rider" className="btn p-2 rounded-full bg-black"><MdArrowOutward color='#CAEB66' size={25} /></Link>
+                    </div>)
+            }
+            {/* <div className="navbar-end gap-1">
                 <Link to="/auth/signin" className="btn rounded-lg">Sign in </Link>
                 <Link to="/auth/register" className="btn hidden lg:flex bg-[#CAEB66] rounded-lg font-bold">Register</Link>
                 <Link to="/be-a-rider" className="btn p-2 rounded-full bg-black"><MdArrowOutward color='#CAEB66' size={25} /></Link>
-            </div>
+            </div> */}
+            <ToastContainer />
         </div>
+
     );
 };
 
