@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdArrowOutward } from 'react-icons/md';
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import ProfastLogo from './ProfastLogo';
 import useAuth from '../../hooks/useAuth';
 import { Slide, ToastContainer, toast } from 'react-toastify';
@@ -9,11 +9,11 @@ const Navbar = () => {
     const { user, logOut } = useAuth();
 
     const logoutToast = () =>
-        toast.success('Successfully Signed OUt!', {
+        toast.success('Successfully Signed Out!', {
             position: "top-right",
-            autoClose: 1500,
+            autoClose: 1000,
             hideProgressBar: false,
-            closeOnClick: false,
+            closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
@@ -58,11 +58,11 @@ const Navbar = () => {
             {/* Mid Section */}
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-5 ">
-                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/services"><a>Services</a></Link>
-                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/coverage"><a>Coverage</a></Link>
-                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/aboutus"><a>About us</a></Link>
-                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/pricing"><a>Pricing</a></Link>
-                    <Link className='font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/be-a-rider"><a>Be a Rider</a></Link>
+                     <NavLink className={({isActive})=>(isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' :'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' )} to="/services"><a>Services</a></NavLink>
+                    <NavLink className={({isActive})=>(isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' :'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' )} to="/coverage"><a>Coverage</a></NavLink>
+                    <NavLink className={({isActive})=>(isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' :'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' )} to="/aboutus"><a>About us</a></NavLink>
+                    <NavLink className={({isActive})=>(isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' :'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' )} to="/pricing"><a>Pricing</a></NavLink>
+                    <NavLink className={({isActive})=>(isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' :'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' )} to="/be-a-rider"><a>Be a Rider</a></NavLink>
                 </ul>
             </div>
 
@@ -81,11 +81,6 @@ const Navbar = () => {
                         <Link to="/be-a-rider" className="btn p-2 rounded-full bg-black"><MdArrowOutward color='#CAEB66' size={25} /></Link>
                     </div>)
             }
-            {/* <div className="navbar-end gap-1">
-                <Link to="/auth/signin" className="btn rounded-lg">Sign in </Link>
-                <Link to="/auth/register" className="btn hidden lg:flex bg-[#CAEB66] rounded-lg font-bold">Register</Link>
-                <Link to="/be-a-rider" className="btn p-2 rounded-full bg-black"><MdArrowOutward color='#CAEB66' size={25} /></Link>
-            </div> */}
             <ToastContainer />
         </div>
 

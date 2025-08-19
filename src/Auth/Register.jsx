@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Lottie from "lottie-react";
 import registerAnimation from "../../src/assets/json/register.json";
 import { Link, useNavigate } from 'react-router';
@@ -7,7 +7,9 @@ import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 import { useForm } from 'react-hook-form';
 import useAuth from '../hooks/useAuth';
-// ..
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import accountCreatedAnimation from "../assets/json/accountedCreated.json";
 AOS.init();
 
 AOS.init({
@@ -38,24 +40,66 @@ const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { createUser, signinGoogle } = useAuth();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = data => {
-        console.log(data);
+        setLoading(true);
         createUser(data.email, data.password)
-        .then(() => {
-            navigate("/");
-        })
+            .then(() => {
+                setTimeout(() => {
+                    // setLoading(false);
+                    navigate("/");
+                }, 1000);
+            })
             .catch(error => {
-                console.log(error);
+                setLoading(false);
+                toast.error(getAuthErrorMessage(error), {
+                    position: "top-right",
+                    autoClose: 1500,
+                    theme: "light"
+                });
             })
     }
 
+    function getAuthErrorMessage(error) {
+        switch (error.code) {
+            case "auth/invalid-credential":
+            case "auth/wrong-password":
+                return "Incorrect password. Please try again.";
+            case "auth/user-not-found":
+                return "No account found with this email.";
+            case "auth/too-many-requests":
+                return "Too many attempts. Please try again later.";
+            case "auth/network-request-failed":
+                return "Network error. Please check your connection.";
+            case "auth/email-already-in-use":
+                return "This email is already registered. Please use another email or sign in.";
+            case "auth/invalid-email":
+                return "Invalid email address. Please check and try again.";
+            case "auth/weak-password":
+                return "Password is too weak. Please use a stronger password.";
+            default:
+                return "Authentication failed. Please try again.";
+        }
+    }
+
     const handleGoogleRegister = () => {
+        setLoading(true);
         signinGoogle()
-                    .then(() => {
-            navigate("/");
-        })
-            .catch(error => { console.error(error) })
+            .then(() => {
+                setTimeout(() => {
+                    // setLoading(false);
+                    navigate("/");
+                }, 1000); 
+            })
+            .catch(error => {
+                setLoading(false);
+                toast.error(getAuthErrorMessage(error), {
+                    position: "top-right",
+                    autoClose: 1500,
+                    theme: "light"
+                });
+            })
     }
 
 
@@ -70,6 +114,13 @@ const Register = () => {
             data-aos-once="false"
             data-aos-anchor-placement="top-center"
         >
+            {loading && (
+                <div className="fixed inset-0 flex flex-col items-center justify-center bg-white  z-50">
+                    <Lottie className='md:hidden' animationData={accountCreatedAnimation} loop={true} style={{ width: 350, height: 350 }} />
+                    <Lottie className='hidden md:flex' animationData={accountCreatedAnimation} loop={true} style={{ width: 600, height: 600 }} />
+                  
+                </div>
+            )}
             <section className=" flex flex-col lg:flex-row items-center justify-center px-5 py-6 gap-10">
                 <div className="lg:hidden w-[150px]">
                     <Lottie animationData={registerAnimation} loop={true} />
@@ -214,7 +265,9 @@ const Register = () => {
                 <div className="w-full hidden lg:flex lg:w-[500px]">
                     <Lottie animationData={registerAnimation} loop={true} />
                 </div>
-            </section></div>
+            </section>
+            <ToastContainer></ToastContainer>
+        </div>
     );
 };
 

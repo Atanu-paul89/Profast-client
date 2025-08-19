@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Lottie from "lottie-react";
 import signInAnimation from "../../src/assets/json/login.json";
 import { Link, Navigate, useNavigate } from 'react-router';
@@ -7,7 +7,10 @@ import AOS from 'aos';
 import 'aos/dist/aos.css'; // You can also use <link> for styles
 import { useForm } from 'react-hook-form';
 import useAuth from '../hooks/useAuth';
-// ..
+import loadingAnimation from "../assets/json/verifying.json";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 AOS.init();
 
 AOS.init({
@@ -36,25 +39,64 @@ AOS.init({
 
 const SignIn = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const {signinUser,signinGoogle} = useAuth();
+    const { signinUser, signinGoogle } = useAuth();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = data => {
-        console.log(data);
+        setLoading(true);
         signinUser(data.email, data.password)
-        .then(() => {
-            navigate("/");
-        })
-        .catch(error => {
-            console.error(error);
-        })
+            .then(() => {
+                setTimeout(() => {
+                    navigate("/");
+                    // setLoading(false); [if we use this then after animation the login page is showed before moving to "/"]
+                }, 1000);
+            })
+
+            .catch(error => {
+                setLoading(false);
+                toast.error(getAuthErrorMessage(error), {
+                    position: "top-right",
+                    autoClose: 1500,
+                    theme: "light"
+                });
+            })
+
     }
-    const handleGoogleSignin =() => {
+
+    function getAuthErrorMessage(error) {
+        switch (error.code) {
+            case "auth/invalid-credential":
+            case "auth/wrong-password":
+                return "Incorrect password. Please try again.";
+            case "auth/user-not-found":
+                return "No account found with this email.";
+            case "auth/too-many-requests":
+                return "Too many attempts. Please try again later.";
+            case "auth/network-request-failed":
+                return "Network error. Please check your connection.";
+            default:
+                return "Authentication failed. Please try again.";
+        }
+    }
+
+    const handleGoogleSignin = () => {
+        setLoading(true);
         signinGoogle()
-                .then(() => {
-            navigate("/");
-        })
-        .catch(error => {console.error(error)})
+            .then(() => {
+                setTimeout(() => {
+                    navigate("/");
+                }, 1000);
+            })
+            .catch(error => {
+                setLoading(false);
+                toast.error(getAuthErrorMessage(error), {
+                    position: "top-right",
+                    autoClose: 1500,
+                    theme: "light"
+                });
+            })
+
     }
 
     return (
@@ -68,6 +110,13 @@ const SignIn = () => {
             data-aos-once="false"
             data-aos-anchor-placement="top-center"
         >
+            {loading && (
+                <div className="fixed inset-0 flex flex-col items-center justify-center bg-white  z-50">
+                    <Lottie className='md:hidden' animationData={loadingAnimation} loop={true} style={{ width: 350, height: 350 }} />
+                    <Lottie className='hidden lg:flex' animationData={loadingAnimation} loop={true} style={{ width: 500, height:500 }} />
+                    {/* <span className="text-[#03373D] font-bold mt-4 text-lg">Signing in...</span> */}
+                </div>
+            )}
             <section className=" flex flex-col lg:flex-row items-center justify-center px-5 py-6 gap-10">
                 <div className="lg:hidden w-[150px]">
                     <Lottie animationData={signInAnimation} loop={true} />
@@ -165,7 +214,9 @@ const SignIn = () => {
                     <Lottie animationData={signInAnimation} loop={true} />
                 </div>
             </section>
+            <ToastContainer />
         </div>
+
     );
 };
 
