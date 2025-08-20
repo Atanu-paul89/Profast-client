@@ -1,11 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lottie from "lottie-react";
 import forgotanimation from "../../src/assets/json/forbidden.json";
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import useAuth from '../hooks/useAuth';
 
 const ForgotPass = () => {
+    const { resetPass } = useAuth();
+    const [email, setEmail] = useState("");
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        resetPass(email)
+            .then(() => {
+                alert("Reset email has been sent to " + email);
+                navigate("/auth/signin");
+            })
+            .catch((error) => {
+                // Show error to user
+                alert("Error: " + error.message);
+            });
+    };
+
     useEffect(() => {
         AOS.init({ duration: 400, easing: 'ease-in-out' });
     }, []);
@@ -27,21 +45,23 @@ const ForgotPass = () => {
                     <div >
                         <h2 className="text-3xl lg:text-4xl font-bold  lg:text-[#03373D]">Forgot Password</h2>
                         <p className="text-[#606060] mt-1 font-semibold lg:font-normal  text-sm">
-                            Enter your email address and we’ll send <br  /> you a reset link.
+                            Enter your email address and we’ll send <br /> you a reset link.
                         </p>
                     </div>
 
-                    <form className="space-y-4 lg:w-2/3">
+                    <form onSubmit={handleSubmit} className="space-y-4 lg:w-2/3">
                         <div>
                             <label className="text-sm font-semibold">Email</label>
                             <input
                                 type="email"
                                 placeholder="Email"
                                 required
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                                 className="w-full shadow-md border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
                             />
                         </div>
-                        <button
+                        <button 
                             type="submit"
                             className="w-full bg-[#CAEB66] text-[#03373D] font-semibold cursor-pointer py-2 rounded-md hover:opacity-90 transition"
                         >
