@@ -1,85 +1,93 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import lg from "../../../assets/service.png";
-import { useLocation } from 'react-router';
-import AOS from 'aos';
-import 'aos/dist/aos.css'; // You can also use <link> for styles
-// ..
-AOS.init();
-
-//got this from npm aos website (copy paste) 
-AOS.init({
-    // Global settings:
-    disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
-    startEvent: 'DOMContentLoaded', // name of the event dispatched on the document, that AOS should initialize on
-    initClassName: 'aos-init', // class applied after initialization
-    animatedClassName: 'aos-animate', // class applied on animation
-    useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
-    disableMutationObserver: false, // disables automatic mutations' detections (advanced)
-    debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
-    throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+// React Icons
+import { FaShippingFast, FaMapMarkedAlt, FaWarehouse, FaMoneyBillWave, FaBuilding, FaUndoAlt } from 'react-icons/fa';
 
 
-    // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
-    offset: 120, // offset (in px) from the original trigger point
-    delay: 0, // values from 0 to 3000, with step 50ms
-    duration: 400, // values from 0 to 3000, with step 50ms
-    easing: 'ease', // default easing for AOS animations
-    once: false, // whether animation should happen only once - while scrolling down
-    mirror: false, // whether elements should animate out while scrolling past them
-    anchorPlacement: 'top-bottom', // defines which position of the element regarding to window should trigger the animation
 
-});
+// const services = [
+//     {
+//         title: "Express & Standard Delivery",
+//         description: "We deliver parcels within 24–72 hours across the country. Express delivery available in Dhaka within 4–6 hours from pick-up to drop-off.",
+//         icon: FaShippingFast,
+//     },
+//     {
+//         title: "Nationwide Delivery",
+//         description: "We deliver parcels nationwide with home delivery in every district, ensuring your products reach customers within 48–72 hours.",
+//         icon: FaMapMarkedAlt,
+//     },
+//     {
+//         title: "Fulfillment Solution",
+//         description: "We also offer customized service with inventory management support, online order processing, packaging, and after sales support.",
+//         icon: FaWarehouse,
+//     },
+//     {
+//         title: "Cash on Home Delivery",
+//         description: "100% cash on delivery anywhere in Bangladesh with guaranteed safety of your product.",
+//         icon: FaMoneyBillWave,
+//     },
+//     {
+//         title: "Corporate Service ",
+//         description: "Customized corporate services which includes warehouse and inventory management support.",
+//         icon: FaBuilding,
+//     },
+//     {
+//         title: "Parcel Return",
+//         description: "Through our reverse logistics facility we allow end customers to return or exchange their products with online business merchants.",
+//         icon: FaUndoAlt,
+//     },
+// ];
 
 const services = [
     {
         title: "Express & Standard Delivery",
         description:
-            "We deliver parcels within 24–72 hours in Dhaka, Chittagong, Sylhet, Khulna, and Rajshahi. Express delivery available in Dhaka within 4–6 hours from pick-up to drop-off.",
+            "Fast delivery within 24–72 hours across major cities. Express option in Dhaka delivers within 4–6 hours from pickup to drop-off.",
+        icon: FaShippingFast,
     },
     {
         title: "Nationwide Delivery",
         description:
-            "We deliver parcels nationwide with home delivery in every district, ensuring your products reach customers within 48–72 hours.",
+            "We deliver to every district in Bangladesh with doorstep service. Your parcels arrive safely within 48–72 hours nationwide.",
+        icon: FaMapMarkedAlt,
     },
     {
         title: "Fulfillment Solution",
         description:
-            "We also offer customized service with inventory management support, online order processing, packaging, and after sales support.",
+            "We offer inventory support, order processing, packaging, and after-sales service—tailored for growing online businesses.",
+        icon: FaWarehouse,
     },
     {
         title: "Cash on Home Delivery",
         description:
-            "100% cash on delivery anywhere in Bangladesh with guaranteed safety of your product.",
+            "Secure cash collection at the customer’s doorstep. We ensure safe handling and full delivery coverage across Bangladesh.",
+        icon: FaMoneyBillWave,
     },
     {
-        title: "Corporate Service / Contract In Logistics",
+        title: "Corporate Service",
         description:
-            "Customized corporate services which includes warehouse and inventory management support.",
+            "Custom logistics for corporate clients, including warehouse support, inventory tracking, and flexible delivery contracts.",
+        icon: FaBuilding,
     },
     {
         title: "Parcel Return",
         description:
-            "Through our reverse logistics facility we allow end customers to return or exchange their products with online business merchants.",
+            "Our reverse logistics lets customers return or exchange items easily, helping online merchants build trust and loyalty.",
+        icon: FaUndoAlt,
     },
 ];
 
-const OurServices = () => {
-    const location = useLocation();
 
-    useEffect(() => {
-        AOS.refresh();
-    }, [location]);
+const OurServices = () => {
 
     return (
         <div
             data-aos="fade-right"
-            data-aos-offset="200"
-            data-aos-delay="50"
-            data-aos-duration="500"
+            data-aos-offset="100"
+            data-aos-delay="100"
+            data-aos-duration="600"
             data-aos-easing="ease-in-out"
-            data-aos-mirror="true"
-            data-aos-once="false"
-            data-aos-anchor-placement="top-center"
+
         >
             <section className="my-5 lg:mt-20 bg-[#03373D] py-10 px-5 lg:px-20 rounded-3xl">
                 <div className="text-center text-white mb-10">
@@ -92,15 +100,17 @@ const OurServices = () => {
                 <div className="lg:pb-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {services.map((service, index) => {
                         const isHighlighted = index === 1;
+                        const Icon = service.icon;
                         return (
                             <div
                                 key={index}
                                 className={` rounded-2xl place-items-center p-6 space-y-3 shadow-md ${isHighlighted ? "bg-[#CAEB66]" : "bg-white"
                                     }`}
                             >
-                                <img src={lg} alt="Service Icon" className="h-[52px] w-[52px]" />
+                                {/* <img src={lg} alt="Service Icon" className="h-[48px] w-[48px]" /> */}
+                                <Icon className="h-[45px] w-[42px] text-[#03373D]" />
                                 <h3 className="text-[#03373D] font-bold text-lg">{service.title}</h3>
-                                <p className="text-[#606060] text-sm">{service.description}</p>
+                                <p className="text-[#606060] px-2 text-sm">{service.description}</p>
                             </div>
                         );
                     }
