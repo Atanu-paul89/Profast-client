@@ -1,2 +1,10 @@
 @import "tailwindcss";  
 @plugin "daisyui";
+@import "leaflet/dist/leaflet.css";
+
+.custom-placeholder::placeholder {
+  /* color: #CAEB66; */
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 1; /* Make sure it's visible */
+}

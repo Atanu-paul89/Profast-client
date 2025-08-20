@@ -75,7 +75,7 @@ const OurServices = () => {
             data-aos="fade-right"
             data-aos-offset="200"
             data-aos-delay="50"
-            data-aos-duration="700"
+            data-aos-duration="500"
             data-aos-easing="ease-in-out"
             data-aos-mirror="true"
             data-aos-once="false"

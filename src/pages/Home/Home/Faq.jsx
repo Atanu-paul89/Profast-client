@@ -70,7 +70,7 @@ const Faq = () => {
             data-aos="fade-left"
             data-aos-offset="200"
             data-aos-delay="15"
-            data-aos-duration="600"
+            data-aos-duration="500"
             data-aos-easing="ease-in-out"
             data-aos-mirror="true"
             data-aos-once="false"
