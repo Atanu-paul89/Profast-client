@@ -8,7 +8,7 @@ const BeARider = () => {
             data-aos="fade-left"
             data-aos-offset="100"
             data-aos-delay="100"
-            data-aos-duration="800"
+            data-aos-duration="600"
             data-aos-easing="ease-in-out"
 
         >

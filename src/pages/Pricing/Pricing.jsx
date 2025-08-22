@@ -1,5 +1,6 @@
 import React from 'react';
 import CalculateFare from './CalculateFare';
+import AddParcel from './AddParcel';
 
 
 const Pricing = () => {
@@ -8,11 +9,22 @@ const Pricing = () => {
             data-aos="fade-right"
             data-aos-offset="100"
             data-aos-delay="100"
-            data-aos-duration="800"
+            data-aos-duration="600"
             data-aos-easing="ease-in-out"
         >
             <section>
                 <CalculateFare></CalculateFare>
+                <div
+                    data-aos="fade-in"
+                    data-aos-offset="100"
+                    data-aos-delay="100"
+                    data-aos-duration="800"
+                    data-aos-easing="ease-in-out"
+                >
+
+                    <AddParcel
+                    ></AddParcel>
+                </div>
 
             </section>
         </div>
