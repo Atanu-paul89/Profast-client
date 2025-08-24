@@ -12,6 +12,7 @@ import SignIn from "../Auth/SignIn";
 import Register from "../Auth/Register";
 import AuthLayout from "../Auth/AuthLayout";
 import ForgotPass from "../Auth/ForgotPass";
+import CalculateFare from "../pages/Pricing/CalculateFare";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: "pricing",
         Component: Pricing,
+      },
+      {
+        path: "calculate-fare",
+        Component: CalculateFare,
       },
       {
         path: "be-a-rider",

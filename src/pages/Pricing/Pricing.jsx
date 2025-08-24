@@ -1,6 +1,8 @@
 import React from 'react';
 import CalculateFare from './CalculateFare';
 import AddParcel from './AddParcel';
+import clickAnimation from "../../assets/json/Click.json";
+import { motion } from 'framer-motion';
 
 
 const Pricing = () => {
@@ -13,7 +15,7 @@ const Pricing = () => {
             data-aos-easing="ease-in-out"
         >
             <section>
-                <CalculateFare></CalculateFare>
+
                 <div
                     data-aos="fade-in"
                     data-aos-offset="100"
@@ -21,9 +23,7 @@ const Pricing = () => {
                     data-aos-duration="800"
                     data-aos-easing="ease-in-out"
                 >
-
-                    <AddParcel
-                    ></AddParcel>
+                    <AddParcel ></AddParcel>
                 </div>
 
             </section>
@@ -32,3 +32,4 @@ const Pricing = () => {
 };
 
 export default Pricing;
+

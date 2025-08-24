@@ -1,14 +1,87 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import useAuth from '../../hooks/useAuth';
+import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
+import Lottie from "lottie-react";
+import parcelAnimation from "../../assets/json/addParcel.json"
+import { Link } from 'react-router';
+import { TfiHandPointLeft, TfiHandPointRight } from "react-icons/tfi";
 
-const regions = [
+// divisions and distances
+const divisions = [
   'Dhaka', 'Chattogram', 'Rajshahi', 'Khulna', 'Barishal', 'Rangpur', 'Mymensingh', 'Sylhet'
 ];
 
 const warehouses = [
   'Central Hub', 'North Hub', 'South Hub', 'East Hub', 'West Hub'
 ];
+
+const parcelTypes = {
+  documents: {
+    baseFare: 9,
+    intraDivision: { perKg: 4, perKm: 0.15 },
+    interDivision: { perKg: 7, perKm: 0.4 }
+  },
+  electronics: {
+    baseFare: 14,
+    intraDivision: { perKg: 7, perKm: 0.25 },
+    interDivision: { perKg: 10, perKm: 0.7 }
+  },
+  fragile_items: {
+    baseFare: 23,
+    intraDivision: { perKg: 10, perKm: 0.35 },
+    interDivision: { perKg: 14, perKm: 1.0 }
+  },
+  general_goods: {
+    baseFare: 14,
+    intraDivision: { perKg: 5, perKm: 0.2 },
+    interDivision: { perKg: 7, perKm: 0.5 }
+  }
+};
+
+const divisionDistances = {
+  Dhaka: { Dhaka: 10, Chattogram: 245, Rajshahi: 245, Khulna: 260, Barishal: 120, Rangpur: 300, Mymensingh: 120, Sylhet: 240 },
+  Chattogram: { Dhaka: 245, Chattogram: 10, Rajshahi: 480, Khulna: 400, Barishal: 320, Rangpur: 540, Mymensingh: 350, Sylhet: 320 },
+  Rajshahi: { Dhaka: 245, Chattogram: 480, Rajshahi: 10, Khulna: 270, Barishal: 340, Rangpur: 160, Mymensingh: 260, Sylhet: 420 },
+  Khulna: { Dhaka: 260, Chattogram: 400, Rajshahi: 270, Khulna: 10, Barishal: 180, Rangpur: 400, Mymensingh: 320, Sylhet: 480 },
+  Barishal: { Dhaka: 120, Chattogram: 320, Rajshahi: 340, Khulna: 180, Barishal: 10, Rangpur: 420, Mymensingh: 220, Sylhet: 340 },
+  Rangpur: { Dhaka: 300, Chattogram: 540, Rajshahi: 160, Khulna: 400, Barishal: 420, Rangpur: 10, Mymensingh: 220, Sylhet: 380 },
+  Mymensingh: { Dhaka: 120, Chattogram: 350, Rajshahi: 260, Khulna: 320, Barishal: 220, Rangpur: 220, Mymensingh: 10, Sylhet: 220 },
+  Sylhet: { Dhaka: 240, Chattogram: 320, Rajshahi: 420, Khulna: 480, Barishal: 340, Rangpur: 380, Mymensingh: 220, Sylhet: 10 },
+};
+
+const MIN_FARE_SAME_DIVISION = 45;
+const MIN_FARE_DIFFERENT_DIVISION = 75;
+const MIN_DISTANCE_SAME_DIVISION = 10;
+
+const calculateFare = (parcelType, fromDivision, toDivision, weightKg) => {
+  const typeRates = parcelTypes[parcelType];
+  if (!typeRates || !fromDivision || !toDivision || isNaN(weightKg) || weightKg <= 0) return null;
+
+  const distance = divisionDistances[fromDivision][toDivision];
+  if (!distance) return null;
+
+  let totalFare;
+  if (fromDivision === toDivision) {
+    // Intra-division
+    const usedDistance = Math.max(distance, MIN_DISTANCE_SAME_DIVISION);
+    totalFare =
+      typeRates.baseFare +
+      weightKg * typeRates.intraDivision.perKg +
+      usedDistance * typeRates.intraDivision.perKm;
+    totalFare = Math.max(totalFare, MIN_FARE_SAME_DIVISION);
+  } else {
+    // Inter-division
+    totalFare =
+      typeRates.baseFare +
+      weightKg * typeRates.interDivision.perKg +
+      distance * typeRates.interDivision.perKm;
+    totalFare = Math.max(totalFare, MIN_FARE_DIFFERENT_DIVISION);
+  }
+
+  return Math.round(totalFare);
+};
 
 const labelCls = 'block text-sm font-semibold text-[#03373D] mb-1';
 const inputCls = 'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-[#03373D] outline-none focus:border-[#CAEB66] focus:ring-1 focus:ring-[#CAEB66]';
@@ -17,26 +90,135 @@ const textareaCls = 'w-full rounded-md border border-gray-300 bg-white px-3 py-2
 const AddParcel = () => {
   const { user } = useAuth() || {};
   const [isDocument, setIsDocument] = useState(false);
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(fd.entries());
-    // You can replace this with your API call
-    console.log('Add Parcel payload:', payload);
+  // const onSubmit = (data) => {
+  //   data.isDocument = isDocument ? 'yes' : 'no';
+
+  //   // map form input to our parcelTypes keys
+  //   let parcelKey;
+  //   if (isDocument) {
+  //     parcelKey = "documents";
+  //   } else {
+  //     if (data.parcelType === "Electronics") parcelKey = "electronics";
+  //     else if (data.parcelType === "Fragile Items") parcelKey = "fragile_items";
+  //     else parcelKey = "general_goods";
+  //   }
+
+  //   const fare = calculateFare(
+  //     parcelKey,
+  //     data.senderRegion,
+  //     data.receiverRegion,
+  //     parseFloat(data.weight)
+  //   );
+
+  //   Swal.fire({
+  //     title: 'Parcel Added!',
+  //     html: `
+  //       <p>Your parcel has been successfully booked.</p>
+  //       <p><b>Total Delivery Cost:</b> ${fare ? fare + " BDT" : "N/A"}</p>
+  //     `,
+  //     icon: 'success',
+  //     confirmButtonColor: '#CAEB66',
+  //     background: '#F7F9F9',
+  //     color: '#03373D',
+  //     confirmButtonText: 'OK',
+  //     customClass: {
+  //       popup: 'rounded-2xl',
+  //       confirmButton: 'font-bold',
+  //       title: 'font-bold',
+  //     }
+  //   });
+
+  //   reset();
+  // };
+  const onSubmit = (data) => {
+    data.isDocument = isDocument ? 'yes' : 'no';
+
+    // map form input to our parcelTypes keys
+    let parcelKey;
+    if (isDocument) {
+      parcelKey = "documents";
+    } else {
+      if (data.parcelType === "Electronics") parcelKey = "electronics";
+      else if (data.parcelType === "Fragile Items") parcelKey = "fragile_items";
+      else parcelKey = "general_goods";
+    }
+
+    const fare = calculateFare(
+      parcelKey,
+      data.senderRegion,
+      data.receiverRegion,
+      parseFloat(data.weight)
+    );
+
+    // attach fare + parcelKey to payload
+    data.parcelCategory = parcelKey;
+    data.fare = fare;
+
+    // log the full payload
+    console.log("Add Parcel payload:", data);
+
+    Swal.fire({
+      title: 'Parcel Added!',
+      html: `
+      <p>Your parcel has been successfully booked.</p>
+      <p><b>Total Delivery Cost:</b> ${fare ? fare + " BDT" : "N/A"}</p>
+    `,
+      icon: 'success',
+      confirmButtonColor: '#CAEB66',
+      background: '#F7F9F9',
+      color: '#03373D',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'rounded-2xl',
+        confirmButton: 'font-bold',
+        title: 'font-bold',
+      }
+    });
+
+    reset();
   };
 
   return (
     <section className="lg:min-h-screen px-4 md:px-8 lg:px-20 py-8 lg:py-12 bg-white rounded-3xl my-4 text-[#03373D]">
       {/* Header */}
-      <div className="mb-6 lg:mb-8 pb-4 border-b border-gray-200">
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">Add Parcel</h2>
+      <div className="relative mb-6 lg:mb-8 pb-4 border-b border-gray-200">
+
+        <Lottie className='absolute lg:hidden -top-12 left-25 h-[100px] w-[150px] lg:-top-14 lg:left-40' animationData={parcelAnimation} autoPlay={true} loop={true} />
+
+        <Link to="/calculate-fare">
+          <motion.p
+            className="absolute md:flex items-center gap-1 right-5 -top-1 lg:-right-0 text-[#CAEB66] text-base lg:text-2xl hidden  font-bold"
+            animate={{
+              y: [0, -10, 0]
+            }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              ease: 'easeInOut'
+            }}
+          >
+            <TfiHandPointRight size={30} />Calculate your Fare <TfiHandPointLeft size={30} />
+          </motion.p>
+        </Link>
+
+
+        <div className='flex items-center'>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold ">Add Parcel</h2>
+          <Lottie className='absolute hidden lg:flex lg:h-[120px] lg:w-[170px] lg:-top-14 lg:left-40' animationData={parcelAnimation} autoPlay={true} loop={true} />
+        </div>
         <p className="text-gray-500 text-sm md:text-base mt-1">
           Fill in the parcel details below. We’ll confirm pickup and keep you updated in real-time.
         </p>
+        <div className='place-items-center '>
+          <p className='flex gap-1 md:hidden text-sm font-semibold '>Calculate fare <Link to="/calculate-fare"><span className='text-[#CAEB66] flex items-center gap-1 font-extrabold'> <TfiHandPointRight size={20} />Here</span></Link></p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+
         {/* Parcel details */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -53,47 +235,69 @@ const AddParcel = () => {
               <button
                 type="button"
                 onClick={() => setIsDocument(true)}
-                className={`px-4 cursor-pointer py-1.5 text-sm rounded-full transition ${
-                  isDocument ? 'bg-[#CAEB66] text-[#03373D] font-semibold' : 'text-gray-600'
-                }`}
+                className={`px-4 cursor-pointer py-1.5 text-sm rounded-full transition ${isDocument ? 'bg-[#CAEB66] text-[#03373D] font-semibold' : 'text-gray-600'
+                  }`}
               >
                 Yes
               </button>
               <button
                 type="button"
                 onClick={() => setIsDocument(false)}
-                className={`px-4 cursor-pointer py-1.5 text-sm rounded-full transition ${
-                  !isDocument ? 'bg-[#CAEB66] text-[#03373D] font-semibold' : 'text-gray-600'
-                }`}
+                className={`px-4 cursor-pointer py-1.5 text-sm rounded-full transition ${!isDocument ? 'bg-[#CAEB66] text-[#03373D] font-semibold' : 'text-gray-600'
+                  }`}
               >
                 No
               </button>
             </div>
-            {/* Hidden field to submit value */}
-            <input type="hidden" name="isDocument" value={isDocument ? 'yes' : 'no'} />
           </div>
+          {/* Parcel type (if not a document) */}
+          {!isDocument && (
+            <div className="w-full">
+              <label className={labelCls}>Parcel Type</label>
+              <select
+                {...register("parcelType", { required: "Parcel type is required" })}
+                className={inputCls}
+                defaultValue=""
+              >
+                <option value="" disabled>Select Parcel Type</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fragile Items">Fragile Items</option>
+                <option value="General Goods">General Goods</option>
+              </select>
+              {errors.parcelType && (
+                <p className="text-red-500">{errors.parcelType.message}</p>
+              )}
+            </div>
+          )}
+
+
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div>
               <label className={labelCls}>Parcel name</label>
-              <input name="parcelName" placeholder="e.g., Documents, Gift box, Electronics" className={inputCls} required />
+              <input
+                {...register("parcelName", { required: "Parcel name is required" })}
+                placeholder="e.g., Documents, Gift box, Electronics"
+                className={inputCls}
+              />
+              {errors.parcelName && <p className="text-red-500">{errors.parcelName.message}</p>}
             </div>
             <div>
               <label className={labelCls}>Weight</label>
               <div className="flex items-center">
                 <input
-                  name="weight"
+                  {...register("weight", { required: "Weight is required", min: { value: 0, message: "Weight must be positive" } })}
                   type="number"
                   min="0"
                   step="0.1"
                   placeholder="e.g., 1.5"
                   className={`${inputCls} rounded-r-none`}
-                  required
                 />
                 <span className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-md text-sm bg-[#F7F9F9] text-gray-600">
                   kg
                 </span>
               </div>
+              {errors.weight && <p className="text-red-500">{errors.weight.message}</p>}
             </div>
           </div>
         </motion.div>
@@ -109,30 +313,57 @@ const AddParcel = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div>
               <label className={labelCls}>Sender name</label>
-              <input name="senderName" defaultValue={user?.displayName || ''} placeholder="Your full name" className={inputCls} required />
+              <input
+                {...register("senderName", { required: "Sender name is required" })}
+                defaultValue={user?.displayName || ''}
+                placeholder="Your full name"
+                className={inputCls}
+              />
+              {errors.senderName && <p className="text-red-500">{errors.senderName.message}</p>}
             </div>
             <div>
               <label className={labelCls}>Sender contact number</label>
-              <input name="senderPhone" defaultValue={user?.phoneNumber || ''} placeholder="e.g., 01XXXXXXXXX" className={inputCls} required />
+              <input
+                {...register("senderPhone", { required: "Sender contact number is required" })}
+                defaultValue={user?.phoneNumber || ''}
+                placeholder="e.g., 01XXXXXXXXX"
+                className={inputCls}
+              />
+              {errors.senderPhone && <p className="text-red-500">{errors.senderPhone.message}</p>}
             </div>
             <div>
               <label className={labelCls}>Sender address</label>
-              <textarea name="senderAddress" placeholder="House, road, area, city" className={textareaCls} required />
+              <textarea
+                {...register("senderAddress", { required: "Sender address is required" })}
+                placeholder="House, road, area, city"
+                className={textareaCls}
+              />
+              {errors.senderAddress && <p className="text-red-500">{errors.senderAddress.message}</p>}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className={labelCls}>Region</label>
-                <select name="senderRegion" className={inputCls} defaultValue="">
+                <select
+                  {...register("senderRegion", { required: "Region is required" })}
+                  className={inputCls}
+                  defaultValue=""
+                >
                   <option value="" disabled>Select region</option>
-                  {regions.map(r => <option key={r} value={r}>{r}</option>)}
+                  {divisions.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
+                {errors.senderRegion && <p className="text-red-500">{errors.senderRegion.message}</p>}
               </div>
               <div>
                 <label className={labelCls}>Warehouse</label>
-                <select name="senderWarehouse" className={inputCls} defaultValue="">
+                <select
+                  {...register("senderWarehouse", { required: "Warehouse is required" })}
+                  className={inputCls}
+                  defaultValue=""
+                >
                   <option value="" disabled>Select warehouse</option>
                   {warehouses.map(w => <option key={w} value={w}>{w}</option>)}
                 </select>
+                {errors.senderWarehouse && <p className="text-red-500">{errors.senderWarehouse.message}</p>}
               </div>
             </div>
           </div>
@@ -149,30 +380,55 @@ const AddParcel = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             <div>
               <label className={labelCls}>Receiver name</label>
-              <input name="receiverName" placeholder="Receiver’s full name" className={inputCls} required />
+              <input
+                {...register("receiverName", { required: "Receiver name is required" })}
+                placeholder="Receiver’s full name"
+                className={inputCls}
+              />
+              {errors.receiverName && <p className="text-red-500">{errors.receiverName.message}</p>}
             </div>
             <div>
               <label className={labelCls}>Receiver contact number</label>
-              <input name="receiverPhone" placeholder="e.g., 01XXXXXXXXX" className={inputCls} required />
+              <input
+                {...register("receiverPhone", { required: "Receiver contact number is required" })}
+                placeholder="e.g., 01XXXXXXXXX"
+                className={inputCls}
+              />
+              {errors.receiverPhone && <p className="text-red-500">{errors.receiverPhone.message}</p>}
             </div>
             <div>
               <label className={labelCls}>Receiver address</label>
-              <textarea name="receiverAddress" placeholder="House, road, area, city" className={textareaCls} required />
+              <textarea
+                {...register("receiverAddress", { required: "Receiver address is required" })}
+                placeholder="House, road, area, city"
+                className={textareaCls}
+              />
+              {errors.receiverAddress && <p className="text-red-500">{errors.receiverAddress.message}</p>}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className={labelCls}>Region</label>
-                <select name="receiverRegion" className={inputCls} defaultValue="">
+                <select
+                  {...register("receiverRegion", { required: "Region is required" })}
+                  className={inputCls}
+                  defaultValue=""
+                >
                   <option value="" disabled>Select region</option>
-                  {regions.map(r => <option key={r} value={r}>{r}</option>)}
+                  {divisions.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
+                {errors.receiverRegion && <p className="text-red-500">{errors.receiverRegion.message}</p>}
               </div>
               <div>
                 <label className={labelCls}>Warehouse</label>
-                <select name="receiverWarehouse" className={inputCls} defaultValue="">
+                <select
+                  {...register("receiverWarehouse", { required: "Warehouse is required" })}
+                  className={inputCls}
+                  defaultValue=""
+                >
                   <option value="" disabled>Select warehouse</option>
                   {warehouses.map(w => <option key={w} value={w}>{w}</option>)}
                 </select>
+                {errors.receiverWarehouse && <p className="text-red-500">{errors.receiverWarehouse.message}</p>}
               </div>
             </div>
           </div>
@@ -190,7 +446,7 @@ const AddParcel = () => {
             <div>
               <label className={labelCls}>Pickup instructions</label>
               <textarea
-                name="pickupInstructions"
+                {...register("pickupInstructions")}
                 placeholder="e.g., Call on arrival, gate code, pickup from reception"
                 className={textareaCls}
               />
@@ -198,7 +454,7 @@ const AddParcel = () => {
             <div>
               <label className={labelCls}>Delivery instructions</label>
               <textarea
-                name="deliveryInstructions"
+                {...register("deliveryInstructions")}
                 placeholder="e.g., Hand over to guard, leave at front desk"
                 className={textareaCls}
               />
@@ -211,6 +467,7 @@ const AddParcel = () => {
           <p className="text-gray-600 text-sm">
             Pickup time is approximately between 4:00 PM and 7:00 PM. We’ll notify you once it’s scheduled.
           </p>
+
           <button
             type="submit"
             className="inline-flex cursor-pointer items-center justify-center bg-[#CAEB66] text-[#03373D] font-bold px-6 py-3 rounded-md hover:opacity-90 transition w-full lg:w-auto"
@@ -224,8 +481,3 @@ const AddParcel = () => {
 };
 
 export default AddParcel;
-
-
-
-
-

@@ -23,6 +23,8 @@ const AuthLayout = () => {
     useEffect(() => {
         AOS.refresh();
     }, [location.pathname]);
+
+    
     return (
 
         <div className=' px-3 py-3 lg:py-8  max-w-screen-xl mx-auto'>
