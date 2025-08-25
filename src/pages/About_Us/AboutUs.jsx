@@ -1,6 +1,6 @@
 
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const tabs = ['Story', 'Mission', 'Success', 'Team & Others'];
@@ -35,6 +35,9 @@ Beyond leadership, our team includes dedicated riders, support agents, warehouse
 
 const AboutUs = () => {
     const [activeTab, setActiveTab] = useState('Story');
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
 
     return (
         <section className="lg:min-h-screen px-5 lg:px-20 py-10 rounded-3xl my-5 lg:my-6 bg-white text-[#03373D]">

@@ -4,7 +4,7 @@ import Home from "../pages/Home/Home/Home";
 import ErrorPage from "../pages/Shared/ErrorPage";
 import Coverage from "../pages/Coverage/Coverage";
 import Services from "../pages/Services/Services";
-import Pricing from "../pages/Pricing/Pricing";
+
 import BeARider from "../pages/Be a Rider/BeARider";
 import AboutUs from "../pages/About_Us/AboutUs";
 import FaqPage from "../pages/FAQ/FaqPage";
@@ -13,6 +13,10 @@ import Register from "../Auth/Register";
 import AuthLayout from "../Auth/AuthLayout";
 import ForgotPass from "../Auth/ForgotPass";
 import CalculateFare from "../pages/Pricing/CalculateFare";
+import PrivateRoute from "../Auth/PrivateRoute";
+import Pricing from "../pages/Pricing/Pricing";
+import AddParcel from "../pages/Pricing/AddParcel";
+import ContactUs from "../pages/Contact/ContactUs";
 
 export const router = createBrowserRouter([
   {
@@ -29,15 +33,20 @@ export const router = createBrowserRouter([
       },
       {
         path: "services",
-        Component: Services,
+        Component: Services, //81263 //45689 //01840425475
       },
       {
         path: "pricing",
-        Component: Pricing,
+        element: <PrivateRoute> <Pricing></Pricing> </PrivateRoute>,
+        // Component: Pricing,
       },
       {
         path: "calculate-fare",
         Component: CalculateFare,
+      },
+      {
+        path: "contact-us",
+        Component: ContactUs,
       },
       {
         path: "be-a-rider",

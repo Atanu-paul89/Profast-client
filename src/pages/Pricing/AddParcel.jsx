@@ -132,8 +132,56 @@ const AddParcel = () => {
 
   //   reset();
   // };
+  // const onSubmit = (data) => {
+  //   data.isDocument = isDocument ? 'yes' : 'no';
+
+  //   // map form input to our parcelTypes keys
+  //   let parcelKey;
+  //   if (isDocument) {
+  //     parcelKey = "documents";
+  //   } else {
+  //     if (data.parcelType === "Electronics") parcelKey = "electronics";
+  //     else if (data.parcelType === "Fragile Items") parcelKey = "fragile_items";
+  //     else parcelKey = "general_goods";
+  //   }
+
+  //   const fare = calculateFare(
+  //     parcelKey,
+  //     data.senderRegion,
+  //     data.receiverRegion,
+  //     parseFloat(data.weight)
+  //   );
+
+  //   // attach fare + parcelKey to payload
+  //   data.parcelCategory = parcelKey;
+  //   data.fare = fare;
+
+  //   // log the full payload
+  //   console.log("Add Parcel payload:", data);
+
+  //   Swal.fire({
+  //     title: 'Parcel Added!',
+  //     html: `
+  //     <p>Your parcel has been successfully booked.</p>
+  //     <p><b>Total Delivery Cost:</b> ${fare ? fare + " BDT" : "N/A"}</p>
+  //   `,
+  //     icon: 'success',
+  //     confirmButtonColor: '#CAEB66',
+  //     background: '#F7F9F9',
+  //     color: '#03373D',
+  //     confirmButtonText: 'OK',
+  //     customClass: {
+  //       popup: 'rounded-2xl',
+  //       confirmButton: 'font-bold',
+  //       title: 'font-bold',
+  //     }
+  //   });
+
+  //   reset();
+  // };
+
   const onSubmit = (data) => {
-    data.isDocument = isDocument ? 'yes' : 'no';
+    data.isDocument = isDocument ? "yes" : "no";
 
     // map form input to our parcelTypes keys
     let parcelKey;
@@ -145,40 +193,94 @@ const AddParcel = () => {
       else parcelKey = "general_goods";
     }
 
-    const fare = calculateFare(
-      parcelKey,
-      data.senderRegion,
-      data.receiverRegion,
-      parseFloat(data.weight)
-    );
+    // Calculate fare
+    const weight = parseFloat(data.weight);
+    const distance = divisionDistances[data.senderRegion][data.receiverRegion];
+    const typeRates = parcelTypes[parcelKey];
+    const sameDivision = data.senderRegion === data.receiverRegion;
 
-    // attach fare + parcelKey to payload
-    data.parcelCategory = parcelKey;
-    data.fare = fare;
+    let baseFare = typeRates.baseFare;
+    let perKg = sameDivision ? typeRates.intraDivision.perKg : typeRates.interDivision.perKg;
+    let perKm = sameDivision ? typeRates.intraDivision.perKm : typeRates.interDivision.perKm;
+    let distanceUsed = sameDivision ? Math.max(distance, MIN_DISTANCE_SAME_DIVISION) : distance;
 
-    // log the full payload
-    console.log("Add Parcel payload:", data);
+    let totalFare = baseFare + weight * perKg + distanceUsed * perKm;
+    totalFare = sameDivision
+      ? Math.max(totalFare, MIN_FARE_SAME_DIVISION)
+      : Math.max(totalFare, MIN_FARE_DIFFERENT_DIVISION);
+    totalFare = Math.round(totalFare);
 
+    // Metadata
+    const createdAt = new Date().toISOString();
+    const createdBy = {
+      email: user?.email || "N/A",
+      name: user?.displayName || "Anonymous",
+    };
+
+    // Build payload
+    const parcelData = {
+      ...data,
+      parcelCategory: parcelKey,
+      fare: totalFare,
+      createdAt,
+      createdBy,
+    };
+
+    console.log("Add Parcel payload:", parcelData);
+
+    // SweetAlert
     Swal.fire({
-      title: 'Parcel Added!',
+      title: "📦 Parcel Created Successfully",
       html: `
-      <p>Your parcel has been successfully booked.</p>
-      <p><b>Total Delivery Cost:</b> ${fare ? fare + " BDT" : "N/A"}</p>
+      <div style="text-align:left; font-size:14px; line-height:1.6;">
+        <h3 style="margin:0; color:#03373D;">Cost Breakdown</h3>
+        <p><b>Base Fare:</b> ${baseFare} BDT</p>
+        <p><b>Weight Charge:</b> ${weight}kg × ${perKg} = ${weight * perKg} BDT</p>
+        <p><b>Distance Charge:</b> ${distanceUsed}km × ${perKm} = ${(distanceUsed * perKm).toFixed(2)} BDT</p>
+        <p style="margin-top:6px;"><b>Total Fare:</b> <span style="color:green; font-weight:bold;">${totalFare} BDT</span></p>
+
+        <hr/>
+        <h3 style="margin:0; color:#03373D;">Parcel Details</h3>
+        <p><b>Name:</b> ${data.parcelName}</p>
+        <p><b>Type:</b> ${isDocument ? "Document" : data.parcelType}</p>
+        <p><b>Weight:</b> ${data.weight} kg</p>
+
+        <hr/>
+        <h3 style="margin:0; color:#03373D;">Sender</h3>
+        <p><b>Name:</b> ${data.senderName}</p>
+        <p><b>Phone:</b> ${data.senderPhone}</p>
+        <p><b>Address:</b> ${data.senderAddress}</p>
+        <p><b>Region:</b> ${data.senderRegion}, <b>Warehouse:</b> ${data.senderWarehouse}</p>
+
+        <hr/>
+        <h3 style="margin:0; color:#03373D;">Receiver</h3>
+        <p><b>Name:</b> ${data.receiverName}</p>
+        <p><b>Phone:</b> ${data.receiverPhone}</p>
+        <p><b>Address:</b> ${data.receiverAddress}</p>
+        <p><b>Region:</b> ${data.receiverRegion}, <b>Warehouse:</b> ${data.receiverWarehouse}</p>
+
+        <hr/>
+        <h3 style="margin:0; color:#03373D;">Created By</h3>
+        <p><b>User:</b> ${createdBy.name} (${createdBy.email})</p>
+        <p><b>Created At:</b> ${new Date(createdAt).toLocaleString()}</p>
+      </div>
     `,
-      icon: 'success',
-      confirmButtonColor: '#CAEB66',
-      background: '#F7F9F9',
-      color: '#03373D',
-      confirmButtonText: 'OK',
+      icon: "success",
+      confirmButtonColor: "#CAEB66",
+      background: "#F7F9F9",
+      color: "#03373D",
+      confirmButtonText: "OK",
       customClass: {
-        popup: 'rounded-2xl',
-        confirmButton: 'font-bold',
-        title: 'font-bold',
-      }
+        popup: "rounded-2xl",
+        confirmButton: "font-bold",
+        title: "font-bold",
+      },
+      width: 600
     });
 
     reset();
   };
+
 
   return (
     <section className="lg:min-h-screen px-4 md:px-8 lg:px-20 py-8 lg:py-12 bg-white rounded-3xl my-4 text-[#03373D]">

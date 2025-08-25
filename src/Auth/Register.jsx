@@ -13,16 +13,28 @@ import accountCreatedAnimation from "../assets/json/accountedCreated.json";
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser, signinGoogle } = useAuth();
+    const { createUser, signinGoogle, updateUserProfile } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
+
+
     const onSubmit = data => {
         setLoading(true);
+
         createUser(data.email, data.password)
             .then(() => {
+                const file = data.file?.[0];
+                const photoURL = file ? URL.createObjectURL(file) : null;
+
+                // ✅ Update user profile in Firebase Auth
+                return updateUserProfile({
+                    displayName: data.name,
+                    photoURL
+                });
+            })
+            .then(() => {
                 setTimeout(() => {
-                    // setLoading(false);
                     navigate("/");
                 }, 1000);
             })
@@ -33,8 +45,10 @@ const Register = () => {
                     autoClose: 1500,
                     theme: "light"
                 });
-            })
-    }
+            });
+    };
+
+
 
     function getAuthErrorMessage(error) {
         switch (error.code) {
@@ -65,7 +79,7 @@ const Register = () => {
                 setTimeout(() => {
                     // setLoading(false);
                     navigate("/");
-                }, 1000); 
+                }, 1000);
             })
             .catch(error => {
                 setLoading(false);
@@ -90,7 +104,7 @@ const Register = () => {
                 <div className="fixed inset-0 flex flex-col items-center justify-center bg-white  z-50">
                     <Lottie className='md:hidden' animationData={accountCreatedAnimation} loop={true} style={{ width: 350, height: 350 }} />
                     <Lottie className='hidden md:flex' animationData={accountCreatedAnimation} loop={true} style={{ width: 600, height: 600 }} />
-                  
+
                 </div>
             )}
             <section className=" flex flex-col lg:flex-row items-center justify-center px-5 py-6 gap-10">

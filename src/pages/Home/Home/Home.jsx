@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Banner from './Banner';
 import How_It_Works from './How_It_Works';
 import OurServices from './OurServices';
@@ -9,6 +9,9 @@ import CustomerReviews from './CustomerReviews';
 import Faq from './Faq';
 
 const Home = () => {
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
     return (
         <div
             data-aos="fade-right"

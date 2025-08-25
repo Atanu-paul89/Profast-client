@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CalculateFare from './CalculateFare';
 import AddParcel from './AddParcel';
-import clickAnimation from "../../assets/json/Click.json";
 import { motion } from 'framer-motion';
 
 
 const Pricing = () => {
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
     return (
         <div
             data-aos="fade-right"
