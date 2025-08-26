@@ -92,7 +92,6 @@ const AddParcel = () => {
   const [isDocument, setIsDocument] = useState(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  // const onSubmit = (data) => {
   //   data.isDocument = isDocument ? 'yes' : 'no';
 
   //   // map form input to our parcelTypes keys
@@ -180,6 +179,7 @@ const AddParcel = () => {
   //   reset();
   // };
 
+
   const onSubmit = (data) => {
     data.isDocument = isDocument ? "yes" : "no";
 
@@ -210,6 +210,11 @@ const AddParcel = () => {
       : Math.max(totalFare, MIN_FARE_DIFFERENT_DIVISION);
     totalFare = Math.round(totalFare);
 
+    // Generate unique Tracking ID
+    const randomPart = Math.random().toString(36).substring(2, 7).toUpperCase();
+    const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const trackingId = `PRF-${datePart}-${randomPart}`;
+
     // Metadata
     const createdAt = new Date().toISOString();
     const createdBy = {
@@ -224,62 +229,76 @@ const AddParcel = () => {
       fare: totalFare,
       createdAt,
       createdBy,
+      trackingId,
     };
 
     console.log("Add Parcel payload:", parcelData);
 
-    // SweetAlert
+    // SweetAlert (same content as your previous block) with Cancel + Proceed buttons
     Swal.fire({
       title: "📦 Parcel Created Successfully",
       html: `
-      <div style="text-align:left; font-size:14px; line-height:1.6;">
-        <h3 style="margin:0; color:#03373D;">Cost Breakdown</h3>
-        <p><b>Base Fare:</b> ${baseFare} BDT</p>
-        <p><b>Weight Charge:</b> ${weight}kg × ${perKg} = ${weight * perKg} BDT</p>
-        <p><b>Distance Charge:</b> ${distanceUsed}km × ${perKm} = ${(distanceUsed * perKm).toFixed(2)} BDT</p>
-        <p style="margin-top:6px;"><b>Total Fare:</b> <span style="color:green; font-weight:bold;">${totalFare} BDT</span></p>
+    <div style="text-align:left; font-size:14px; line-height:1.6;">
+      <h3 style="margin:0; color:#03373D;">Tracking ID</h3>
+      <p><b>${trackingId}</b></p>
 
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Parcel Details</h3>
-        <p><b>Name:</b> ${data.parcelName}</p>
-        <p><b>Type:</b> ${isDocument ? "Document" : data.parcelType}</p>
-        <p><b>Weight:</b> ${data.weight} kg</p>
+      <hr/>
+      <h3 style="margin:0; color:#03373D;">Cost Breakdown</h3>
+      <p><b>Base Fare:</b> ${baseFare} BDT</p>
+      <p><b>Weight Charge:</b> ${weight}kg × ${perKg} = ${weight * perKg} BDT</p>
+      <p><b>Distance Charge:</b> ${distanceUsed}km × ${perKm} = ${(distanceUsed * perKm).toFixed(2)} BDT</p>
+      <p style="margin-top:6px;"><b>Total Fare:</b> <span style="color:green; font-weight:bold;">${totalFare} BDT</span></p>
 
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Sender</h3>
-        <p><b>Name:</b> ${data.senderName}</p>
-        <p><b>Phone:</b> ${data.senderPhone}</p>
-        <p><b>Address:</b> ${data.senderAddress}</p>
-        <p><b>Region:</b> ${data.senderRegion}, <b>Warehouse:</b> ${data.senderWarehouse}</p>
+      <hr/>
+      <h3 style="margin:0; color:#03373D;">Sender</h3>
+      <p><b>Name:</b> ${data.senderName}</p>
+      <p><b>Phone:</b> ${data.senderPhone}</p>
+      <p><b>Address:</b> ${data.senderAddress}</p>
 
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Receiver</h3>
-        <p><b>Name:</b> ${data.receiverName}</p>
-        <p><b>Phone:</b> ${data.receiverPhone}</p>
-        <p><b>Address:</b> ${data.receiverAddress}</p>
-        <p><b>Region:</b> ${data.receiverRegion}, <b>Warehouse:</b> ${data.receiverWarehouse}</p>
+      <hr/>
+      <h3 style="margin:0; color:#03373D;">Receiver</h3>
+      <p><b>Name:</b> ${data.receiverName}</p>
+      <p><b>Phone:</b> ${data.receiverPhone}</p>
+      <p><b>Address:</b> ${data.receiverAddress}</p>
 
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Created By</h3>
-        <p><b>User:</b> ${createdBy.name} (${createdBy.email})</p>
-        <p><b>Created At:</b> ${new Date(createdAt).toLocaleString()}</p>
-      </div>
-    `,
+      <hr/>
+      <h3 style="margin:0; color:#03373D;">Created By</h3>
+      <p><b>User:</b> ${createdBy.name} (${createdBy.email})</p>
+      <p><b>Created At:</b> ${new Date(createdAt).toLocaleString()}</p>
+    </div>
+  `,
       icon: "success",
+      showCancelButton: true,
+      confirmButtonText: "Proceed to Payment",
+      cancelButtonText: "Cancel",
       confirmButtonColor: "#CAEB66",
+      cancelButtonColor: "#d33",
       background: "#F7F9F9",
       color: "#03373D",
-      confirmButtonText: "OK",
       customClass: {
-        popup: "rounded-2xl",
+        popup: "rounded-3xl",
         confirmButton: "font-bold",
+        cancelButton: "font-bold",
         title: "font-bold",
       },
       width: 600
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User chose to proceed to payment
+        // TODO: call backend to save parcelData before redirect if/when backend is ready
+        // Reset form and redirect to payment page (route example)
+        reset();
+        window.location.href = `/payment/${parcelData.trackingId}`;
+      } else {
+        // User cancelled: keep form as-is so they can edit
+        console.log("User cancelled. Form preserved for edits.");
+      }
     });
 
-    reset();
+    // DO NOT call reset() here — reset is handled only if user confirms above.
   };
+
+
 
 
   return (

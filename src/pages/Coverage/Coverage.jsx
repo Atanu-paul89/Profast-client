@@ -4,6 +4,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import mapmarker from "../../assets/map-marker.svg";
 import warehouseData from "../../assets/warehouses.json";
+import { Link } from 'react-router';
+import { HashLink } from 'react-router-hash-link';
 
 
 const customIcon = new L.Icon({
@@ -85,7 +87,7 @@ const Coverage = () => {
 
 
                 {/* Search Section */}
-                <div className="flex items-center justify-center md:justify-start mb-10">
+                <div className="flex items-center justify-center md:justify-start mb-2">
                     <div className="flex w-full sm:w-[400px] bg-[#F7F9F9] rounded-full  overflow-hidden">
 
                         <input
@@ -95,25 +97,6 @@ const Coverage = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="flex-grow px-5 bg-transparent outline-none text-sm text-[#03373D] custom-placeholder"
                         />
-                        {/* <button className="bg-[#CAEB66] cursor-pointer text-[#03373D] font-semibold px-6 py-2 rounded-full hover:opacity-90 transition">
-                        Search
-                    </button> */}
-
-                        {/* <button
-                        onClick={() => {
-                            const match = districtLocations.find(d =>
-                                d.name.toLowerCase() === searchTerm.trim().toLowerCase()
-                            );
-                            if (match && mapRef.current) {
-                                mapRef.current.setView(match.coords, 8); // zoom in
-                            } else {
-                                alert("Sorry, we couldn't find that district on the map. But yes, we do deliver there!");
-                            }
-                        }}
-                        className="bg-[#CAEB66] cursor-pointer text-[#03373D] font-semibold px-6 py-2 rounded-full hover:opacity-90 transition"
-                    >
-                        Search
-                    </button> */}
 
                         <button
                             onClick={handleSearch}
@@ -123,9 +106,12 @@ const Coverage = () => {
                         </button>
                     </div>
                 </div>
+                <p className='mb-2'>FInd out all of our office addresses
+                    <HashLink to="/contact-us#officeLocation"><span> here</span></HashLink>
+                </p>
 
                 {/* Show search result */}
-                <div className="mb-10">
+                <div className="mb-8">
                     {searchResult && searchResult !== "not_found" && (
                         <div className="bg-[#F7F9F9] rounded-xl p-4 shadow-md">
                             <h3 className="font-bold text-lg text-[#03373D] mb-2">
