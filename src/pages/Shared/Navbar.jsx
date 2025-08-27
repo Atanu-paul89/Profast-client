@@ -99,7 +99,9 @@ const Navbar = () => {
                                         <li>{user?.email}</li>
                                     </div>
                                     <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a >Profile</a></li>
+                                    <NavLink to="/dashboard">
                                     <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Dashboard</a></li>
+                                    </NavLink>
                                     <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Your Order</a></li>
                                 </ul>
                             </div>

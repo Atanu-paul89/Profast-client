@@ -17,6 +17,8 @@ import PrivateRoute from "../Auth/PrivateRoute";
 import Pricing from "../pages/Pricing/Pricing";
 import AddParcel from "../pages/Pricing/AddParcel";
 import ContactUs from "../pages/Contact/ContactUs";
+import DashboardLayout from "../dashboard/DashboardLayout";
+import MyParcels from "../dashboard/user-merchent/MyParcels";
 
 export const router = createBrowserRouter([
   {
@@ -86,6 +88,19 @@ export const router = createBrowserRouter([
         path: "forgot-password",
         Component: ForgotPass,
       },
+    ]
+  },
+
+  // Dashboard page layout 
+  {
+    path: '/dashboard',
+    element: <PrivateRoute><DashboardLayout></DashboardLayout> </PrivateRoute>,
+    children: [
+      {
+        path: 'my-parcel',
+        Component: MyParcels,
+      },
+      // ...... mroe will be added .....
     ]
   }
 ]);

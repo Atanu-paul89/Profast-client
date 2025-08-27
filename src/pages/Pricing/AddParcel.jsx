@@ -7,6 +7,7 @@ import Lottie from "lottie-react";
 import parcelAnimation from "../../assets/json/addParcel.json"
 import { Link } from 'react-router';
 import { TfiHandPointLeft, TfiHandPointRight } from "react-icons/tfi";
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 // divisions and distances
 const divisions = [
@@ -55,33 +56,7 @@ const MIN_FARE_SAME_DIVISION = 45;
 const MIN_FARE_DIFFERENT_DIVISION = 75;
 const MIN_DISTANCE_SAME_DIVISION = 10;
 
-const calculateFare = (parcelType, fromDivision, toDivision, weightKg) => {
-  const typeRates = parcelTypes[parcelType];
-  if (!typeRates || !fromDivision || !toDivision || isNaN(weightKg) || weightKg <= 0) return null;
 
-  const distance = divisionDistances[fromDivision][toDivision];
-  if (!distance) return null;
-
-  let totalFare;
-  if (fromDivision === toDivision) {
-    // Intra-division
-    const usedDistance = Math.max(distance, MIN_DISTANCE_SAME_DIVISION);
-    totalFare =
-      typeRates.baseFare +
-      weightKg * typeRates.intraDivision.perKg +
-      usedDistance * typeRates.intraDivision.perKm;
-    totalFare = Math.max(totalFare, MIN_FARE_SAME_DIVISION);
-  } else {
-    // Inter-division
-    totalFare =
-      typeRates.baseFare +
-      weightKg * typeRates.interDivision.perKg +
-      distance * typeRates.interDivision.perKm;
-    totalFare = Math.max(totalFare, MIN_FARE_DIFFERENT_DIVISION);
-  }
-
-  return Math.round(totalFare);
-};
 
 const labelCls = 'block text-sm font-semibold text-[#03373D] mb-1';
 const inputCls = 'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-[#03373D] outline-none focus:border-[#CAEB66] focus:ring-1 focus:ring-[#CAEB66]';
@@ -91,93 +66,7 @@ const AddParcel = () => {
   const { user } = useAuth() || {};
   const [isDocument, setIsDocument] = useState(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
-
-  //   data.isDocument = isDocument ? 'yes' : 'no';
-
-  //   // map form input to our parcelTypes keys
-  //   let parcelKey;
-  //   if (isDocument) {
-  //     parcelKey = "documents";
-  //   } else {
-  //     if (data.parcelType === "Electronics") parcelKey = "electronics";
-  //     else if (data.parcelType === "Fragile Items") parcelKey = "fragile_items";
-  //     else parcelKey = "general_goods";
-  //   }
-
-  //   const fare = calculateFare(
-  //     parcelKey,
-  //     data.senderRegion,
-  //     data.receiverRegion,
-  //     parseFloat(data.weight)
-  //   );
-
-  //   Swal.fire({
-  //     title: 'Parcel Added!',
-  //     html: `
-  //       <p>Your parcel has been successfully booked.</p>
-  //       <p><b>Total Delivery Cost:</b> ${fare ? fare + " BDT" : "N/A"}</p>
-  //     `,
-  //     icon: 'success',
-  //     confirmButtonColor: '#CAEB66',
-  //     background: '#F7F9F9',
-  //     color: '#03373D',
-  //     confirmButtonText: 'OK',
-  //     customClass: {
-  //       popup: 'rounded-2xl',
-  //       confirmButton: 'font-bold',
-  //       title: 'font-bold',
-  //     }
-  //   });
-
-  //   reset();
-  // };
-  // const onSubmit = (data) => {
-  //   data.isDocument = isDocument ? 'yes' : 'no';
-
-  //   // map form input to our parcelTypes keys
-  //   let parcelKey;
-  //   if (isDocument) {
-  //     parcelKey = "documents";
-  //   } else {
-  //     if (data.parcelType === "Electronics") parcelKey = "electronics";
-  //     else if (data.parcelType === "Fragile Items") parcelKey = "fragile_items";
-  //     else parcelKey = "general_goods";
-  //   }
-
-  //   const fare = calculateFare(
-  //     parcelKey,
-  //     data.senderRegion,
-  //     data.receiverRegion,
-  //     parseFloat(data.weight)
-  //   );
-
-  //   // attach fare + parcelKey to payload
-  //   data.parcelCategory = parcelKey;
-  //   data.fare = fare;
-
-  //   // log the full payload
-  //   console.log("Add Parcel payload:", data);
-
-  //   Swal.fire({
-  //     title: 'Parcel Added!',
-  //     html: `
-  //     <p>Your parcel has been successfully booked.</p>
-  //     <p><b>Total Delivery Cost:</b> ${fare ? fare + " BDT" : "N/A"}</p>
-  //   `,
-  //     icon: 'success',
-  //     confirmButtonColor: '#CAEB66',
-  //     background: '#F7F9F9',
-  //     color: '#03373D',
-  //     confirmButtonText: 'OK',
-  //     customClass: {
-  //       popup: 'rounded-2xl',
-  //       confirmButton: 'font-bold',
-  //       title: 'font-bold',
-  //     }
-  //   });
-
-  //   reset();
-  // };
+  const axiosSecure = useAxiosSecure();
 
 
   const onSubmit = (data) => {
@@ -234,7 +123,17 @@ const AddParcel = () => {
 
     console.log("Add Parcel payload:", parcelData);
 
-    // SweetAlert (same content as your previous block) with Cancel + Proceed buttons
+    // Axios to send data to Database ********//
+    axiosSecure.post('/parcels', parcelData)
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.error("Error saving parcel:", err);
+        Swal.fire("Error", "Failed to save parcel. Please try again.", "error");
+      })
+
+    // sweet alert2 to show the details of parcels // 
     Swal.fire({
       title: "📦 Parcel Created Successfully",
       html: `
@@ -295,10 +194,8 @@ const AddParcel = () => {
       }
     });
 
-    // DO NOT call reset() here — reset is handled only if user confirms above.
+
   };
-
-
 
 
   return (
