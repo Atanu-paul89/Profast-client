@@ -3,9 +3,11 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import mapmarker from "../../assets/map-marker.svg";
-import warehouseData from "../../assets/warehouses.json";
+import warehouseData from "../../assets/data/warehouses.json";
 import { Link } from 'react-router';
 import { HashLink } from 'react-router-hash-link';
+import { PiBuildingOfficeBold } from "react-icons/pi";
+import Typewriter from 'typewriter-effect';
 
 
 const customIcon = new L.Icon({
@@ -85,9 +87,8 @@ const Coverage = () => {
                     <h2 className="text-3xl lg:text-4xl font-bold mb-2">We are available in 64 districts</h2>
                 </div>
 
-
                 {/* Search Section */}
-                <div className="flex items-center justify-center md:justify-start mb-2">
+                <div className="flex flex-col md:flex-row gap-2 items-center justify-center md:justify-start mb-5">
                     <div className="flex w-full sm:w-[400px] bg-[#F7F9F9] rounded-full  overflow-hidden">
 
                         <input
@@ -105,15 +106,38 @@ const Coverage = () => {
                             Search
                         </button>
                     </div>
+
+                    <HashLink to="/contact-us#officeLocation" aria-label="Find office locations">
+                        <span className='text-[#CAEB66] font-bold gap-1 flex items-center hover:underline hover:text-[#b5db4f] transition-colors duration-200 md:text-xl'>
+                            <PiBuildingOfficeBold size={24} />
+                            <Typewriter
+                                options={{
+                                    strings: ['Find Offices Here'],
+                                    autoStart: true,
+                                    loop: true,
+                                    delay: 65,
+                                    deleteSpeed: 30,
+                                    pauseFor: 1000,
+                                    cursor: '',
+                                }}
+                            />
+                        </span>
+                    </HashLink>
                 </div>
-                <p className='mb-2'>FInd out all of our office addresses
-                    <HashLink to="/contact-us#officeLocation"><span> here</span></HashLink>
-                </p>
 
                 {/* Show search result */}
                 <div className="mb-8">
                     {searchResult && searchResult !== "not_found" && (
-                        <div className="bg-[#F7F9F9] rounded-xl p-4 shadow-md">
+                        <div className="relative bg-[#F7F9F9] rounded-xl p-4 shadow-md">
+                            {/* Close button */}
+                            <button
+                                onClick={() => setSearchResult(null)}
+                                className="absolute top-2 right-2 cursor-pointer  text-red-600 hover:text-red-600 text-2xl font-bold"
+                                aria-label="Close search result"
+                            >
+                                ×
+                            </button>
+
                             <h3 className="font-bold text-lg text-[#03373D] mb-2">
                                 📍 {searchResult.district}
                             </h3>
@@ -122,13 +146,13 @@ const Coverage = () => {
                             <p><strong>Status:</strong> {searchResult.status}</p>
                         </div>
                     )}
+
                     {searchResult === "not_found" && (
                         <div className="bg-red-100 text-red-600 p-3 rounded-lg shadow-sm">
                             ❌ District not found. Please check spelling and try again.
                         </div>
                     )}
                 </div>
-
 
                 {/* Map Section */}
                 <div className="w-full border-t-1 border-gray-300 lg:pt-8">

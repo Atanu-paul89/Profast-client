@@ -2,6 +2,7 @@ import React from 'react';
 import ProfastLogo from './ProfastLogo';
 import { Link } from 'react-router';
 
+
 const Footer = () => {
     return (
         <footer className="place-items-center rounded-2xl footer-horizontal footer-center bg-black text-[#C0C0C0] p-5">
