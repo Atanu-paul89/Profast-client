@@ -19,6 +19,7 @@ import AddParcel from "../pages/Pricing/AddParcel";
 import ContactUs from "../pages/Contact/ContactUs";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import MyParcels from "../dashboard/user-merchent/MyParcels";
+import MyProfile from "../dashboard/user-merchent/MyProfile";
 
 export const router = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ export const router = createBrowserRouter([
       {
         path: 'my-parcel',
         Component: MyParcels,
+      },
+      {
+        path: 'profile',
+        Component: MyProfile,
       },
       // ...... mroe will be added .....
     ]

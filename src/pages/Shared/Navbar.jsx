@@ -81,13 +81,14 @@ const Navbar = () => {
                                     <div className="w-10 rounded-full">
                                         <img
                                             alt={user?.displayName || 'No Name'}
-                                            src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"
-                                        // src={user?.photoURL || "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"} />
-                                        // src={user?.photoURL && user.photoURL.trim() !== ""
+                                            // src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"
+                                            src={user?.photoURL || "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"} />
+
+                                        {/* src ={user?.photoURL && user.photoURL.trim() !== ""
                                         //     ? user.photoURL
                                         //     : "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"}
 
-                                        />
+                                        /> */}
 
                                     </div>
                                 </div>
@@ -98,11 +99,11 @@ const Navbar = () => {
                                         <li>{user?.displayName}</li>
                                         <li>{user?.email}</li>
                                     </div>
-                                    <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a >Profile</a></li>
+                                    {/* <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a >Profile</a></li> */}
                                     <NavLink to="/dashboard">
-                                    <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Dashboard</a></li>
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-bold'><a>Dashboard</a></li>
                                     </NavLink>
-                                    <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Your Order</a></li>
+                                    {/* <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Your Order</a></li> */}
                                 </ul>
                             </div>
                         </div>

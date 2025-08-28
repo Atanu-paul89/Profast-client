@@ -343,7 +343,7 @@ const AddParcel = () => {
               <label className={labelCls}>Sender contact number</label>
               <input
                 {...register("senderPhone", { required: "Sender contact number is required" })}
-                defaultValue={user?.phoneNumber || ''}
+                defaultValue={user?.contactNo || ''}
                 placeholder="e.g., 01XXXXXXXXX"
                 className={inputCls}
               />
