@@ -4,6 +4,8 @@ import axiosSecure from '../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
+import { FaUserEdit } from 'react-icons/fa';
+import { MdAddAPhoto, MdModeEditOutline } from "react-icons/md";
 
 const MySwal = withReactContent(Swal);
 
@@ -21,36 +23,6 @@ const MyProfile = () => {
     }, [user.email, refresh]);
 
     const handleRefresh = () => setRefresh(prev => !prev);
-
-    //   const handleUpdate = async (field) => {
-    //     const { value: input } = await MySwal.fire({
-    //       title: `Update ${field}`,
-    //       input: field === 'password' ? 'password' : 'text',
-    //       inputValue: profile[field],
-    //       confirmButtonColor: '#CAEB66',
-    //       cancelButtonColor: '#03373D',
-    //       showCancelButton: true,
-    //       inputPlaceholder: `Enter new ${field}`,
-    //       confirmButtonText: 'Update'
-    //     });
-
-    //     if (!input) return;
-
-    //     try {
-    //       if (field === 'password') {
-    //         await updateUserPassword(input);
-    //       } else {
-    //         const updatedData = { ...profile, [field]: input };
-    //         await updateUserProfile({ displayName: updatedData.name, photoURL: updatedData.photoURL });
-    //         await axiosSecure.post('/users', updatedData);
-    //       }
-    //       MySwal.fire('Updated!', `${field} updated successfully`, 'success');
-    //       handleRefresh();
-    //     } catch (err) {
-    //       console.error(err);
-    //       MySwal.fire('Error', 'Update failed', 'error');
-    //     }
-    //   };
 
     const handleUpdate = async (field) => {
         const { value: input } = await MySwal.fire({
@@ -132,9 +104,10 @@ const MyProfile = () => {
 
     return (
         <>
+        {/* this loading basically will give a loader animation /  window to show while upadating the profile data  */}
             {isUpdating && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-80">
-                    <p className="text-xl font-semibold text-[#03373D] animate-pulse">Updating...</p>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#03373D] bg-opacity-80">
+                    <p className="text-2xl font-semibold text-[#CAEB66] animate-pulse">Updating...</p>
                 </div>
             )}
 
@@ -146,9 +119,9 @@ const MyProfile = () => {
                             <img src={profile.photoURL} alt="Profile" className="w-24 h-24 rounded-full object-cover border" />
                             <button
                                 onClick={handlePhotoUpload}
-                                className="text-sm text-[#03373D] font-bold hover:underline"
+                                className="text-sm items-center text-[#CAEB66] font-extrabold cursor-pointer hover:underline"
                             >
-                                Change Photo
+                                <MdAddAPhoto size={35} />
                             </button>
                         </div>
 
@@ -173,9 +146,9 @@ const ProfileRow = ({ label, value, onEdit, disabled }) => (
         {!disabled && (
             <button
                 onClick={onEdit}
-                className="text-sm text-[#03373D] font-bold hover:underline"
+                className="text-sm text-[#CAEB66] cursor-pointer  font-extrabold hover:underline"
             >
-                Edit
+               <MdModeEditOutline size={23}  />
             </button>
         )}
     </div>
