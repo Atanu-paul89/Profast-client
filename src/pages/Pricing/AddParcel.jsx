@@ -187,7 +187,7 @@ const AddParcel = () => {
         // TODO: call backend to save parcelData before redirect if/when backend is ready
         // Reset form and redirect to payment page (route example)
         reset();
-        window.location.href = `/payment/${parcelData.trackingId}`;
+        window.location.href = `dashboard/payment/${parcelData.trackingId}`;
       } else {
         // User cancelled: keep form as-is so they can edit
         console.log("User cancelled. Form preserved for edits.");

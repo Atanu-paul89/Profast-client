@@ -20,8 +20,10 @@ import ContactUs from "../pages/Contact/ContactUs";
 import DashboardLayout from "../dashboard/DashboardLayout";
 import MyParcels from "../dashboard/user-merchent/MyParcels";
 import MyProfile from "../dashboard/user-merchent/MyProfile";
+import Payment from "../Auth/Payment/Payment";
 
 export const router = createBrowserRouter([
+  // main layout
   {
     path: "/",
     Component: RootLayout,
@@ -41,11 +43,10 @@ export const router = createBrowserRouter([
       {
         path: "pricing",
         element: <PrivateRoute> <Pricing></Pricing> </PrivateRoute>,
-        // Component: Pricing,
       },
       {
         path: "calculate-fare",
-        Component: CalculateFare,
+        element: <PrivateRoute><CalculateFare></CalculateFare> </PrivateRoute>
       },
       {
         path: "contact-us",
@@ -53,7 +54,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "be-a-rider",
-        Component: BeARider,
+        element: <PrivateRoute><BeARider></BeARider> </PrivateRoute>
       },
       {
         path: "aboutus",
@@ -104,6 +105,10 @@ export const router = createBrowserRouter([
       {
         path: 'profile',
         Component: MyProfile,
+      },
+      {
+        path: 'payment/:trackingId',
+        Component: Payment,
       },
       // ...... mroe will be added .....
     ]

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
-import axiosSecure from '../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import useAxiosSecure from '../../hooks/useAxiosSecure';

@@ -65,10 +65,12 @@ import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import lockerAnimation from "../../src/assets/json/Locker.json"
 
+
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [showPrompt, setShowPrompt] = useState(false);
+
 
   useEffect(() => {
     if (!loading && !user) {
