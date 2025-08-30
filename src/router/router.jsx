@@ -21,6 +21,7 @@ import DashboardLayout from "../dashboard/DashboardLayout";
 import MyParcels from "../dashboard/user-merchent/MyParcels";
 import MyProfile from "../dashboard/user-merchent/MyProfile";
 import Payment from "../Auth/Payment/Payment";
+import MyPayments from "../dashboard/user-merchent/MyPayments";
 
 export const router = createBrowserRouter([
   // main layout
@@ -105,6 +106,10 @@ export const router = createBrowserRouter([
       {
         path: 'profile',
         Component: MyProfile,
+      },
+      {
+        path: 'Payment-history',
+        Component: MyPayments,
       },
       {
         path: 'payment/:trackingId',
