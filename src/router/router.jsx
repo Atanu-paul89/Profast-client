@@ -22,6 +22,7 @@ import MyParcels from "../dashboard/user-merchent/MyParcels";
 import MyProfile from "../dashboard/user-merchent/MyProfile";
 import Payment from "../Auth/Payment/Payment";
 import MyPayments from "../dashboard/user-merchent/MyPayments";
+import TrackingParcel from "../dashboard/user-merchent/TrackingParcel";
 
 export const router = createBrowserRouter([
   // main layout
@@ -114,6 +115,10 @@ export const router = createBrowserRouter([
       {
         path: 'payment/:trackingId',
         Component: Payment,
+      },
+      {
+        path: 'tracking-parcel',
+        Component: TrackingParcel,
       },
       // ...... mroe will be added .....
     ]

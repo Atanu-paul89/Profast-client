@@ -73,6 +73,18 @@ const DashboardLayout = () => {
 
           <li>
             <NavLink
+              to="/dashboard/tracking-parcel"
+              className={({ isActive }) =>
+                `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive ? "bg-[#CAEB66] text-[#03373D]" : "hover:bg-[#0F4C55]"
+                }`
+              }
+            >
+              <FaBox /> Track Parcel
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
               to="/dashboard/payment-history"
               className={({ isActive }) =>
                 `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive ? "bg-[#CAEB66] text-[#03373D]" : "hover:bg-[#0F4C55]"
