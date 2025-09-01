@@ -9,3 +9,13 @@
   opacity: 1; /* Make sure it's visible */
 }
 
+.custom-swal-popup {
+  width: 350px !important;   /* smaller modal */
+  padding: 1rem !important;
+}
+
+.custom-confirm-btn {
+  color: #03373D !important; /* dark text */
+  font-weight: 600;
+}
+

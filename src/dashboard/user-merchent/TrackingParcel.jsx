@@ -243,9 +243,9 @@ const TrackingParcel = () => {
                   <FaBoxOpen /> {parcel.parcelName}
                 </h2>
                 <div className='hidden md:flex flex-col'>
-                  <p className="mt-2"><span className='font-bold'>From &nbsp;:</span>&nbsp; {parcel.senderAddress} ,  {parcel.senderRegion} </p>
-                  <p> <span className='font-bold'>To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span> {parcel.receiverAddress} , {parcel.receiverRegion}</p>
-                  <p> <span className='font-bold'>Fare &nbsp;&nbsp;&nbsp;:&nbsp;</span> {parcel.fare}/-</p>
+                  <p className="mt-2"><span className='font-bold'>From &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span>&nbsp; {parcel.senderAddress} ,  {parcel.senderRegion} </p>
+                  <p> <span className='font-bold'>To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span> {parcel.receiverAddress} , {parcel.receiverRegion}</p>
+                  <p> <span className='font-bold'>Fare &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span> {parcel.fare}/-</p>
                   {(() => {
                     const latestLog = parcel.logs?.[parcel.logs.length - 1];
                     const status = latestLog?.status || "Pending";
@@ -253,7 +253,7 @@ const TrackingParcel = () => {
                     return (
                       <>
                         <p className='my-3'>
-                          <span className='font-bold'>Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span>
+                          <span className='font-bold'>Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;</span>
                           <span className='py-1 px-3 font-semibold rounded-lg bg-[#CAEB6670]'>{status}</span>
                         </p>
                         <p>
@@ -277,11 +277,11 @@ const TrackingParcel = () => {
                     return (
                       <>
                         <p className='my-3'>
-                          <span className='font-bold'>Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span>
+                          <span className='font-bold'>Status :&nbsp;</span>
                           <span className='py-1 px-3 font-semibold rounded-lg bg-[#CAEB6670]'>{status}</span>
                         </p>
                         <p>
-                          <span className='font-bold'>Message &nbsp;&nbsp;&nbsp;:&nbsp;</span>
+                          <span className='font-bold'>Message:&nbsp;</span>
                           <span className='py-1 px-3 font-semibold rounded-lg bg-[#CAEB6670]'>{message}</span>
                         </p>
                       </>

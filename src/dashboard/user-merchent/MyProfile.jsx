@@ -115,7 +115,7 @@ const MyProfile = () => {
                 {profile && (
                     <div className="space-y-4">
                         <div className="flex items-center gap-4">
-                            <img src={profile.photoURL} alt="Profile" className="w-24 h-24 rounded-full object-cover border" />
+                            <img src={user.photoURL} alt="Profile" className="w-24 h-24 rounded-full object-cover border" />
                             <button
                                 onClick={handlePhotoUpload}
                                 className="text-sm items-center text-[#CAEB66] font-extrabold cursor-pointer hover:underline"

@@ -8,20 +8,34 @@ import useAuth from '../hooks/useAuth';
 import loadingAnimation from "../assets/json/verifying.json";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 const SignIn = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const { signinUser, signinGoogle } = useAuth();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure();
     const [loading, setLoading] = useState(false);
 
     const onSubmit = data => {
         setLoading(true);
         signinUser(data.email, data.password)
-            .then(() => {
+
+            // .then(() => {
+            //     setTimeout(() => {
+            //         navigate("/");
+            //         // setLoading(false); [if we use this then after animation the login page is showed before moving to "/"]
+            //     }, 1000);
+            // })
+
+            // added jwt token request after login user // 
+            .then(async () => {
+                // ✅ Request JWT token after Firebase login
+                const res = await axiosSecure.post("/jwt", { email: data.email });
+                localStorage.setItem("access-token", res.data.token); // Store token
+
                 setTimeout(() => {
                     navigate("/");
-                    // setLoading(false); [if we use this then after animation the login page is showed before moving to "/"]
                 }, 1000);
             })
 
@@ -52,13 +66,62 @@ const SignIn = () => {
         }
     }
 
+
     const handleGoogleSignin = () => {
         setLoading(true);
         signinGoogle()
-            .then(() => {
-                setTimeout(() => {
-                    navigate("/");
-                }, 1000);
+            .then(async (result) => {
+                const loggedInUser = result.user;
+
+                const userData = {
+                    name: loggedInUser.displayName || "Unnamed User",
+                    email: loggedInUser.email,
+                    photoURL: loggedInUser.photoURL || "",
+                    contactNo: "",
+                    role: "merchant",
+                    createdAt: new Date().toISOString()
+                };
+
+                try {
+                    const response = await axiosSecure.post("/users", userData);
+
+
+                    //  Request JWT token after saving user
+                    const jwtRes = await axiosSecure.post("/jwt", { email: loggedInUser.email });
+                    localStorage.setItem("access-token", jwtRes.data.token); 
+                    //  Store token
+
+                    if (response.data.isNewUser) {
+                        toast.success("Account created successfully!", {
+                            position: "top-right",
+                            autoClose: 1500,
+                            theme: "light"
+                        });
+                    } else {
+                        toast.info("Welcome back!", {
+                            position: "top-right",
+                            autoClose: 1500,
+                            theme: "light",
+                            progressStyle: {
+                                background: "#CAEB66",
+                            },
+                        });
+                    }
+
+                    setTimeout(() => {
+                        navigate("/");
+                    }, 1000);
+                } catch (err) {
+                    setLoading(false);
+                    toast.error(`Failed to save Google user. Error: ${err.message}`, {
+                        position: "top-right",
+                        autoClose: 1500,
+                        theme: "light",
+                        progressStyle: {
+                            background: "#CAEB66",
+                        },
+                    });
+                }
             })
             .catch(error => {
                 setLoading(false);
@@ -67,9 +130,10 @@ const SignIn = () => {
                     autoClose: 1500,
                     theme: "light"
                 });
-            })
+            });
+    };
 
-    }
+
 
     return (
         <div

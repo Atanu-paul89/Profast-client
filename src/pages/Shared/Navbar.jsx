@@ -5,6 +5,8 @@ import ProfastLogo from './ProfastLogo';
 import useAuth from '../../hooks/useAuth';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-scroll';
+import { FaPowerOff } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
     const { user, logOut } = useAuth();
@@ -22,10 +24,36 @@ const Navbar = () => {
             transition: Slide,
         });
 
+    
     const handleLogout = () => {
-        logOut()
-            .then(() => logoutToast())
-    }
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will be signed out of your account.",
+            icon: "warning",
+            iconColor: "#CAEB66",
+            showCancelButton: true,
+            confirmButtonColor: "#CAEB66",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Sign Out",
+            cancelButtonText: "Cancel",
+            customClass: {
+                popup: "custom-swal-popup",
+                confirmButton: "custom-confirm-btn"
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logOut()
+                    .then(() => {
+                        logoutToast(); // your existing toast
+                    })
+                    .catch((err) => {
+                        console.error("Logout failed:", err);
+                        Swal.fire("Error", "Something went wrong. Please try again.", "error");
+                    });
+            }
+        });
+    };
+
 
     return (
         <div className="rounded-xl lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
@@ -72,8 +100,8 @@ const Navbar = () => {
                 user ?
                     (
 
-                        <div className="navbar-end gap-1 md:gap-2">
-                            <button onClick={handleLogout} className="btn bg-[#CAEB66] rounded-lg">Sign Out </button>
+                        <div className="navbar-end gap-2 items-center  md:gap-3">
+                            <button onClick={handleLogout} className=" text-[#CAEB66] hover:text-[#B6D95C] rounded-lg cursor-pointer"><FaPowerOff size={28} /> </button>
 
                             {/* avatar */}
                             <div className="dropdown dropdown-end">
@@ -84,11 +112,6 @@ const Navbar = () => {
                                             // src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"
                                             src={user?.photoURL || "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"} />
 
-                                        {/* src ={user?.photoURL && user.photoURL.trim() !== ""
-                                        //     ? user.photoURL
-                                        //     : "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"}
-
-                                        /> */}
 
                                     </div>
                                 </div>
@@ -100,7 +123,7 @@ const Navbar = () => {
                                         <li>{user?.email}</li>
                                     </div>
                                     {/* <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a >Profile</a></li> */}
-                                    <NavLink to="/dashboard">
+                                    <NavLink to="/dashboard/profile">
                                         <li className='hover:bg-[#CAEB6615] text-[#03373D] font-bold'><a>Dashboard</a></li>
                                     </NavLink>
                                     {/* <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Your Order</a></li> */}
