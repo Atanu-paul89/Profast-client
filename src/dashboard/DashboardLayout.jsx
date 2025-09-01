@@ -1,11 +1,28 @@
-
-
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { FaBox, FaHome, FaUser } from "react-icons/fa";
+import useAuth from "../hooks/useAuth";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const DashboardLayout = () => {
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const [userRole, setUserRole] = useState(null);
+
+  // ✅ Fetch user role from backend
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure
+        .get(`/users/${user.email}`)
+        .then((res) => {
+          setUserRole(res.data.role);
+        })
+        .catch((err) => {
+          console.error("Error fetching user role:", err);
+        });
+    }
+  }, [user?.email, axiosSecure]);
+
   return (
     <div className="drawer lg:drawer-open min-h-screen bg-[#F7F9F9]">
       {/* Drawer toggle for small screens */}
@@ -94,6 +111,22 @@ const DashboardLayout = () => {
               <FaBox /> Payments
             </NavLink>
           </li>
+
+          {userRole === "merchant" && (
+            <li>
+              <NavLink
+                to="/dashboard/rider-result"
+                className={({ isActive }) =>
+                  `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive
+                    ? "bg-[#CAEB66] text-[#03373D]"
+                    : "hover:bg-[#0F4C55]"
+                  }`
+                }
+              >
+                <FaBox /> Be a Rider
+              </NavLink>
+            </li>
+          )}
 
         </ul>
       </div>

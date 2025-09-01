@@ -3,6 +3,9 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import rightrider from "../../../src/assets/agent-pending.png";
 import locationData from "../../assets/data/profast_offices_full.json";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useNavigate } from "react-router";
 
 const BeARider = () => {
     const {
@@ -13,10 +16,14 @@ const BeARider = () => {
         reset,
         formState: { errors },
     } = useForm();
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const navigate = useNavigate();
 
     const [districts, setDistricts] = useState([]);
     const watchRegion = watch("region");
     const watchDob = watch("dob");
+    const watchHasLicense = watch("hasLicense"); // Watch license checkbox
 
     // Calculate age when DOB changes
     React.useEffect(() => {
@@ -41,60 +48,41 @@ const BeARider = () => {
         }
     }, [watchRegion]);
 
-    const onSubmit = (data) => {
-        Swal.fire({
-            title: "🛵 Rider Application",
-            html: `
-      <div style="text-align:left; font-size:14px; line-height:1.6;">
-        <h3 style="margin:0; color:#03373D;">Personal Info</h3>
-        <p><b>Name:</b> ${data.name}</p>
-        <p><b>Email:</b> ${data.email}</p>
-        <p><b>Gender:</b> ${data.gender}</p>
-        <p><b>Date of Birth:</b> ${data.dob}</p>
-        <p><b>Age:</b> ${data.age} years</p>
 
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Work Preference</h3>
-        <p><b>Region:</b> ${data.region}</p>
-        <p><b>District:</b> ${data.district}</p>
-
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Identification</h3>
-        <p><b>NID No:</b> ${data.nid}</p>
-        <p><b>NID Link:</b> <a href="${data.nidLink}" target="_blank" style="color:blue;">View NID</a></p>
-
-        <hr/>
-        <h3 style="margin:0; color:#03373D;">Contact</h3>
-        <p><b>Phone:</b> ${data.contact}</p>
-      </div>
-    `,
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonColor: "#CAEB66",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Submit",
-            cancelButtonText: "Cancel",
-            background: "#F7F9F9",
-            color: "#03373D",
-            customClass: {
-                popup: "rounded-3xl",
-                confirmButton: "font-bold",
-                cancelButton: "font-bold",
-                title: "font-bold",
-            },
-            width: 600,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log("Form submitted:", data); // 👈 you’ll see all form data here
-                reset(); // 👈 clears the form after confirm
-                Swal.fire({
-                    icon: "success",
-                    title: "Application Submitted!",
-                    text: "Thank you for applying to be a rider. Our team will review your info.",
-                    confirmButtonColor: "#CAEB66",
-                });
+    const onSubmit = async (data) => {
+        try {
+            // Set default license info if user selected "No"
+            if (data.hasLicense === "No") {
+                data.licenseType = "";
+                data.vehicleType = "";
+                data.licenseExpiry = "";
             }
-        });
+
+            const res = await axiosSecure.post("/apply-rider", data);
+
+            Swal.fire({
+                icon: "success",
+                iconColor: '#CAEB66',
+                title: "Application Submitted!",
+                text: res.data.message || "Thank you for applying to be a rider. Our team will review your info.",
+                confirmButtonColor: "#03373D",
+            }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigate("/dashboard/rider-result");
+                    }
+                });
+
+            reset();
+        } catch (err) {
+            console.error("Error submitting form:", err);
+            Swal.fire({
+                icon: "error",
+                iconColor: '#CAEB66',
+                title: "Submission Failed",
+                text: err.response?.data?.message || "Something went wrong. Please try again.",
+                confirmButtonColor: "#03373D",
+            });
+        }
     };
 
     return (
@@ -114,7 +102,7 @@ const BeARider = () => {
                             className="w-1/3 h-1/3 object-contain"
                         />
                     </div>
-                    <h2 className="text-[#03373D] text-3xl font-bold mb-3">Be a Rider</h2>
+                    <h2 className="text-[#03373D] text-3xl font-bold mb-3">Be a Rider </h2>
                     <p className="text-[#606060] text-sm lg:text-base">
                         Enjoy fast, reliable parcel delivery with real-time tracking and
                         zero hassle. From personal packages to business shipments — we
@@ -135,16 +123,17 @@ const BeARider = () => {
                             </label>
                             <input
                                 type="text"
+                                value={user?.displayName || ""}
+                                readOnly
                                 {...register("name", { required: true })}
-                                placeholder="Full Name"
-                                className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
+                                className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm bg-gray-100 cursor-not-allowed"
                             />
                             {errors.name && (
                                 <p className="text-red-500 text-xs">Name is required</p>
                             )}
                         </div>
 
-                        {/* Age (auto-calculated) */}
+                        {/* Age */}
                         <div>
                             <label className="block text-sm font-medium text-[#03373D] mb-1">
                                 Your Age
@@ -154,7 +143,7 @@ const BeARider = () => {
                                 {...register("age")}
                                 readOnly
                                 placeholder="Age"
-                                className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm bg-gray-100"
+                                className="w-full border border-[#E0E0E0] rounded-md px-4 cursor-not-allowed py-2 text-sm bg-gray-100"
                             />
                         </div>
 
@@ -165,9 +154,10 @@ const BeARider = () => {
                             </label>
                             <input
                                 type="email"
+                                defaultValue={user?.email || ""}
+                                readOnly
                                 {...register("email", { required: true })}
-                                placeholder="name@gmail.com"
-                                className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
+                                className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm bg-gray-100 cursor-not-allowed"
                             />
                             {errors.email && (
                                 <p className="text-red-500 text-xs">Valid email is required</p>
@@ -287,7 +277,7 @@ const BeARider = () => {
                             )}
                         </div>
 
-                        {/* District (dependent on region) */}
+                        {/* District */}
                         <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-[#03373D] mb-1">
                                 Which District you want to work?
@@ -307,6 +297,95 @@ const BeARider = () => {
                                 <p className="text-red-500 text-xs">District is required</p>
                             )}
                         </div>
+
+                        {/* Driving License Section */}
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-[#03373D] mb-1">
+                                Do you have a Driving License?
+                            </label>
+                            <div className="flex gap-4">
+                                <label className="flex items-center gap-1">
+                                    <input
+                                        type="radio"
+                                        value="Yes"
+                                        {...register("hasLicense", { required: true })}
+                                    />
+                                    Yes
+                                </label>
+                                <label className="flex items-center gap-1">
+                                    <input
+                                        type="radio"
+                                        value="No"
+                                        {...register("hasLicense", { required: true })}
+                                    />
+                                    No
+                                </label>
+                            </div>
+                            {errors.hasLicense && (
+                                <p className="text-red-500 text-xs">Please select an option</p>
+                            )}
+                        </div>
+
+                        {/* Conditional License Fields */}
+                        {watchHasLicense === "Yes" && (
+                            <>
+                                {/* License Type */}
+                                <div>
+                                    <label className="block text-sm font-medium text-[#03373D] mb-1">
+                                        License Type
+                                    </label>
+                                    <select
+                                        {...register("licenseType", { required: true })}
+                                        className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
+                                    >
+                                        <option value="">Select type</option>
+                                        <option>Professional</option>
+                                        <option>Non Professional</option>
+                                    </select>
+                                    {errors.licenseType && (
+                                        <p className="text-red-500 text-xs">License type required</p>
+                                    )}
+                                </div>
+
+                                {/* Vehicle Type */}
+                                <div>
+                                    <label className="block text-sm font-medium text-[#03373D] mb-1">
+                                        Vehicle Type
+                                    </label>
+                                    <select
+                                        {...register("vehicleType", { required: true })}
+                                        className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
+                                    >
+                                        <option value="">Select vehicle</option>
+                                        <option>Light (Both Car & Bike)</option>
+                                        <option>Light (Bike)</option>
+                                        <option>Light (Car)</option>
+                                        <option>Heavy (14 wheels)</option>
+                                        <option>Heavy (18 wheels)</option>
+                                        <option>Heavy (22 wheels)</option>
+                                        <option>Heavy (8 wheels)</option>
+                                    </select>
+                                    {errors.vehicleType && (
+                                        <p className="text-red-500 text-xs">Vehicle type required</p>
+                                    )}
+                                </div>
+
+                                {/* License Expiry */}
+                                <div>
+                                    <label className="block text-sm font-medium text-[#03373D] mb-1">
+                                        License Expiry Date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        {...register("licenseExpiry", { required: true })}
+                                        className="w-full border border-[#E0E0E0] rounded-md px-4 py-2 text-sm"
+                                    />
+                                    {errors.licenseExpiry && (
+                                        <p className="text-red-500 text-xs">Expiry date required</p>
+                                    )}
+                                </div>
+                            </>
+                        )}
 
                         {/* Submit */}
                         <div className="md:col-span-2">
@@ -334,3 +413,4 @@ const BeARider = () => {
 };
 
 export default BeARider;
+
