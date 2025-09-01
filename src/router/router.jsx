@@ -24,6 +24,7 @@ import Payment from "../Auth/Payment/Payment";
 import MyPayments from "../dashboard/user-merchent/MyPayments";
 import TrackingParcel from "../dashboard/user-merchent/TrackingParcel";
 import RiderResult from "../dashboard/user-merchent/RiderResult";
+import ManageUsers from "../dashboard/admin/ManageUsers";
 
 export const router = createBrowserRouter([
   // main layout
@@ -125,7 +126,11 @@ export const router = createBrowserRouter([
         path: 'tracking-parcel',
         Component: TrackingParcel,
       },
-      // ...... mroe will be added .....
+      // admin path started // 
+    {
+      path: 'manage-users',
+      Component: ManageUsers,
+    }
     ]
   }
 ]);

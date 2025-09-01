@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdArrowOutward } from 'react-icons/md';
 import { NavLink } from 'react-router';
 import ProfastLogo from './ProfastLogo';
@@ -7,9 +7,12 @@ import { Slide, ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-scroll';
 import { FaPowerOff } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const Navbar = () => {
     const { user, logOut } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const [userRole, setUserRole] = useState(null);
 
     const logoutToast = () =>
         toast.success('Successfully Signed Out!', {
@@ -24,7 +27,6 @@ const Navbar = () => {
             transition: Slide,
         });
 
-    
     const handleLogout = () => {
         Swal.fire({
             title: "Are you sure?",
@@ -54,6 +56,20 @@ const Navbar = () => {
         });
     };
 
+    // Fetch user role from backend
+    useEffect(() => {
+        if (user?.email) {
+            axiosSecure
+                .get(`/users/${user.email}`)
+                .then((res) => {
+                    setUserRole(res.data.role);
+                })
+                .catch((err) => {
+                    console.error("Error fetching user role:", err);
+                });
+        }
+    }, [user?.email, axiosSecure]);
+
 
     return (
         <div className="rounded-xl lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
@@ -73,6 +89,7 @@ const Navbar = () => {
                             <NavLink className="text-[#03373D]" to="/aboutus"><a>About us</a></NavLink>
                             <NavLink className="text-[#03373D]" to="/pricing"><a>Pricing</a></NavLink>
                             <NavLink className="text-[#03373D]" to="/be-a-rider"><a>Be a Rider</a></NavLink>
+                            <NavLink className="text-[#03373D]" to="/dashboard/profile"><a>Dashboard</a></NavLink>
                         </ul>
                     </ul>
                 </div>
@@ -91,7 +108,27 @@ const Navbar = () => {
                     <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/coverage"><a>Coverage</a></NavLink>
                     <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/aboutus"><a>About us</a></NavLink>
                     <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/pricing"><a>Pricing</a></NavLink>
-                    <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/be-a-rider"><a>Be a Rider</a></NavLink>
+
+                    {/* show be a rider to all visitor and user except rider */}
+                    {(!user || ["merchant", "admin"].includes(userRole)) && (
+                        <NavLink
+                            to="/be-a-rider"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm"
+                                    : "font-semibold text-[#03373D] hover:border-2 hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]"
+                            }
+                        >
+                            Be a Rider
+                        </NavLink>
+                    )}
+                    {/* show to only logged in users */}
+                    {user ? (
+                        <NavLink className='  font-bold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/dashboard/profile"><a>Dashboard</a></NavLink>
+                    ): ''}
+
+
+
                 </ul>
             </div>
 
@@ -106,10 +143,10 @@ const Navbar = () => {
                             {/* avatar */}
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                                    <div className="w-10 rounded-full">
+                                    <div className="w-10 rounded-full ">
                                         <img
                                             alt={user?.displayName || 'No Name'}
-                                            // src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"
+
                                             src={user?.photoURL || "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"} />
 
 
@@ -121,12 +158,13 @@ const Navbar = () => {
                                     <div className='font-semibold italic px-2 text-blue-600 space-y-1 mb-2 border-l-4 rounded-lg py-1 border-[#CAEB66]'>
                                         <li>{user?.displayName}</li>
                                         <li>{user?.email}</li>
+                                        <li>Role: {userRole}</li>
                                     </div>
-                                    {/* <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a >Profile</a></li> */}
+
                                     <NavLink to="/dashboard/profile">
                                         <li className='hover:bg-[#CAEB6615] text-[#03373D] font-bold'><a>Dashboard</a></li>
                                     </NavLink>
-                                    {/* <li className='hover:bg-[#CAEB66] text-[#03373D] font-semibold'><a>Your Order</a></li> */}
+
                                 </ul>
                             </div>
                         </div>
