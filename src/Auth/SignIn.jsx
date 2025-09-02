@@ -21,22 +21,28 @@ const SignIn = () => {
         setLoading(true);
         signinUser(data.email, data.password)
 
-            // .then(() => {
-            //     setTimeout(() => {
-            //         navigate("/");
-            //         // setLoading(false); [if we use this then after animation the login page is showed before moving to "/"]
-            //     }, 1000);
-            // })
-
             // added jwt token request after login user // 
             .then(async () => {
-                // ✅ Request JWT token after Firebase login
-                const res = await axiosSecure.post("/jwt", { email: data.email });
-                localStorage.setItem("access-token", res.data.token); // Store token
+                // by this try catch blick it will send token + check if user is restrcited or not // 
+                try {
+                    const res = await axiosSecure.post("/jwt", { email: data.email });
+                    localStorage.setItem("access-token", res.data.token);
 
-                setTimeout(() => {
-                    navigate("/");
-                }, 1000);
+                    setTimeout(() => {
+                        navigate("/");
+                    }, 1000);
+                } catch (err) {
+                    setLoading(false);
+                    if (err.response?.status === 403 && err.response?.data?.message.includes("restricted")) {
+                        toast.error("Your account has been restricted by admin.", {
+                            position: "top-right",
+                            autoClose: 2000,
+                            theme: "light"
+                        });
+                    } else {
+                        toast.error("Failed to retrieve access token.");
+                    }
+                }
             })
 
             .catch(error => {
@@ -88,7 +94,7 @@ const SignIn = () => {
 
                     //  Request JWT token after saving user
                     const jwtRes = await axiosSecure.post("/jwt", { email: loggedInUser.email });
-                    localStorage.setItem("access-token", jwtRes.data.token); 
+                    localStorage.setItem("access-token", jwtRes.data.token);
                     //  Store token
 
                     if (response.data.isNewUser) {
