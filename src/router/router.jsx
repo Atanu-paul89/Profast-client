@@ -25,6 +25,7 @@ import MyPayments from "../dashboard/user-merchent/MyPayments";
 import TrackingParcel from "../dashboard/user-merchent/TrackingParcel";
 import RiderResult from "../dashboard/user-merchent/RiderResult";
 import ManageUsers from "../dashboard/admin/ManageUsers";
+import RiderApplication from "../dashboard/admin/RiderApplication";
 
 export const router = createBrowserRouter([
   // main layout
@@ -130,6 +131,10 @@ export const router = createBrowserRouter([
     {
       path: 'manage-users',
       Component: ManageUsers,
+    },
+    {
+      path: 'rider-applications',
+      Component: RiderApplication,
     }
     ]
   }

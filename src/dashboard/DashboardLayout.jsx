@@ -226,11 +226,6 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/role-editor" className={navClass}>
-                  🛠️ Role Editor
-                </NavLink>
-              </li>
-              <li>
                 <NavLink to="/dashboard/reports" className={navClass}>
                   📊 Reports & Analytics
                 </NavLink>

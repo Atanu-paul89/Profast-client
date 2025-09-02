@@ -141,6 +141,11 @@ const RiderResult = () => {
           <p className="mt-1 font-semibold text-sm text-[#03373D]">
             Total Applied: <span className="font-normal">{userData.AppliedToBeRider} times</span>
           </p>
+          {riderForm?.status === "Rejected" || riderForm?.status === "Approved" ? (
+            <p className="mt-1 font-bold px-4 lg:px-70 text-sm md:text-lg text-[#03373D]">
+              Feedback: <span className="font-semibold italic text-red-400"> {riderForm?.feedback}</span>
+            </p>
+          ) : ''}
 
           {riderForm?.status === "Rejected" || riderForm?.status === "Canceled" ? (
             <button
