@@ -5,7 +5,7 @@ import rightrider from "../../../src/assets/agent-pending.png";
 import locationData from "../../assets/data/profast_offices_full.json";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import riderAnimation from "../../assets/json/rider.json"
 import Lottie from "lottie-react";
 
@@ -122,8 +122,8 @@ const BeARider = () => {
 
     if (riderApplicationStatus?.status === "Pending") {
         return (
-            <div className=" my-3 rounded-2xl bg-white">
-                <div className=" flex flex-col items-center justify-center pb-10 ">
+            <div className=" my-3  rounded-2xl bg-white">
+                <div className=" flex flex-col items-center justify-center pb-5 ">
                     <Lottie animationData={riderAnimation} loop={true} style={{ width: 300, height: 300 }} />
                     <h2 className="lg:text-2xl px-4 lg:px-0 font-bold text-[#03373D] text-center">You have already applied to be a rider</h2>
                     <p className="mt-2 text-sm lg:text-lg font-semibold">
@@ -132,6 +132,11 @@ const BeARider = () => {
                             {riderApplicationStatus?.status}
                         </span>
                     </p>
+                </div>
+                <div className="flex pb-5 justify-center">
+                    <Link to="/dashboard/rider-result">
+                        <button className=" bg-[#03373D] text-[#CAEB66] text-sm font-semibold cursor-pointer px-4 rounded-md py-2 ">Check Update</button>
+                    </Link>
                 </div>
             </div>
         );
