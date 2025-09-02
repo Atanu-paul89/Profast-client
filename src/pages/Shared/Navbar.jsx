@@ -70,6 +70,8 @@ const Navbar = () => {
         }
     }, [user?.email, axiosSecure]);
 
+    const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1);
+
 
     return (
         <div className="rounded-xl lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
@@ -158,7 +160,7 @@ const Navbar = () => {
                                     <div className='font-semibold italic px-2 text-blue-600 space-y-1 mb-2 border-l-4 rounded-lg py-1 border-[#CAEB66]'>
                                         <li>{user?.displayName}</li>
                                         <li>{user?.email}</li>
-                                        <li>Role: {userRole}</li>
+                                        <li>Role: {formattedRole}</li>
                                     </div>
 
                                     <NavLink to="/dashboard/profile">

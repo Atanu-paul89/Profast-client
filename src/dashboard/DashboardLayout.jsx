@@ -75,6 +75,8 @@ const DashboardLayout = () => {
     `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive ? "bg-[#CAEB66] text-[#03373D]" : "hover:bg-[#0F4C55]"
     }`;
 
+  const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1);
+
   return (
     <div className="drawer lg:drawer-open min-h-screen bg-[#F7F9F9]">
       {/* Drawer toggle for small screens */}
@@ -102,7 +104,7 @@ const DashboardLayout = () => {
         <ul className="menu p-4 w-72 min-h-full bg-[#03373D]  font-medium space-y-1 text-white">
           {/* Dashboard header */}
           <h2 className="text-2xl font-bold text-center text-[#CAEB66]">Dashboard</h2>
-          <p className="mb-4 text-[#CAEB66] text-center">Role: {userRole}</p>
+          <p className="mb-4 text-[#CAEB66] text-center">Role: {formattedRole}</p>
 
           {/* Sidebar Links */}
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import rightrider from "../../../src/assets/agent-pending.png";
@@ -6,6 +6,8 @@ import locationData from "../../assets/data/profast_offices_full.json";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useNavigate } from "react-router";
+import riderAnimation from "../../assets/json/rider.json"
+import Lottie from "lottie-react";
 
 const BeARider = () => {
     const {
@@ -23,7 +25,9 @@ const BeARider = () => {
     const [districts, setDistricts] = useState([]);
     const watchRegion = watch("region");
     const watchDob = watch("dob");
-    const watchHasLicense = watch("hasLicense"); // Watch license checkbox
+    const watchHasLicense = watch("hasLicense");
+    const [riderApplicationStatus, setRiderApplicationStatus] = useState();
+    const [loading, setLoading] = useState(true);
 
     // Calculate age when DOB changes
     React.useEffect(() => {
@@ -67,10 +71,10 @@ const BeARider = () => {
                 text: res.data.message || "Thank you for applying to be a rider. Our team will review your info.",
                 confirmButtonColor: "#03373D",
             }).then((result) => {
-                    if (result.isConfirmed) {
-                        navigate("/dashboard/rider-result");
-                    }
-                });
+                if (result.isConfirmed) {
+                    navigate("/dashboard/rider-result");
+                }
+            });
 
             reset();
         } catch (err) {
@@ -85,7 +89,56 @@ const BeARider = () => {
         }
     };
 
+    // Fetch user data from backend
+    useEffect(() => {
+        const fetchUserDataAndApplication = async () => {
+            if (!user?.email) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const userRes = await axiosSecure.get(`/users/${user.email}`);
+                const userData = userRes.data;
+                console.log(userData);
+
+                if (userData?.IsRequestedToBeRider === "Yes") {
+                    const riderFormRes = await axiosSecure.get(`/rider-form/${user.email}`);
+                    setRiderApplicationStatus(riderFormRes.data);
+                }
+            } catch (err) {
+                console.error("Error fetching data:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserDataAndApplication();
+    }, [user?.email, axiosSecure]);
+
+    if (loading) {
+        return <p className="text-center mt-10 text-[#CAEB66]">Loading...</p>;
+    }
+
+    if (riderApplicationStatus?.status === "Pending") {
+        return (
+            <div className=" my-3 rounded-2xl bg-white">
+                <div className=" flex flex-col items-center justify-center pb-10 ">
+                    <Lottie animationData={riderAnimation} loop={true} style={{ width: 300, height: 300 }} />
+                    <h2 className="lg:text-2xl px-4 lg:px-0 font-bold text-[#03373D] text-center">You have already applied to be a rider</h2>
+                    <p className="mt-2 text-sm lg:text-lg font-semibold">
+                        Status:{" "}
+                        <span className="font-bold text-yellow-500">
+                            {riderApplicationStatus?.status}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
+
         <div
             data-aos="fade-left"
             data-aos-offset="100"
@@ -111,6 +164,7 @@ const BeARider = () => {
                 </div>
 
                 <div className="lg:border-t-2 lg:border-gray-200 flex flex-col lg:flex-row items-center gap-10">
+
                     {/* Form Section */}
                     <form
                         onSubmit={handleSubmit(onSubmit)}
@@ -408,9 +462,11 @@ const BeARider = () => {
                     </div>
                 </div>
             </section>
+
         </div>
     );
 };
 
 export default BeARider;
+
 
