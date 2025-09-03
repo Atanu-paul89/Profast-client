@@ -127,6 +127,7 @@ const MyProfile = () => {
                         <ProfileRow label="Name" value={profile.name} onEdit={() => handleUpdate('name')} />
                         <ProfileRow label="Email" value={profile.email} onEdit={() => handleUpdate('email')} />
                         <ProfileRow label="Contact No" value={profile.contactNo} onEdit={() => handleUpdate('contactNo')} />
+                        <ProfileRow label="Gender" value={profile.gender} onEdit={() => handleUpdate('gender')} />
                         <ProfileRow label="Password" value="••••••••" onEdit={() => handleUpdate('password')} />
                         <ProfileRow label="Role" value={profile.role} disabled />
                     </div>

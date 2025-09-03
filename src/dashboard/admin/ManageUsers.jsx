@@ -79,7 +79,7 @@ const ManageUsers = () => {
     };
 
     const handleDelete = async (email, role) => {
-        if (role === "admin") 
+        if (role === "admin")
             return Swal.fire("Blocked", "Admin users cannot be Deleted.", "info");
 
         Swal.fire({
@@ -139,12 +139,13 @@ const ManageUsers = () => {
                             <th className="px-4 py-2 text-left">Joined</th>
                             <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">Requested Rider</th>
                             <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">Applied Count</th>
+                            <th className="px-4 py-2 text-left">Restricted</th>
                             <th className="px-4 py-2 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((u) => (
-                            <tr key={u.email} className="border-b border-gray-300 hover:bg-[#CAEB6620]">
+                            <tr key={u.email} className={`border-b border-gray-300 hover:bg-[#CAEB6620] ${u.isRestricted ? ' text-red-500' : ''}`}>
                                 <td className="px-4 py-2">
                                     <img src={u.photoURL} alt="User" className="w-10 h-10 rounded-full" />
                                 </td>
@@ -164,8 +165,16 @@ const ManageUsers = () => {
                                     </select>
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{dayjs(u.createdAt).format("DD MMM YYYY")}</td>
-                                <td className="px-4 py-2 text-center">{u.IsRequestedToBeRider ?? "No"}</td>
+
+                                <td className="px-4 py-2 text-center">
+                                    {u.IsRequestedToBeRider === "Approved & Application Deleted" ||
+
+                                        u.IsRequestedToBeRider === "Yes"
+                                        ? "Yes"
+                                        : "No"}
+                                </td>
                                 <td className="px-4 py-2 text-center">{u.AppliedToBeRider ?? 0}</td>
+                                <td className="px-4 py-2 text-center">{u.isRestricted ? "Yes" : "No"}</td>
                                 <td className="px-4 py-2">
                                     <div className="flex gap-3">
                                         <button
@@ -233,7 +242,11 @@ const ManageUsers = () => {
                         </div>
                         <div className="mb-2">
                             <p className="font-bold text-[#03373D]">Requested Rider:</p>
-                            <p>{u.IsRequestedToBeRider ?? "No"}</p>
+                            <p>                                    {u.IsRequestedToBeRider === "Approved & Application Deleted" ||
+
+                                u.IsRequestedToBeRider === "Yes"
+                                ? "Yes"
+                                : "No"}</p>
                         </div>
                         <div className="mb-2">
                             <p className="font-bold text-[#03373D]">Applied Count:</p>

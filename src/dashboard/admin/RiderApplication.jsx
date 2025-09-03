@@ -107,40 +107,6 @@ const RiderApplication = () => {
         }
     };
 
-    // const handleDeleteApplication = async (email) => {
-    //     Swal.fire({
-    //         title: "Delete Rider Application?",
-    //         text: "This action will permanently remove the latest rider form for this user.",
-    //         icon: "warning",
-    //         iconColor: "#CAEB66",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#03373D",
-    //         cancelButtonColor: "#CAEB66",
-    //         confirmButtonText: "Yes, delete!",
-    //         cancelButtonText: "Cancel"
-    //     }).then(async (result) => {
-    //         if (result.isConfirmed) {
-    //             try {
-    //                 await axiosSecure.delete(`/admin/rider-applications/${email}`);
-    //                 const updated = await axiosSecure.get("/admin/rider-applications");
-    //                 setApplications(updated.data);
-    //                 Swal.fire({
-    //                     title: "Deleted!",
-    //                     text: "Rider application has been removed.",
-    //                     icon: "success",
-    //                     iconColor: "#CAEB66",
-    //                     showConfirmButton: false,
-    //                     confirmButtonColor: "#03373D",
-    //                     background: "#F9FFF3",
-    //                     color: "#03373D",
-    //                     confirmButtonText: "Okay"
-    //                 });
-    //             } catch (err) {
-    //                 Swal.fire("Error", "Failed to delete rider application.", err);
-    //             }
-    //         }
-    //     });
-    // };
     const handleDeleteApplication = async (email) => {
         // ✅ Find the latest application for this user
         const latestApp = [...applications]
@@ -151,7 +117,7 @@ const RiderApplication = () => {
             return Swal.fire("Error", "Application not found.", "error");
         }
 
-        if (latestApp.status !== "Rejected" && latestApp.status !== "Approved") {
+        if (latestApp.status !== "Rejected" && latestApp.status !== "Approved" && latestApp.status !=="Canceled") {
             return Swal.fire({
                 title: "Blocked",
                 text: "You must Approve or Reject the application before deleting it.",
@@ -197,10 +163,6 @@ const RiderApplication = () => {
             }
         });
     };
-
-
-
-
 
 
     if (loading) {
@@ -360,9 +322,10 @@ const RiderApplication = () => {
             {/* global  */}
             <div className="mt-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <button onClick={togglePause} className="px-4 py-2 bg-[#03373D] text-white rounded hover:bg-[#022C2F]">
+                    <button onClick={togglePause} className={`px-4 py-2 bg-[#03373D] text-white rounded-lg cursor-pointer hover:bg-[#022C2F] ${paused ? 'text-red-500' : ''}` }>
                         {paused ? "Resume Submissions" : "Pause Submissions"}
                     </button>
+                    
                 </div>
                 <div className="flex items-center gap-2">
                     <input
@@ -377,6 +340,7 @@ const RiderApplication = () => {
                     </button>
                 </div>
             </div>
+            <p className={`px-1 text-sm md:text-base mt-1 italic font-semibold ${paused ? "text-red-600": "text-[#03373D]"}`}> Update: {paused ? 'Submission Closed' : 'Submission Open'}</p>
 
 
 
