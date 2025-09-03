@@ -3,6 +3,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { FaTrashAlt, FaBan } from "react-icons/fa";
+import { LuRefreshCw } from "react-icons/lu";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -104,6 +105,11 @@ const ManageUsers = () => {
         });
     };
 
+    // function for Refreshing the page
+    const RefreshPage = () => {
+        window.location.reload();
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -124,7 +130,15 @@ const ManageUsers = () => {
 
     return (
         <div className="lg:p-4">
-            <h2 className="text-2xl font-bold text-[#03373D] mb-4">Manage Users<span className="text-xs"> ({users.length})</span></h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-[#03373D] mb-4">Manage Users<span className="text-xs"> ({users.length})</span></h2>
+
+                {/* Refresh the page */}
+                <button onClick={RefreshPage} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                    <LuRefreshCw className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                </button>
+
+            </div>
 
             {/* Large screens: scrollable table */}
             <div className="hidden lg:block overflow-x-auto">

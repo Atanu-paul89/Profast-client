@@ -4,6 +4,10 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { RxCheck, RxCross2 } from "react-icons/rx";
 import { FaBan, FaRegCheckCircle, FaTrashAlt } from "react-icons/fa";
+import { MdBlock } from "react-icons/md";
+import { MdLockOpen } from "react-icons/md";
+import { IoMdEye } from "react-icons/io";
+import { LuRefreshCw } from "react-icons/lu";
 
 const RiderApplication = () => {
     const axiosSecure = useAxiosSecure();
@@ -80,8 +84,53 @@ const RiderApplication = () => {
         }
     };
 
+    // const restrictUser = async () => {
+    //     if (!restrictEmail) return;
+    //     const confirm = await Swal.fire({
+    //         title: "Restrict User?",
+    //         text: `Do you want to block ${restrictEmail} from submitting rider applications?`,
+    //         showCancelButton: true,
+    //         confirmButtonText: "Yes, restrict",
+    //         cancelButtonText: "Cancel",
+    //         icon: "warning",
+    //         iconColor: "#CAEB66",
+    //         confirmButtonColor: "#03373D",
+    //         cancelButtonColor: "#CAEB66"
+    //     });
+
+    //     if (confirm.isConfirmed) {
+    //         try {
+    //             const res = await axiosSecure.patch(`/admin/restrict-user/${restrictEmail}`, {
+    //                 restricted: true
+    //             });
+    //             Swal.fire("Updated!", res.data.message, "success");
+    //             setRestrictEmail("");
+    //         } catch (err) {
+    //             Swal.fire("Error", "Failed to restrict user", err);
+    //         }
+    //     }
+    // };
     const restrictUser = async () => {
-        if (!restrictEmail) return;
+        if (!restrictEmail || restrictEmail === "Restrict User From Applying") {
+            return Swal.fire({
+                title: "No Email Selected",
+                text: "Please select a valid user email to restrict.",
+                icon: "info",
+                iconColor: "#CAEB66",
+                confirmButtonColor: "#03373D"
+            });
+        }
+
+        if (restrictEmail.includes("admin")) {
+            return Swal.fire({
+                title: "Action Blocked",
+                text: "Admin users cannot be restricted from submitting rider applications.",
+                icon: "error",
+                iconColor: "#CAEB66",
+                confirmButtonColor: "#03373D"
+            });
+        }
+
         const confirm = await Swal.fire({
             title: "Restrict User?",
             text: `Do you want to block ${restrictEmail} from submitting rider applications?`,
@@ -96,17 +145,129 @@ const RiderApplication = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await axiosSecure.patch(`/admin/restrict-user/${restrictEmail}`, {
+                await axiosSecure.patch(`/admin/restrict-user/${restrictEmail}`, {
                     restricted: true
                 });
-                Swal.fire("Updated!", res.data.message, "success");
+                Swal.fire("Updated!", `${restrictEmail} has been restricted from applying.`, "success");
                 setRestrictEmail("");
             } catch (err) {
-                Swal.fire("Error", "Failed to restrict user", err);
+                Swal.fire("Error", "Failed to restrict user.", err);
             }
         }
     };
 
+    // const unrestrictUser = async () => {
+    //     if (!restrictEmail) return;
+    //     const confirm = await Swal.fire({
+    //         title: "Unrestrict User?",
+    //         text: `Do you want to allow ${restrictEmail} to submit rider applications again?`,
+    //         showCancelButton: true,
+    //         confirmButtonText: "Yes, unrestrict",
+    //         cancelButtonText: "Cancel",
+    //         icon: "question",
+    //         iconColor: "#CAEB66",
+    //         confirmButtonColor: "#03373D",
+    //         cancelButtonColor: "#CAEB66"
+    //     });
+
+    //     if (confirm.isConfirmed) {
+    //         try {
+    //             const res = await axiosSecure.patch(`/admin/restrict-user/${restrictEmail}`, {
+    //                 restricted: false
+    //             });
+    //             Swal.fire("Updated!", res.data.message, "success");
+    //             setRestrictEmail("");
+    //         } catch (err) {
+    //             Swal.fire("Error", "Failed to unrestrict user", err);
+    //         }
+    //     }
+    // };
+    const unrestrictUser = async () => {
+        if (!restrictEmail || restrictEmail === "Restrict User From Applying") {
+            return Swal.fire({
+                title: "No Email Selected",
+                text: "Please select a valid user email to unrestrict.",
+                icon: "info",
+                iconColor: "#CAEB66",
+                confirmButtonColor: "#03373D"
+            });
+        }
+
+        if (restrictEmail.includes("admin")) {
+            return Swal.fire({
+                title: "Action Blocked",
+                text: "Admin users cannot be unrestricted — they are always allowed to apply.",
+                icon: "error",
+                iconColor: "#CAEB66",
+                confirmButtonColor: "#03373D"
+            });
+        }
+
+        const confirm = await Swal.fire({
+            title: "Unrestrict User?",
+            text: `Do you want to allow ${restrictEmail} to submit rider applications again?`,
+            showCancelButton: true,
+            confirmButtonText: "Yes, unrestrict",
+            cancelButtonText: "Cancel",
+            icon: "question",
+            iconColor: "#CAEB66",
+            confirmButtonColor: "#03373D",
+            cancelButtonColor: "#CAEB66"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                await axiosSecure.patch(`/admin/restrict-user/${restrictEmail}`, {
+                    restricted: false
+                });
+                Swal.fire("Updated!", `${restrictEmail} has been unrestricted and can now apply.`, "success");
+                setRestrictEmail("");
+            } catch (err) {
+                Swal.fire("Error", "Failed to unrestrict user.", err);
+            }
+        }
+    };
+
+    // function to view Restricted user from applying to be a rider
+    const ViewRestrictUser = async () => {
+        try {
+            const res = await axiosSecure.get("/users"); // Assuming this returns all users
+            const allUsers = res.data;
+
+            const restrictedUsers = allUsers.filter((user) => user.riderFormRestricted);
+
+            if (restrictedUsers.length === 0) {
+                return Swal.fire({
+                    title: "No Restricted Users",
+                    text: "There are currently no users restricted from submitting rider applications.",
+                    icon: "info",
+                    iconColor: "#CAEB66",
+                    confirmButtonColor: "#03373D"
+                });
+            }
+
+            const emailList = restrictedUsers.map((user, i) => `${i + 1}. ${user.email}`).join("\n");
+
+            Swal.fire({
+                title: "Restricted Users",
+                html: `<pre style="text-align:left; font-size:14px; color:#03373D;">${emailList}</pre>`,
+                icon: "warning",
+                iconColor: "#CAEB66",
+                confirmButtonColor: "#03373D",
+                background: "#F9FFF3"
+            });
+        } catch (err) {
+            Swal.fire("Error", "Failed to fetch restricted users.", err);
+        }
+    };
+
+    // function for Refreshing the page
+    const RefreshPage = () => {
+        window.location.reload();
+    };
+
+
+    //  it will delete the rider application data // 
     const handleDeleteApplication = async (email) => {
         // ✅ Find the latest application for this user
         const latestApp = [...applications]
@@ -117,7 +278,7 @@ const RiderApplication = () => {
             return Swal.fire("Error", "Application not found.", "error");
         }
 
-        if (latestApp.status !== "Rejected" && latestApp.status !== "Approved" && latestApp.status !=="Canceled") {
+        if (latestApp.status !== "Rejected" && latestApp.status !== "Approved" && latestApp.status !== "Canceled") {
             return Swal.fire({
                 title: "Blocked",
                 text: "You must Approve or Reject the application before deleting it.",
@@ -185,12 +346,19 @@ const RiderApplication = () => {
 
     return (
         <div className="lg:p-4">
-            <h2 className="text-2xl font-bold text-[#03373D] mb-4">
-                Rider Applications <span className="text-xs">({applications.length})</span>
-            </h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-[#03373D] mb-4">
+                    Rider Applications <span className="text-xs">({applications.length})</span>
+                </h2>
+
+                {/* Refresh the page */}
+                <button onClick={RefreshPage} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                    <LuRefreshCw className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                </button>
+            </div>
 
             {/* Large screens: scrollable table */}
-            <div className="hidden lg:block overflow-x-auto">
+            <div className="hidden border border-gray-300 rounded-lg lg:block overflow-x-auto">
                 <table className="min-w-[1450px] w-full border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                     <thead className="bg-[#03373D] text-white">
                         <tr>
@@ -322,25 +490,44 @@ const RiderApplication = () => {
             {/* global  */}
             <div className="mt-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex items-center gap-4">
-                    <button onClick={togglePause} className={`px-4 py-2 bg-[#03373D] text-white rounded-lg cursor-pointer hover:bg-[#022C2F] ${paused ? 'text-red-500' : ''}` }>
+                    <button onClick={togglePause} className={`px-4 py-2 bg-[#03373D] text-white rounded-lg cursor-pointer hover:bg-[#1C4B50] ${paused ? 'text-red-500' : ''}`}>
                         {paused ? "Resume Submissions" : "Pause Submissions"}
                     </button>
-                    
+                    <p className={`px-1 md:hidden text-sm md:text-base mt-1 italic font-semibold ${paused ? "text-red-600" : "text-[#03373D]"}`}> Update: {paused ? 'Submission Closed' : 'Submission Open'}</p>
                 </div>
+
+                {/* Restrict Specific user from appling to be a rider */}
                 <div className="flex items-center gap-2">
-                    <input
-                        type="email"
+                    <select
                         value={restrictEmail}
                         onChange={(e) => setRestrictEmail(e.target.value)}
-                        placeholder="Enter email to restrict"
-                        className="px-3 py-2 border rounded w-64"
-                    />
-                    <button onClick={restrictUser} className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700">
-                        Restrict User
+                        className="text-[#03373D] font-semibold px-3 py-2 border-b-4 rounded-lg border-[#CAEB66] cursor-pointer w-65 "
+                    >
+                        <option className="">Restrict User From Applying</option>
+                        {users.map((user, index) => (
+                            <option key={index} value={user.email} className="">
+                                {user.email}
+                            </option>
+                        ))}
+                    </select>
+                    {/* button to restrict user */}
+                    <button onClick={restrictUser} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                        <MdBlock className="text-red-500 text-xl hover:text-red-600 cursor-pointer" />
+                    </button>
+                    {/* button to un-restrict user */}
+                    <button
+                        onClick={unrestrictUser}
+                        className="px-3 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-lg hover:bg-[#E0F58A] cursor-pointer text-sm lg:text-base"
+                    >
+                        <MdLockOpen className="text-[#03373D] text-xl hover:text-[#1C4B50] cursor-pointer" />
+                    </button>
+                    {/* button to view restricted user */}
+                    <button onClick={ViewRestrictUser} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                        <IoMdEye className="text-red-500 text-xl hover:text-red-600 cursor-pointer" />
                     </button>
                 </div>
             </div>
-            <p className={`px-1 text-sm md:text-base mt-1 italic font-semibold ${paused ? "text-red-600": "text-[#03373D]"}`}> Update: {paused ? 'Submission Closed' : 'Submission Open'}</p>
+            <p className={`px-1 hidden md:flex text-sm md:text-base mt-1 italic font-semibold ${paused ? "text-red-600" : "text-[#03373D]"}`}> Update: {paused ? 'Submission Closed' : 'Submission Open'}</p>
 
 
 
