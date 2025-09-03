@@ -232,31 +232,8 @@ const BeARider = () => {
 
     };
 
+    // this will be rendered when a particular user is restricted to submit the rider application
     if (userData?.riderFormRestricted === true) {
-        // return (
-        //     <motion.div
-        //         initial={{ opacity: 0, y: 30 }}
-        //         animate={{ opacity: 1, y: 0 }}
-        //         transition={{ duration: 0.6, ease: "easeOut" }}
-        //         className="flex flex-col items-center justify-center px-4 py-10 text-center bg-[#F9FFF3] rounded-xl shadow-md"
-        //     >
-        //         <div className="w-[200px] md:w-[250px] lg:w-[300px] mb-6">
-        //             <Lottie animationData={pauseAnimation} loop={true} />
-        //         </div>
-
-        //         <h2 className="text-xl md:text-2xl font-bold text-red-500">🚫 You Are Restricted From Applying</h2>
-        //         <p className="mt-3 text-sm md:text-base text-[#03373D] font-medium max-w-xl">
-        //             An admin has restricted your access to the rider application form. If you believe this is a mistake, please contact support.
-        //         </p>
-
-        //         <button
-        //             onClick={() => navigate("/contact")}
-        //             className="mt-6 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90 transition"
-        //         >
-        //             Contact Support
-        //         </button>
-        //     </motion.div>
-        // );
         return (
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -270,9 +247,9 @@ const BeARider = () => {
 
                 <h2 className="text-xl md:text-2xl font-bold text-red-500">🚫 You Are Restricted From Applying</h2>
 
-                 <p className="mt-3 text-sm md:text-base text-[#03373D] font-medium max-w-xl">
+                <p className="mt-3 text-sm md:text-base text-[#03373D] font-medium max-w-xl">
                     An admin has restricted your access to the rider application form. If you believe this is a mistake, please contact support.
-                 </p>
+                </p>
 
                 <button
                     onClick={() => navigate("/contact-us")}
@@ -283,7 +260,6 @@ const BeARider = () => {
             </motion.div>
         );
     }
-
 
 
     // Default rendered UI , contains the form  // 
