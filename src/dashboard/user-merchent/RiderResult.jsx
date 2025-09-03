@@ -80,7 +80,7 @@ const RiderResult = () => {
       <Lottie className=" md:hidden" animationData={riderStatusAnimation} loop={true} style={{ width: 230, height: 230 }} />
 
       {userData?.AppliedToBeRider >= 1 && userData?.IsRequestedToBeRider === "No" ? (
-        // ✅ Canceled application
+        //  Canceled application
         <div className="text-center">
           <h2 className="lg:text-2xl font-bold text-[#03373D]">
             You Cancelled Your Last Application
@@ -117,12 +117,11 @@ const RiderResult = () => {
 
           <p className="mt-2 font-semibold text-sm lg:text-lg">
             Status:{" "}
-            <span className={`font-bold ${
-              riderForm?.status === "Rejected" ? "text-red-500" :
-              riderForm?.status === "Approved" ? "text-[#CAEB66]" :
-              riderForm?.status === "Canceled" ? "text-gray-500" :
-              "text-yellow-500"
-            }`}>
+            <span className={`font-bold ${riderForm?.status === "Rejected" ? "text-red-500" :
+              riderForm?.status === "Approved" ? "text-green-500" :
+                riderForm?.status === "Canceled" ? "text-gray-500" :
+                  "text-yellow-500"
+              }`}>
               {riderForm?.status || "Pending"}
             </span>
           </p>
@@ -163,20 +162,88 @@ const RiderResult = () => {
             </button>
           ) : null}
         </div>
-      ) : (
-        // ✅ Never applied
+      ) : userData?.IsRequestedToBeRider === "Rejected & Application Deleted" ? (
+        // Application Rejected & data was deleted by admin // 
         <div className="text-center">
           <h2 className="lg:text-2xl font-bold text-[#03373D]">
-            You Have Not Yet Applied To Be A Rider
+            You Have Already Submitted The Form
           </h2>
+
+          <p className="mt-2 font-semibold text-sm lg:text-lg">
+            Status: <span className="font-bold text-red-500">Rejected</span>
+          </p>
+
+          <p className="mt-1 text-sm font-semibold text-[#03373D]">
+            Last Applied on:{" "}
+            <span className="font-normal">
+              {formatDate(userData?.LastRiderApplicationSubmittedAt || riderForm?.firstSubmittedAt || riderForm?.submittedAt)}
+            </span>
+          </p>
+
+          <p className="mt-1 font-semibold text-sm text-[#03373D]">
+            Total Applied: <span className="font-normal">{userData.AppliedToBeRider} times</span>
+          </p>
+
+          <p className="mt-1 font-bold px-4 lg:px-70 text-sm md:text-lg text-[#03373D]">
+            Feedback: <span className="font-semibold italic text-red-400"> {userData.LastRiderApplyFeedback}</span>
+          </p>
+
           <button
             onClick={() => navigate("/be-a-rider")}
             className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
           >
-            Apply Today
+            Re-Apply
           </button>
         </div>
-      )}
+      ) : userData?.IsRequestedToBeRider === "Approved & Application Deleted" ? (
+        // Application Approved & data was deleted by admin // 
+        <div className="text-center">
+          <h2 className="lg:text-2xl font-bold text-[#03373D]">
+            You Have Already Submitted The Form
+          </h2>
+
+          <p className="mt-2 font-semibold text-sm lg:text-lg">
+            Status: <span className="font-bold text-green-500">Approved</span>
+          </p>
+
+          <p className="mt-1 text-sm font-semibold text-[#03373D]">
+            Last Applied on:{" "}
+            <span className="font-normal">
+              {formatDate(userData?.LastRiderApplicationSubmittedAt || riderForm?.firstSubmittedAt || riderForm?.submittedAt)}
+            </span>
+          </p>
+
+          <p className="mt-1 font-semibold text-sm text-[#03373D]">
+            Total Applied: <span className="font-normal">{userData.AppliedToBeRider} times</span>
+          </p>
+
+          <p className="mt-1 font-bold px-4 lg:px-70 text-sm md:text-lg text-[#03373D]">
+            Feedback: <span className="font-semibold italic text-red-400"> {userData.LastRiderApplyFeedback}</span>
+          </p>
+
+          <button
+            onClick={() => navigate("/be-a-rider")}
+            className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
+          >
+            Congratulation
+          </button>
+        </div>
+      )
+        : (
+          // ✅ Never applied
+          <div className="text-center">
+            <h2 className="lg:text-2xl font-bold text-[#03373D]">
+              You Have Not Yet Applied To Be A Rider
+            </h2>
+            <button
+              onClick={() => navigate("/be-a-rider")}
+              className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
+            >
+              Apply Today
+            </button>
+          </div>
+        )
+      }
     </div>
   );
 };

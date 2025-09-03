@@ -137,8 +137,8 @@ const ManageUsers = () => {
                             <th className="px-4 py-2 text-left">Contact</th>
                             <th className="px-4 py-2 text-left">Role</th>
                             <th className="px-4 py-2 text-left">Joined</th>
-                            <th className="px-4 py-2 text-left">Requested Rider</th>
-                            <th className="px-4 py-2 text-left">Applied Count</th>
+                            <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">Requested Rider</th>
+                            <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">Applied Count</th>
                             <th className="px-4 py-2 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -148,7 +148,7 @@ const ManageUsers = () => {
                                 <td className="px-4 py-2">
                                     <img src={u.photoURL} alt="User" className="w-10 h-10 rounded-full" />
                                 </td>
-                                <td className="px-4 py-2">{u.name}</td>
+                                <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{u.name}</td>
                                 <td className="px-4 py-2">{u.email}</td>
                                 <td className="px-4 py-2">{u.contactNo}</td>
                                 <td className="px-4 py-2">
@@ -163,9 +163,9 @@ const ManageUsers = () => {
                                         <option value="admin">Admin</option>
                                     </select>
                                 </td>
-                                <td className="px-4 py-2">{dayjs(u.createdAt).format("DD MMM YYYY")}</td>
-                                <td className="px-4 py-2">{u.IsRequestedToBeRider ?? "No"}</td>
-                                <td className="px-4 py-2">{u.AppliedToBeRider ?? 0}</td>
+                                <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{dayjs(u.createdAt).format("DD MMM YYYY")}</td>
+                                <td className="px-4 py-2 text-center">{u.IsRequestedToBeRider ?? "No"}</td>
+                                <td className="px-4 py-2 text-center">{u.AppliedToBeRider ?? 0}</td>
                                 <td className="px-4 py-2">
                                     <div className="flex gap-3">
                                         <button

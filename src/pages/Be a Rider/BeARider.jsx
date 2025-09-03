@@ -101,14 +101,22 @@ const BeARider = () => {
                 const userRes = await axiosSecure.get(`/users/${user.email}`);
                 const userData = userRes.data;
                 console.log(userData);
+                // const status = userData.IsRequestedToBeRider;
+
+                if (userData?.IsRequestedToBeRider === "Approved & Application Deleted") {
+                    setRiderApplicationStatus({ status: "Approved" });
+                }
+
 
                 if (userData?.IsRequestedToBeRider === "Yes") {
                     const riderFormRes = await axiosSecure.get(`/rider-form/${user.email}`);
                     setRiderApplicationStatus(riderFormRes.data);
                 }
-            } catch (err) {
+            }
+            catch (err) {
                 console.error("Error fetching data:", err);
-            } finally {
+            }
+            finally {
                 setLoading(false);
             }
         };
@@ -136,6 +144,28 @@ const BeARider = () => {
                 <div className="flex pb-5 justify-center">
                     <Link to="/dashboard/rider-result">
                         <button className=" bg-[#03373D] text-[#CAEB66] text-sm font-semibold cursor-pointer px-4 rounded-md py-2 ">Check Update</button>
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    if (riderApplicationStatus?.status === "Approved") {
+        return (
+            <div className=" my-3  rounded-2xl bg-white">
+                <div className=" flex flex-col items-center justify-center pb-5 ">
+                    <Lottie animationData={riderAnimation} loop={true} style={{ width: 300, height: 300 }} />
+                    <h2 className="lg:text-2xl px-4 lg:px-0 font-bold text-[#03373D] text-center">You Are Already Selected As a rider</h2>
+                    <p className="mt-2 text-sm lg:text-lg font-semibold">
+                        Status:{" "}
+                        <span className="font-bold text-green-500">
+                            Approved
+                        </span>
+                    </p>
+                </div>
+                <div className="flex pb-5 justify-center">
+                    <Link to="/dashboard/rider-result">
+                        <button className=" bg-[#03373D] text-[#CAEB66] text-sm font-semibold cursor-pointer px-4 rounded-md py-2 ">Check here</button>
                     </Link>
                 </div>
             </div>
