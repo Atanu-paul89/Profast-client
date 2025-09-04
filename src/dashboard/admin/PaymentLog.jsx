@@ -17,11 +17,7 @@ const PaymentLog = () => {
     const [lastFetchedEmail, setLastFetchedEmail] = useState('');
 
 
-
-
     const RefreshPage = () => window.location.reload();
-
-
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -32,55 +28,7 @@ const PaymentLog = () => {
     }, [axiosSecure]);
 
 
-    // const fetchPayments = async () => {
-    //     setHasFetched(true);
-    //     if (!selectedEmail || selectedEmail === "Select User Email") {
-    //         return Swal.fire({
-    //             title: "No Email Selected",
-    //             text: "Please select a valid user email before fetching payment logs.",
-    //             icon: "info",
-    //             confirmButtonColor: "#03373D"
-    //         });
-    //     }
-
-    //     if (selectedEmail.includes("admin")) {
-    //         return Swal.fire({
-    //             title: "Action Blocked",
-    //             text: "Admin accounts cannot be queried for payment logs.",
-    //             icon: "error",
-    //             confirmButtonColor: "#03373D"
-    //         });
-    //     }
-
-    //     setLoading(true);
-    //     try {
-    //         const res = await axiosSecure.get(`/admin/payments/${selectedEmail}`);
-    //         const payments = res.data.payments || [];
-
-    //         if (payments.length === 0) {
-    //             setPayments([]); // clear previous data
-    //             return Swal.fire({
-    //                 title: "No Payments Found",
-    //                 text: "This user has not paid for any parcel yet.",
-    //                 icon: "info",
-    //                 confirmButtonColor: "#03373D"
-    //             });
-    //         }
-
-    //         setPayments(payments);
-    //     } catch (err) {
-    //         console.error("Error fetching payments:", err);
-    //         Swal.fire({
-    //             title: "Error",
-    //             text: "Failed to fetch payment data.",
-    //             icon: "error",
-    //             confirmButtonColor: "#03373D"
-    //         });
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    const fetchPayments = async () => {
+    const fetchPayments = async (forceRefresh = false) => {
         if (!selectedEmail || selectedEmail === "Select User Email") {
             setPayments([]);
             return Swal.fire({
@@ -103,7 +51,7 @@ const PaymentLog = () => {
             });
         }
 
-        if (selectedEmail === lastFetchedEmail && payments.length > 0) {
+        if (forceRefresh && selectedEmail === lastFetchedEmail && payments.length > 0) {
             return Swal.fire({
                 title: "Already Displayed",
                 text: "You’re already viewing this user’s payment logs.",
@@ -130,12 +78,12 @@ const PaymentLog = () => {
                     iconColor: '#CAEB66',
                     confirmButtonColor: "#03373D",
                     showConfirmButton: false,
-                    timer: 1500, // closes after 2 seconds
+                    timer: 1500
                 });
             }
 
             setPayments(fetchedPayments);
-            setLastFetchedEmail(selectedEmail); // update tracker
+            setLastFetchedEmail(selectedEmail);
         } catch (err) {
             console.error("Error fetching payments:", err);
             Swal.fire({
@@ -177,15 +125,17 @@ const PaymentLog = () => {
             });
         } catch (err) {
             console.error("Error deleting payment:", err);
+            const message = err.response?.data?.message || "Failed to delete payment record.";
             Swal.fire({
                 title: "Error",
-                text: "Failed to delete payment record.",
+                text: message,
                 icon: "error",
                 iconColor: '#CAEB66',
                 confirmButtonColor: "#03373D"
             });
         }
     };
+
 
     if (loading) {
         return (
