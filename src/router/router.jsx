@@ -26,6 +26,10 @@ import TrackingParcel from "../dashboard/user-merchent/TrackingParcel";
 import RiderResult from "../dashboard/user-merchent/RiderResult";
 import ManageUsers from "../dashboard/admin/ManageUsers";
 import RiderApplication from "../dashboard/admin/RiderApplication";
+import MerchantNotifications from "../dashboard/user-merchent/MerchantNotifications";
+import AdminNotifications from "../dashboard/admin/AdminNotifications";
+import PaymentLog from "../dashboard/admin/PaymentLog";
+// import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
   // main layout
@@ -69,6 +73,11 @@ export const router = createBrowserRouter([
         path: "faq",
         Component: FaqPage,
       },
+      // temporary route to migrate payment data 
+      // {
+      //   path: 'migrate-payments',
+      //   Component: MigratePayments,
+      // },
     ],
   },
 
@@ -121,21 +130,33 @@ export const router = createBrowserRouter([
       },
       {
         path: 'rider-result',
-        Component: RiderResult, 
+        Component: RiderResult,
       },
       {
         path: 'tracking-parcel',
         Component: TrackingParcel,
       },
+      {
+        path: 'merc-notifications',
+        Component: MerchantNotifications,
+      },
       // admin path started // 
-    {
-      path: 'manage-users',
-      Component: ManageUsers,
-    },
-    {
-      path: 'rider-applications',
-      Component: RiderApplication,
-    }
+      {
+        path: 'manage-users',
+        Component: ManageUsers,
+      },
+      {
+        path: 'rider-applications',
+        Component: RiderApplication,
+      },
+      {
+        path: 'payment-logs',
+        Component: PaymentLog,
+      },
+      {
+        path: 'admn-notifications',
+        Component: AdminNotifications,
+      }
     ]
   }
 ]);

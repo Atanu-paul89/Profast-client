@@ -9,6 +9,7 @@ import { MdLockOpen } from "react-icons/md";
 import { IoMdEye } from "react-icons/io";
 import { LuRefreshCw } from "react-icons/lu";
 
+
 const RiderApplication = () => {
     const axiosSecure = useAxiosSecure();
     const [applications, setApplications] = useState([]);
@@ -346,6 +347,7 @@ const RiderApplication = () => {
 
     return (
         <div className="lg:p-4">
+            {/* heading section */}
             <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-[#03373D] mb-4">
                     Rider Applications <span className="text-xs">({applications.length})</span>
@@ -372,13 +374,13 @@ const RiderApplication = () => {
                             <th className="px-4 py-2 text-left">District</th>
                             <th className="px-4 py-2 text-left">NID No</th>
                             <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">NID Link</th>
-                            <th className="px-4 py-2 text-left">License</th>
-                            <th className="px-4 py-2 text-left">Permitted Vehicle</th>
+                            <th className="px-4 py-2 text-center">License</th>
+                            <th className="px-4 py-2 text-center">Permitted Vehicle</th>
                             <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">License Expiry</th>
-                            <th className="px-4 py-2 text-left">Status</th>
+                            <th className="px-4 py-2 text-center">Status</th>
                             <th className="px-4 py-2 text-left">Submitted</th>
-                            <th className="px-4 py-2 text-left">Feedback</th>
-                            <th className="px-4 py-2 text-left">Actions</th>
+                            <th className="px-4 py-2 text-center">Feedback</th>
+                            <th className="px-4 py-2 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -487,7 +489,7 @@ const RiderApplication = () => {
                 ))}
             </div>
 
-            {/* global  */}
+            {/* global */}
             <div className="mt-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <button onClick={togglePause} className={`px-4 py-2 bg-[#03373D] text-white rounded-lg cursor-pointer hover:bg-[#1C4B50] ${paused ? 'text-red-500' : ''}`}>

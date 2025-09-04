@@ -134,6 +134,15 @@ const PaymentForm = () => {
         }
     };
 
+    if (parcelInfo.paymentStatus === "Paid") {
+        return (
+            <div className="pt-20 text-center">
+                <h2 className="text-xl font-bold text-red-500">🚫 This Parcel Has Already Been Paid</h2>
+                <p className="mt-2 text-[#03373D] font-medium">You cannot pay again for this parcel. Please check your parcel history.</p>
+            </div>
+        );
+    }
+
     return (
         <div className='pt-20'>
             <form onSubmit={handleSubmit} className='space-y-4 bg-[#CAEB6640] border-x-8 border-[#CAEB66] p-6 rounded-xl shadow-md w-full max-w-md mx-auto'>

@@ -161,11 +161,34 @@ const RiderResult = () => {
               <p className="mt-1 font-semibold text-sm text-[#03373D]">
                 Total Applied: <span className="font-normal">{userData.AppliedToBeRider} {userData.AppliedToBeRider === 1 ? "time" : "times"}</span>
               </p>
-              {riderForm?.status === "Rejected" || riderForm?.status === "Approved" ? (
-                <p className="mt-1 font-bold px-4 lg:px-70 text-sm md:text-lg text-[#03373D]">
-                  Feedback: <span className="font-semibold italic text-red-400"> {riderForm?.feedback}</span>
-                </p>
-              ) : ''}
+
+              {/* {["Rejected", "Approved"].includes(riderForm?.status) && (
+                <div className="mt-4 mx-4 lg:mx-0 bg-white border-t-6 border-[#CAEB66] p-4 rounded-xl shadow-sm">
+                  <h3 className="text-lg font-bold text-[#03373D] mb-2">📩 Feedback</h3>
+                  <p className="whitespace-pre-line text-sm md:text-base text-[#03373D] font-medium italic">
+                    {riderForm?.feedback}
+                  </p>
+                </div>
+              )} */}
+              {riderForm?.status === "Approved" && (
+                <div className="mt-4 mx-4 lg:mx-0 bg-white border-t-6 border-[#CAEB66] p-4 rounded-xl shadow-sm">
+                  <h3 className="text-lg font-bold text-[#03373D] mb-2">📩 Feedback</h3>
+                  <p className="whitespace-pre-line text-sm md:text-base text-[#03373D] font-medium italic">
+                    {riderForm?.feedback}
+                  </p>
+                </div>
+              )}
+
+              {riderForm?.status === "Rejected" && (
+                <div className="mt-4 mx-4 lg:mx-0 bg-white border-t-6 border-red-500 p-4 rounded shadow-sm">
+                  <h3 className="text-lg font-bold text-red-500 mb-2">📩 Feedback</h3>
+                  <p className="whitespace-pre-line text-sm md:text-base text-[#03373D] font-medium italic">
+                    {riderForm?.feedback || "We're sorry, your application was not approved at this time."}
+                  </p>
+                </div>
+              )}
+
+
 
               {riderForm?.status === "Rejected" || riderForm?.status === "Canceled" ? (
                 <button

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FaBox, FaHome, FaMapMarkedAlt, FaMoneyCheckAlt, FaPowerOff, FaUser } from "react-icons/fa";
+import { FaBell, FaBox, FaHome, FaMapMarkedAlt, FaMoneyCheckAlt, FaPowerOff, FaUser } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { MdAttachMoney, MdDirectionsBike } from "react-icons/md";
@@ -184,6 +184,19 @@ const DashboardLayout = () => {
                   <MdDirectionsBike /> Be a Rider
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/dashboard/merc-notifications"
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive
+                      ? "bg-[#CAEB66] text-[#03373D]"
+                      : "hover:bg-[#0F4C55]"
+                    }`
+                  }
+                >
+                  <FaBell  /> Notifications
+                </NavLink>
+              </li>
             </>
           )}
 
@@ -216,7 +229,7 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/notifications" className={navClass}>
+                <NavLink to="/dashboard/admn-notifications" className={navClass}>
                   🔔 Notification Center
                 </NavLink>
               </li>
