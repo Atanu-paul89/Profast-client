@@ -29,6 +29,7 @@ import RiderApplication from "../dashboard/admin/RiderApplication";
 import MerchantNotifications from "../dashboard/user-merchent/MerchantNotifications";
 import AdminNotifications from "../dashboard/admin/AdminNotifications";
 import PaymentLog from "../dashboard/admin/PaymentLog";
+import ActivityLog from "../dashboard/admin/ActivityLog";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -152,6 +153,10 @@ export const router = createBrowserRouter([
       {
         path: 'payment-logs',
         Component: PaymentLog,
+      },
+      {
+        path: 'activity-log',
+        Component: ActivityLog,
       },
       {
         path: 'admn-notifications',

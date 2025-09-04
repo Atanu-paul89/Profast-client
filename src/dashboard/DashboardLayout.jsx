@@ -234,8 +234,8 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/audit-trail" className={navClass}>
-                  📜 Audit Trail
+                <NavLink to="/dashboard/activity-log" className={navClass}>
+                  📜 Activity Log
                 </NavLink>
               </li>
               <li>
