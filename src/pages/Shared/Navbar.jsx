@@ -74,7 +74,7 @@ const Navbar = () => {
 
 
     return (
-        <div className="rounded-xl lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
+        <div className="rounded-xl  lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
             {/* Left section */}
             <div className="navbar-start">
                 {/* dropdown for mobile/small device */}

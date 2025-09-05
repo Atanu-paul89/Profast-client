@@ -7,11 +7,29 @@ import { MdAttachMoney, MdDirectionsBike } from "react-icons/md";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
+
 const DashboardLayout = () => {
   const { user, logOut } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [userRole, setUserRole] = useState(null);
+  const [hasUnseenLogs, setHasUnseenLogs] = useState(false);
   const navigate = useNavigate();
+
+  // logic to show unseen dot for activity log to admin // 
+  useEffect(() => {
+    const checkUnseenLogs = async () => {
+      try {
+        const res = await axiosSecure.get('/admin/logs/unseen');
+        setHasUnseenLogs(res.data.length > 0);
+      } catch (err) {
+        console.error("Error checking unseen logs:", err);
+      }
+    };
+
+    checkUnseenLogs();
+    const interval = setInterval(checkUnseenLogs, 200);
+    return () => clearInterval(interval);
+  }, [axiosSecure]);
 
   const logoutToast = () =>
     toast.success('Successfully Signed Out!', {
@@ -25,7 +43,6 @@ const DashboardLayout = () => {
       theme: "light",
       transition: Slide,
     });
-
 
   const handleLogout = () => {
     Swal.fire({
@@ -85,12 +102,14 @@ const DashboardLayout = () => {
       {/* Main content */}
       <div className="drawer-content flex flex-col">
         {/* Top bar for mobile */}
-        <div className="flex items-center justify-between p-4 shadow-md lg:hidden bg-[#03373D] text-white">
+
+        <div className="flex sticky top-0 items-center justify-between p-4 shadow-md lg:hidden bg-[#03373D] text-white">
           <h2 className="font-bold text-lg">📦 Dashboard</h2>
-          <label htmlFor="dashboard-drawer" className="btn btn-sm bg-[#CAEB66] border-none text-[#03373D] font-bold">
+          <label htmlFor="dashboard-drawer" className="btn  btn-sm bg-[#CAEB66] border-none text-[#03373D] font-bold">
             Menu
           </label>
         </div>
+
 
         {/* Outlet for nested routes */}
         <div className="p-6 flex-1">
@@ -194,7 +213,7 @@ const DashboardLayout = () => {
                     }`
                   }
                 >
-                  <FaBell  /> Notifications
+                  <FaBell /> Notifications
                 </NavLink>
               </li>
             </>
@@ -235,7 +254,16 @@ const DashboardLayout = () => {
               </li>
               <li>
                 <NavLink to="/dashboard/activity-log" className={navClass}>
-                  📜 Activity Log
+                  <div className="flex gap-29  ">
+                    <p>📜 Activity Log</p>
+                    {hasUnseenLogs && (
+                      <span class="relative flex size-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                      </span>
+
+                    )}
+                  </div>
                 </NavLink>
               </li>
               <li>

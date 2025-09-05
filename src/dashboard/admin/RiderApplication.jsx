@@ -499,34 +499,39 @@ const RiderApplication = () => {
                 </div>
 
                 {/* Restrict Specific user from appling to be a rider */}
-                <div className="flex items-center gap-2">
-                    <select
-                        value={restrictEmail}
-                        onChange={(e) => setRestrictEmail(e.target.value)}
-                        className="text-[#03373D] font-semibold px-3 py-2 border-b-4 rounded-lg border-[#CAEB66] cursor-pointer w-65 "
-                    >
-                        <option className="">Restrict User From Applying</option>
-                        {users.map((user, index) => (
-                            <option key={index} value={user.email} className="">
-                                {user.email}
-                            </option>
-                        ))}
-                    </select>
-                    {/* button to restrict user */}
-                    <button onClick={restrictUser} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
-                        <MdBlock className="text-red-500 text-xl hover:text-red-600 cursor-pointer" />
-                    </button>
-                    {/* button to un-restrict user */}
-                    <button
-                        onClick={unrestrictUser}
-                        className="px-3 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-lg hover:bg-[#E0F58A] cursor-pointer text-sm lg:text-base"
-                    >
-                        <MdLockOpen className="text-[#03373D] text-xl hover:text-[#1C4B50] cursor-pointer" />
-                    </button>
-                    {/* button to view restricted user */}
-                    <button onClick={ViewRestrictUser} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
-                        <IoMdEye className="text-red-500 text-xl hover:text-red-600 cursor-pointer" />
-                    </button>
+                <div className="flex flex-col md:flex-row items-center gap-2">
+                    <div>
+                        <select
+                            value={restrictEmail}
+                            onChange={(e) => setRestrictEmail(e.target.value)}
+                            className="text-[#03373D] font-semibold px-3 py-2 border-b-4 rounded-lg border-[#CAEB66] cursor-pointer w-65 "
+                        >
+                            <option className="">Restrict User From Applying</option>
+                            {users.map((user, index) => (
+                                <option key={index} value={user.email} className="">
+                                    {user.email}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="space-x-2">
+                        {/* button to restrict user */}
+                        <button onClick={restrictUser} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                            <MdBlock className="text-red-500 text-xl hover:text-red-600 cursor-pointer" />
+                        </button>
+                        {/* button to un-restrict user */}
+                        <button
+                            onClick={unrestrictUser}
+                            className="px-3 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-lg hover:bg-[#E0F58A] cursor-pointer text-sm lg:text-base"
+                        >
+                            <MdLockOpen className="text-[#03373D] text-xl hover:text-[#1C4B50] cursor-pointer" />
+                        </button>
+                        {/* button to view restricted user */}
+                        <button onClick={ViewRestrictUser} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                            <IoMdEye className="text-red-500 text-xl hover:text-red-600 cursor-pointer" />
+                        </button>
+                    </div>
                 </div>
             </div>
             <p className={`px-1 hidden md:flex text-sm md:text-base mt-1 italic font-semibold ${paused ? "text-red-600" : "text-[#03373D]"}`}> Update: {paused ? 'Submission Closed' : 'Submission Open'}</p>

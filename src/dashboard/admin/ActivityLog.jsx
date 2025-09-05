@@ -1,18 +1,3 @@
-// import React from 'react';
-// import useAxiosSecure from '../../hooks/useAxiosSecure';
-// import logAnimation from "../../assets/json/Activy-Log.json";
-// const ActivityLog = () => {
-//     const axiosSecure = useAxiosSecure(); 
-//     return (
-//         <div>
-           
-//         </div>
-//     );
-// };
-
-
-// export default ActivityLog;
-
 import React, { useEffect, useState } from 'react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { Player } from '@lottiefiles/react-lottie-player';
@@ -39,6 +24,19 @@ const ActivityLog = () => {
     setCurrentTime(dayjs()); // capture time when admin opens the page
   }, [axiosSecure]);
 
+  useEffect(() => {
+    const markLogsAsSeen = async () => {
+      try {
+        await axiosSecure.patch('/admin/logs/mark-seen');
+      } catch (err) {
+        console.error("Error marking logs as seen:", err);
+      }
+    };
+
+    markLogsAsSeen();
+  }, [axiosSecure]);
+
+
   const formatDateTime = (timestamp) => {
     return dayjs(timestamp).format("D MMMM YYYY h:mm A");
   };
@@ -61,7 +59,7 @@ const ActivityLog = () => {
             loop
             src={logAnimation}
             className='h-[100px] w-[100px] lg:h-[80px] lg:w-[80px]'
-            // style={{ height: '80px', width: '80px' }}
+          // style={{ height: '80px', width: '80px' }}
           />
           <h2 className="lg:text-2xl text-xl font-bold text-[#03373D]">Admin Activity Log</h2>
         </div>

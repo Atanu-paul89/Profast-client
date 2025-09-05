@@ -1,4 +1,4 @@
-@import "tailwindcss";  
+@import "tailwindcss";
 @plugin "daisyui";
 @import "leaflet/dist/leaflet.css";
 
@@ -6,17 +6,19 @@
   /* color: #CAEB66; */
   font-weight: bold;
   font-size: 16px;
-  opacity: 1; /* Make sure it's visible */
+  opacity: 1;
+  /* Make sure it's visible */
 }
 
 .custom-swal-popup {
-  width: 350px !important;   /* smaller modal */
+  width: 350px !important;
+  /* smaller modal */
   padding: 1rem !important;
 }
 
 .custom-confirm-btn {
-  color: #03373D !important; /* dark text */
+  color: #03373D !important;
+  /* dark text */
   font-weight: 600;
 }
-
 
