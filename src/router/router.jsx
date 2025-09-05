@@ -30,6 +30,9 @@ import MerchantNotifications from "../dashboard/user-merchent/MerchantNotificati
 import AdminNotifications from "../dashboard/admin/AdminNotifications";
 import PaymentLog from "../dashboard/admin/PaymentLog";
 import ActivityLog from "../dashboard/admin/ActivityLog";
+import RiderNotifications from "../dashboard/rider/RiderNotifications";
+// import AdminMessageInbox from "../dashboard/admin/AdminMessageInbox";
+import MessageCenter from "../dashboard/MessageCenter";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -122,6 +125,10 @@ export const router = createBrowserRouter([
         Component: MyProfile,
       },
       {
+        path: 'Message-center',
+        Component: MessageCenter,
+      },
+      {
         path: 'Payment-history',
         Component: MyPayments,
       },
@@ -140,6 +147,10 @@ export const router = createBrowserRouter([
       {
         path: 'merc-notifications',
         Component: MerchantNotifications,
+      },
+      {
+        path: 'rider-notifications',
+        Component: RiderNotifications,
       },
       // admin path started // 
       {
@@ -161,7 +172,11 @@ export const router = createBrowserRouter([
       {
         path: 'admn-notifications',
         Component: AdminNotifications,
-      }
+      },
+      // {
+      //   path: 'admn-messages',
+      //   Component: AdminMessageInbox,
+      // },
     ]
   }
 ]);

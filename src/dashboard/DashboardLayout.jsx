@@ -6,6 +6,7 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import { MdAttachMoney, MdDirectionsBike } from "react-icons/md";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { FaMessage } from "react-icons/fa6";
 
 
 const DashboardLayout = () => {
@@ -13,6 +14,8 @@ const DashboardLayout = () => {
   const axiosSecure = useAxiosSecure();
   const [userRole, setUserRole] = useState(null);
   const [hasUnseenLogs, setHasUnseenLogs] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
+  const [messageUnread, setMessageUnread] = useState(false);
   const navigate = useNavigate();
 
   // logic to show unseen dot for activity log to admin // 
@@ -30,6 +33,41 @@ const DashboardLayout = () => {
     const interval = setInterval(checkUnseenLogs, 200);
     return () => clearInterval(interval);
   }, [axiosSecure]);
+
+  //importing notificatioan seen/unseen to set notification alert //
+  useEffect(() => {
+    const checkUnread = async () => {
+      try {
+        const res = await axiosSecure.get('/notifications');
+        const unread = res.data.some(n => !n.read);
+        setHasUnread(unread);
+      } catch (err) {
+        console.error("Error checking unseen logs:", err);
+      }
+    };
+
+    checkUnread();
+    const interval = setInterval(checkUnread, 200);
+    return () => clearInterval(interval);
+  }, [axiosSecure]);
+
+  // setting unread dot for messages too //
+  useEffect(() => {
+    const checkUnreadMessages = async () => {
+      try {
+        const res = await axiosSecure.get('/notifications');
+        const unreadMessages = res.data.some(n => !n.read && (n.type === 'Message' || n.type === 'Reply'));
+        setMessageUnread(unreadMessages);
+      } catch (err) {
+        console.error("Error checking unread messages:", err);
+      }
+    };
+
+    checkUnreadMessages();
+    const interval = setInterval(checkUnreadMessages, 200); 
+    return () => clearInterval(interval);
+  }, [axiosSecure]);
+
 
   const logoutToast = () =>
     toast.success('Successfully Signed Out!', {
@@ -91,6 +129,13 @@ const DashboardLayout = () => {
   const navClass = ({ isActive }) =>
     `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive ? "bg-[#CAEB66] text-[#03373D]" : "hover:bg-[#0F4C55]"
     }`;
+
+  const merNavchClass = ({ isActive }) =>
+    `flex items-center gap-3 ounded-lg px-3 py-2 ${isActive
+      ? "bg-[#CAEB66] text-[#03373D]"
+      : "hover:bg-[#0F4C55]"
+    }`;
+
 
   const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1);
 
@@ -206,14 +251,17 @@ const DashboardLayout = () => {
               <li>
                 <NavLink
                   to="/dashboard/merc-notifications"
-                  className={({ isActive }) =>
-                    `flex items-center gap-2 rounded-lg px-3 py-2 ${isActive
-                      ? "bg-[#CAEB66] text-[#03373D]"
-                      : "hover:bg-[#0F4C55]"
-                    }`
-                  }
-                >
-                  <FaBell /> Notifications
+                  className={merNavchClass}>
+                  <div className="flex items-center gap-2">
+                    <FaBell /> Notifications
+                  </div>
+                  {hasUnread && (
+                    <span class="relative flex size-3">
+                      <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                      <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                    </span>
+
+                  )}
                 </NavLink>
               </li>
             </>
@@ -249,9 +297,32 @@ const DashboardLayout = () => {
               </li>
               <li>
                 <NavLink to="/dashboard/admn-notifications" className={navClass}>
-                  🔔 Notification Center
+                  <div className="flex gap-27  ">
+                    <p>🔔 Notifications</p>
+                    {hasUnread && (
+                      <span class="relative flex size-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                      </span>
+
+                    )}
+                  </div>
                 </NavLink>
               </li>
+              {/* <li>
+                <NavLink to="/dashboard/admn-messages" className={navClass}>
+                  <div className="flex gap-27  ">
+                    <p>📩 Messages</p>
+                    {messageUnread && (
+                      <span class="relative flex size-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                      </span>
+
+                    )}
+                  </div>
+                </NavLink>
+              </li> */}
               <li>
                 <NavLink to="/dashboard/activity-log" className={navClass}>
                   <div className="flex gap-29  ">
@@ -302,6 +373,34 @@ const DashboardLayout = () => {
                   📊 Performance Stats
                 </NavLink>
               </li>
+              {/* <li>
+                <NavLink to="/dashboard/rider-messages" className={navClass}>
+                  <div className="flex gap-27  ">
+                    <p>📩 Messages</p>
+                    {messageUnread && (
+                      <span class="relative flex size-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                      </span>
+
+                    )}
+                  </div>
+                </NavLink>
+              </li> */}
+              <li>
+                <NavLink to="/dashboard/rider-notifications" className={navClass}>
+                  <div className="flex gap-27  ">
+                    <p>🔔 Notifications</p>
+                    {hasUnread && (
+                      <span class="relative flex size-3">
+                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                      </span>
+
+                    )}
+                  </div>
+                </NavLink>
+              </li>
               <li>
                 <NavLink to="/dashboard/support" className={navClass}>
                   🛠️ Support Center
@@ -309,6 +408,23 @@ const DashboardLayout = () => {
               </li>
             </>
           )}
+
+          <li>
+            <NavLink
+              to="/dashboard/Message-center"
+              className={merNavchClass}>
+              <div className="flex items-center gap-2">
+                <FaMessage /> Messages
+              </div>
+              {messageUnread && (
+                <span class="relative flex size-3">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
+                  <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
+                </span>
+
+              )}
+            </NavLink>
+          </li>
 
           {/* SIgn Out */}
           <li>
