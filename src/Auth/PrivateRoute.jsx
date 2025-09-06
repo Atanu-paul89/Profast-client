@@ -1,76 +1,28 @@
-// import React, { useEffect, useState } from 'react';
-// import useAuth from '../hooks/useAuth';
-// import { Navigate, useNavigate } from 'react-router';
-// import Swal from 'sweetalert2';
-
-// const PrivateRoute = ({ children }) => {
-//   const { user, loading } = useAuth();
-//   const navigate = useNavigate();
-//   const [showPrompt, setShowPrompt] = useState(false);
-
-//   useEffect(() => {
-//     if (!loading && !user) {
-//       setShowPrompt(true);
-//     }
-//   }, [loading, user]);
-
-//   useEffect(() => {
-//     if (showPrompt) {
-//       Swal.fire({
-//         title: 'Restricted Access',
-//         text: 'You need to sign in to view this page.',
-//         icon: 'info',
-//         showCancelButton: true,
-//         confirmButtonText: 'Sign In',
-//         cancelButtonText: 'Skip Now',
-//         confirmButtonColor: '#CAEB66', // your light green
-//         cancelButtonColor: '#03373D', // your deep green
-//         background: '#ffffff', // light theme
-//         color: '#03373D', // text color
-//         width: 360, // smaller modal
-//         padding: '1.2em',
-//         customClass: {
-//           popup: 'rounded-lg shadow-md',
-//           title: 'text-lg font-semibold',
-//           confirmButton: 'px-4 py-2',
-//           cancelButton: 'px-4 py-2',
-//         },
-//       }).then((result) => {
-//         if (result.isConfirmed) {
-//           navigate('/auth/signin');
-//         } else {
-//           navigate('/');
-//         }
-//       });
-//     }
-//   }, [showPrompt, navigate]);
-
-//   if (loading) {
-//     return <span className="text-green-200 loading loading-dots loading-lg"></span>;
-//   }
-
-//   if (!user) {
-//     return null;
-//   }
-
-//   return children;
-// };
-
-// export default PrivateRoute;
-
-
 import React, { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
 import lockerAnimation from "../../src/assets/json/Locker.json"
+import { useLocation } from 'react-router';
 
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [showPrompt, setShowPrompt] = useState(false);
+  const [minLoadingTimePassed, setMinLoadingTimePassed] = useState(false);
 
+  const location = useLocation();
+  const path = location.pathname;
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMinLoadingTimePassed(true);
+    }, 300); 
+
+    return () => clearTimeout(timer); 
+  }, []);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -116,7 +68,7 @@ const PrivateRoute = ({ children }) => {
                 renderer: 'svg',
                 loop: true,
                 autoplay: true,
-                path: '../../src/assets/json/Locker.json', 
+                path: '../../src/assets/json/Locker.json',
               });
             });
           }
@@ -131,8 +83,21 @@ const PrivateRoute = ({ children }) => {
     }
   }, [showPrompt, navigate]);
 
-  if (loading) {
-    return <span className="text-green-200 loading loading-dots loading-lg"></span>;
+  if (loading && !path.startsWith('/dashboard')) {
+    return (
+      <div className="flex  justify-center items-center min-h-screen">
+        <span className="loading loading-spinner  text-[#CAEB66] loading-xl"></span>
+      </div>
+    );
+  }
+
+
+  if ((loading || !minLoadingTimePassed) && path.startsWith('/dashboard')) {
+    return (
+      <div className="flex  justify-center bg-[#03373D] items-center min-h-screen">
+        <p className=" flex items-center gap-2"><span className="text-[#CAEB66] text-xl lg:text-2xl"> Loading Dashboard </span><span className="loading loading-dots mt-3  text-[#CAEB66] loading-sm"></span></p>
+      </div>
+    );
   }
 
   if (!user) {

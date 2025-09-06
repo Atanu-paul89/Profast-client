@@ -33,6 +33,8 @@ import ActivityLog from "../dashboard/admin/ActivityLog";
 import RiderNotifications from "../dashboard/rider/RiderNotifications";
 // import AdminMessageInbox from "../dashboard/admin/AdminMessageInbox";
 import MessageCenter from "../dashboard/MessageCenter";
+import ManageRiders from "../dashboard/admin/ManageRiders";
+import ManageParcels from "../dashboard/admin/ManageParcels";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -172,6 +174,14 @@ export const router = createBrowserRouter([
       {
         path: 'admn-notifications',
         Component: AdminNotifications,
+      },
+      {
+        path: 'manage-riders',
+        Component: ManageRiders,
+      },
+      {
+        path: 'all-parcels',
+        Component: ManageParcels,
       },
       // {
       //   path: 'admn-messages',

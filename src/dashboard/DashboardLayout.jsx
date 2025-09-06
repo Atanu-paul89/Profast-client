@@ -10,7 +10,7 @@ import { FaMessage } from "react-icons/fa6";
 
 
 const DashboardLayout = () => {
-  const { user, logOut } = useAuth();
+  const { user, logOut} = useAuth();
   const axiosSecure = useAxiosSecure();
   const [userRole, setUserRole] = useState(null);
   const [hasUnseenLogs, setHasUnseenLogs] = useState(false);
@@ -64,7 +64,7 @@ const DashboardLayout = () => {
     };
 
     checkUnreadMessages();
-    const interval = setInterval(checkUnreadMessages, 200); 
+    const interval = setInterval(checkUnreadMessages, 200);
     return () => clearInterval(interval);
   }, [axiosSecure]);
 
@@ -79,7 +79,7 @@ const DashboardLayout = () => {
       draggable: true,
       progress: undefined,
       theme: "light",
-      transition: Slide,
+      // transition: Slide,
     });
 
   const handleLogout = () => {
@@ -281,8 +281,8 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/active-riders" className={navClass}>
-                  🚴 Active Riders
+                <NavLink to="/dashboard/manage-riders" className={navClass}>
+                  🚴 Manage Riders
                 </NavLink>
               </li>
               <li>
@@ -309,20 +309,7 @@ const DashboardLayout = () => {
                   </div>
                 </NavLink>
               </li>
-              {/* <li>
-                <NavLink to="/dashboard/admn-messages" className={navClass}>
-                  <div className="flex gap-27  ">
-                    <p>📩 Messages</p>
-                    {messageUnread && (
-                      <span class="relative flex size-3">
-                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
-                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
-                      </span>
 
-                    )}
-                  </div>
-                </NavLink>
-              </li> */}
               <li>
                 <NavLink to="/dashboard/activity-log" className={navClass}>
                   <div className="flex gap-29  ">
@@ -373,20 +360,7 @@ const DashboardLayout = () => {
                   📊 Performance Stats
                 </NavLink>
               </li>
-              {/* <li>
-                <NavLink to="/dashboard/rider-messages" className={navClass}>
-                  <div className="flex gap-27  ">
-                    <p>📩 Messages</p>
-                    {messageUnread && (
-                      <span class="relative flex size-3">
-                        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75"></span>
-                        <span class="relative inline-flex size-3 rounded-full bg-red-500"></span>
-                      </span>
 
-                    )}
-                  </div>
-                </NavLink>
-              </li> */}
               <li>
                 <NavLink to="/dashboard/rider-notifications" className={navClass}>
                   <div className="flex gap-27  ">

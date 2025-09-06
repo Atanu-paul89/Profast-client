@@ -131,37 +131,6 @@ const Register = () => {
         }
     }
 
-    // const handleGoogleRegister = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const result = await signinGoogle();
-    //         const googleUser = result.user;
-
-    //         // Save Google user to DB
-    //         const userData = {
-    //             name: googleUser.displayName,
-    //             email: googleUser.email,
-    //             contactNo: "", // Google doesn’t provide
-    //             photoURL: googleUser.photoURL,
-    //             role: "merchant",
-    //             createdAt: new Date()
-    //         };
-    //         await saveUserToDB(userData);
-
-    //         //  Request JWT token after saving user
-    //         const jwtRes = await axiosSecure.post("/jwt", { email: googleUser.email });
-    //         localStorage.setItem("access-token", jwtRes.data.token); //Store token 
-    //         // jwt ended // 
-
-    //         setTimeout(() => {
-    //             navigate("/");
-    //         }, 1000);
-
-    //     } catch (error) {
-    //         setLoading(false);
-    //         toast.error(getAuthErrorMessage(error), { autoClose: 2000 });
-    //     }
-    // };
 
     const handleGoogleRegister = async () => {
         try {

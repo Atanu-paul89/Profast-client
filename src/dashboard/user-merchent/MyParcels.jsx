@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { FaTrashAlt, FaBan } from "react-icons/fa";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 const MyParcels = () => {
   const axiosSecure = useAxiosSecure();
