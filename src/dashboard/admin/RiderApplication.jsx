@@ -385,7 +385,10 @@ const RiderApplication = () => {
                     </thead>
                     <tbody>
                         {applications.map((app) => (
-                            <tr key={app._id} className="border-b border-gray-300 hover:bg-[#CAEB6620]">
+                            <tr key={app._id}
+                                className={`border-b border-gray-300 hover:bg-[#CAEB6620]
+                            ${app.status === "Approved" ? ' text-green-500' : ''}
+                            ${app.status === "Rejected" ? ' text-red-500' : ''}`}>
                                 <td className="px-4 py-2"><img src={getUserPhoto(app.email)} alt="Rider" className="w-10 h-10 rounded-full" /></td>
                                 <td className="px-2 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{app.name ?? "N/A"}</td>
                                 <td className="px-4 py-2">{app.email ?? "N/A"}</td>
@@ -411,12 +414,16 @@ const RiderApplication = () => {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleStatusChange(app.email, "Approved")}
-                                            className="p-2 cursor-pointer rounded-full border border-green-500 text-green-500 hover:bg-[#CAEB6620]">
+                                            disabled={app.status === "Approved"}
+                                            className={`p-2  rounded-full border border-green-500 text-green-500 hover:bg-[#CAEB6620]
+                                            ${app.status === "Approved" ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                                             <RxCheck size={18} />
                                         </button>
                                         <button
                                             onClick={() => handleStatusChange(app.email, "Rejected")}
-                                            className="p-2 cursor-pointer rounded-full border border-red-500 text-red-600 hover:bg-red-100">
+                                            disabled={app.status === "Rejected"}
+                                            className={`p-2  rounded-full border border-red-500 text-red-600 hover:bg-red-100
+                                            ${app.status === "Rejected" ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
                                             <RxCross2 />
                                         </button>
                                         <button

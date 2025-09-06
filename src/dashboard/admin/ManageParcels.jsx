@@ -103,6 +103,22 @@ const ManageParcels = () => {
             setUserOverview(res.data);
         } catch (err) {
             console.error("Error fetching user overview:", err);
+            if (err.response && err.response.status === 404) {
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: '#CAEB66',
+                    title: 'Email Not Found',
+                    text: `${selectedEmail} is not registered. Please insert a valid email.`,
+                });
+            } else {
+                // Handle other types of errors
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: '#CAEB66',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again later.',
+                });
+            }
         }
     };
 
@@ -167,17 +183,17 @@ const ManageParcels = () => {
                         {status}
                     </button>
                 ))}
- 
-                    <button
-                        onClick={() => {
-                            const section = document.getElementById("overview");
-                            if (section) {
-                                section.scrollIntoView({ behavior: "smooth" });
-                            }
-                        }}
-                        className='px-4 cursor-pointer hover:bg-[#1C4B50] py-2 rounded-lg font-semibold bg-[#03373D] text-[#BAEC66]'>
-                        OverView
-                    </button>
+
+                <button
+                    onClick={() => {
+                        const section = document.getElementById("overview");
+                        if (section) {
+                            section.scrollIntoView({ behavior: "smooth" });
+                        }
+                    }}
+                    className='px-4 cursor-pointer hover:bg-[#1C4B50] py-2 rounded-lg font-semibold bg-[#03373D] text-[#BAEC66]'>
+                    OverView
+                </button>
 
             </div>
 
@@ -361,7 +377,7 @@ const ManageParcels = () => {
             <section className="mt-10 space-y-6">
                 {/* Parcel Status Overview */}
                 <div id='overview' className='py-7'>
-                    <h3  className="text-xl font-bold text-[#03373D] mb-4">📦 Parcel Status Overview</h3>
+                    <h3 className="text-xl lg:text-2xl  font-bold text-[#03373D] mb-4">📦 Parcel Status Overview</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                         {["Pending", "PickedUp", "InTransit", "OutForDelivery", "Delivered"].map((status) => (
                             <div key={status} className="bg-[#CAEB66] text-[#03373D] p-4 rounded-lg shadow-sm text-center">
@@ -398,6 +414,7 @@ const ManageParcels = () => {
 
                         <button
                             onClick={fetchUserOverview}
+
                             className="px-4 py-2 bg-[#03373D] cursor-pointer text-white font-semibold rounded-md hover:bg-[#1C4B50]"
                         >
                             Show Overview

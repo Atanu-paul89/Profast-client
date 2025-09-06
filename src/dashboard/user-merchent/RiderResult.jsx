@@ -90,19 +90,27 @@ const RiderResult = () => {
             <p className="mt-2 font-semibold text-sm lg:text-lg">
               Status: <span className="font-bold text-red-400">Canceled</span>
             </p>
-
             <p className="mt-1 text-sm font-semibold text-[#03373D]">
               Last Applied on:{" "}
               <span className="font-normal">
-                {formatDate(riderForm?.firstSubmittedAt || riderForm?.submittedAt)}
+                {formatDate(riderForm?.firstSubmittedAt || riderForm?.submittedAt || userData?.LastRiderApplicationSubmittedAt)}
               </span>
             </p>
-            <p className="mt-1 text-sm font-semibold text-[#03373D]">
+            {
+              riderForm?.firstSubmittedAt || riderForm?.canceledAt ?
+                (<p className="mt-1 text-sm font-semibold text-[#03373D]">
+                  Last Canceled on:{" "}
+                  <span className="font-normal">
+                    {formatDate(riderForm?.firstSubmittedAt || riderForm?.canceledAt || 'no date')}
+                  </span>
+                </p>) : ``
+            }
+            {/* <p className="mt-1 text-sm font-semibold text-[#03373D]">
               Last Canceled on:{" "}
               <span className="font-normal">
-                {formatDate(riderForm?.firstSubmittedAt || riderForm?.canceledAt)}
+                {formatDate(riderForm?.firstSubmittedAt || riderForm?.canceledAt || 'no date')}
               </span>
-            </p>
+            </p> */}
 
             <p className="mt-1 font-semibold text-sm text-[#03373D]">
               Total Applied: <span className="font-normal">{userData.AppliedToBeRider} {userData.AppliedToBeRider === 1 ? "time" : "times"}</span>
