@@ -356,7 +356,35 @@ const ManageParcels = () => {
                             </p>
                         </div>
                         <div className="flex justify-end gap-3 mt-2">
-                            <button className="px-3 py-1 text-sm font-semibold border border-blue-500 text-blue-500 rounded-md hover:bg-blue-100">
+                            <button
+                                onClick={() => {
+                                    setEditingParcel(parcel);
+                                    setEditForm({
+                                        parcelType: parcel.parcelType,
+                                        parcelName: parcel.parcelName,
+                                        weight: parcel.weight,
+                                        senderName: parcel.senderName,
+                                        senderPhone: parcel.senderPhone,
+                                        senderAddress: parcel.senderAddress,
+                                        senderRegion: parcel.senderRegion,
+                                        senderWarehouse: parcel.senderWarehouse,
+                                        receiverName: parcel.receiverName,
+                                        receiverPhone: parcel.receiverPhone,
+                                        receiverAddress: parcel.receiverAddress,
+                                        receiverRegion: parcel.receiverRegion,
+                                        receiverWarehouse: parcel.receiverWarehouse,
+                                        pickupInstructions: parcel.pickupInstructions,
+                                        deliveryInstructions: parcel.deliveryInstructions,
+                                        isDocument: parcel.isDocument,
+                                        parcelCategory: parcel.parcelCategory,
+                                        fare: parcel.fare,
+                                        paymentStatus: parcel.paymentStatus,
+                                        trackingId: parcel.trackingId,
+                                        createdBy: parcel.createdBy ?? { email: '', name: '' },
+                                        paymentInfo: parcel.paymentInfo ?? { paymentIntentId: '', amount: '', payerEmail: '' }
+                                    });
+                                }}
+                                className="px-3 py-1 text-sm font-semibold border border-blue-500 text-blue-500 rounded-md hover:bg-blue-100">
                                 Edit
                             </button>
                             <button

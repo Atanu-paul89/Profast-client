@@ -1,32 +1,431 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import RiderAnimation from "../../assets/json/rider.json"
+import RiderLotieAnimation from "../../assets/json/rider.json";
+import Lottie from "lottie-react";
+import { LuRefreshCw } from 'react-icons/lu';
+import { FaBan, FaTrashAlt } from 'react-icons/fa';
+import { MdModeEdit } from 'react-icons/md';
+import Swal from 'sweetalert2';
+import { BsFillUnlockFill } from "react-icons/bs";
+import withReactContent from "sweetalert2-react-content";
+import { MdEdit } from "react-icons/md";
+import { FaIdCard, FaBirthdayCake, FaPhone, FaMapMarkerAlt, FaCar } from "react-icons/fa";
 
 const ManageRiders = () => {
-    const { user } = useAuth();
+    // const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
+    const [riders, setRiders] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+
+    const fetchRiders = async () => {
+        setLoading(true);
+        try {
+            const res = await axiosSecure.get("/admin/active-riders");
+            setRiders(res.data);
+        } catch (err) {
+            console.error("Error fetching riders:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchRiders();
+    }, []);
+
+    const handleRefresh = () => {
+        fetchRiders();
+        window.location.reload();
+    };
+
+    const MySwal = withReactContent(Swal);
+
+    const handleEditRider = (rider) => {
+        // Create a copy of rider data for editing
+        const tempData = { ...rider };
+
+        MySwal.fire({
+            title: <span>Edit Rider Details</span>,
+            html: (
+                <div className="grid gap-3 text-left">
+                    {[
+                        { label: 'Name', value: 'name' },
+                        { label: 'Email', value: 'email', type: 'email' },
+                        { label: 'Age', value: 'age', type: 'number' },
+                        { label: 'Gender', value: 'gender' },
+                        { label: 'DOB', value: 'dob', type: 'date' },
+                        { label: 'NID', value: 'nid' },
+                        { label: 'NID Link', value: 'nidLink' },
+                        { label: 'Contact', value: 'contact' },
+                        { label: 'Region', value: 'region' },
+                        { label: 'District', value: 'district' },
+                        { label: 'Has License', value: 'hasLicense' },
+                        { label: 'License Type', value: 'licenseType' },
+                        { label: 'License Expiry', value: 'licenseExpiry', type: 'date' },
+                        { label: 'Vehicle Type', value: 'vehicleType' },
+                        { label: 'Photo URL', value: 'photoURL' },
+                        { label: 'Rider Status', value: 'riderStatus', type: 'select', options: ['Active', 'Restricted', 'Inactive', 'Resigned'] },
+                        { label: 'Role', value: 'role', type: 'select', options: ['rider', 'merchant', 'admin'] },
+                        { label: 'Rider Email', value: 'RiderEmail' },
+                        { label: 'Submitted At', value: 'submittedAt', type: 'datetime-local' },
+                        { label: 'First Submitted At', value: 'firstSubmittedAt', type: 'datetime-local' },
+                        { label: 'Rider Application Approved At', value: 'RiderApplicationApproveAt', type: 'datetime-local' },
+                        { label: 'Feedback', value: 'feedback' },
+                        { label: 'Is Rider Restricted', value: 'isRiderRestricted', type: 'checkbox' },
+                        { label: 'Assigned Parcels', value: 'assignedParcelsForDelivery', type: 'number' },
+                        { label: 'Pending Parcels', value: 'pendingParcelsToDelivery', type: 'number' },
+                        { label: 'Completed Parcels', value: 'completedParcelDelivery', type: 'number' },
+                    ].map(field => (
+                        <div key={field.value} className="flex flex-col">
+                            <label className="text-[#03373D] font-semibold">{field.label}</label>
+                            {field.type === 'select' ? (
+                                <select
+                                    className="border rounded p-1 w-full text-[#03373D]"
+                                    defaultValue={tempData[field.value]}
+                                    onChange={(e) => tempData[field.value] = e.target.value}
+                                >
+                                    {field.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                </select>
+                            ) : field.type === 'checkbox' ? (
+                                <input
+                                    type="checkbox"
+                                    checked={tempData[field.value]}
+                                    onChange={(e) => tempData[field.value] = e.target.checked}
+                                    className="w-5 h-5 accent-[#BAEC66]"
+                                />
+                            ) : (
+                                <input
+                                    type={field.type || 'text'}
+                                    defaultValue={tempData[field.value]}
+                                    onChange={(e) => tempData[field.value] = e.target.value}
+                                    className="border rounded p-1 w-full text-[#03373D]"
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
+            ),
+            showCancelButton: true,
+            confirmButtonText: 'Save Changes',
+            confirmButtonColor: '#03373D',
+            cancelButtonText: 'Cancel',
+            cancelButtonColor: '#BAEC66',
+            textColor: '#03373D',
+            width: '600px',
+            didOpen: () => {
+                // Optional: focus on first input
+            },
+            preConfirm: async () => {
+                try {
+
+                    const res = await axiosSecure.patch(`/admin/active-riders/${rider.email}`, tempData);
+                    return res.data;
+                } catch (err) {
+                    Swal.showValidationMessage(`Request failed: ${err}`);
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Rider details updated successfully!',
+                    icon: 'success',
+                    iconColor: '#CAEB66'
+                });
+                // Optional: refresh the list
+                fetchRiders(); // assuming you have this function in your component
+            }
+        });
+    };
+
+    // fuunction for changing roles
+    const handleRiderRoleChange = async (email, newRole) => {
+        Swal.fire({
+            title: "Change Rider Role?",
+            text: `Do you want to change this rider's role to "${newRole}"?`,
+            icon: "question",
+            iconColor: "#CAEB66",
+            showCancelButton: true,
+            confirmButtonColor: "#03373D",
+            cancelButtonColor: "#CAEB66",
+            confirmButtonText: "Yes, change it",
+            cancelButtonText: "Cancel"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await axiosSecure.patch(`/active-riders/${email}/role`, { role: newRole });
+                    setRiders(riders.map(r => r.email === email ? { ...r, role: newRole } : r));
+                    Swal.fire("Updated!", res.data.message, "success");
+                } catch (err) {
+                    console.error("Error updating rider role:", err);
+                    Swal.fire("Error", "Failed to update rider role.", "error");
+                }
+            }
+        });
+    };
+
+    //function for restricting rider 
+    const handleRiderRestriction = async (email, isRiderRestricted, role) => {
+        if (role === "admin") {
+            return Swal.fire("Blocked", "Admin users cannot be restricted.", "info");
+        }
+
+        const action = isRiderRestricted ? "unrestrict" : "restrict";
+        const actionText = isRiderRestricted ? "Unrestrict" : "Restrict";
+
+        Swal.fire({
+            title: `${actionText} Rider?`,
+            text: `Do you want to ${action} this rider?`,
+            icon: "warning",
+            iconColor: "#CAEB66",
+            showCancelButton: true,
+            confirmButtonColor: "#03373D",
+            cancelButtonColor: "#CAEB66",
+            confirmButtonText: `Yes, ${actionText}`,
+            cancelButtonText: "Cancel"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await axiosSecure.patch(`/admin/restrict-rider/${email}`, { action });
+
+                    // ✅ Update local state
+                    setRiders(riders.map(r =>
+                        r.email === email
+                            ? { ...r, isRiderRestricted: action === "restrict", riderStatus: action === "restrict" ? "Restricted" : "Active" }
+                            : r
+                    ));
+
+                    Swal.fire("Updated!", res.data.message, "success");
+                } catch (err) {
+                    console.error("Restriction update error:", err);
+                    Swal.fire("Error", "Failed to update rider restriction.", "error");
+                }
+            }
+        });
+    };
+
+    //function for deleting the active_riders collection data (user wise)
+    const handleRiderDelete = async (email, role) => {
+        if (role === "admin") {
+            return Swal.fire("Blocked", "Admin users cannot be deleted.", "info");
+        }
+
+        Swal.fire({
+            title: "Delete Rider?",
+            text: "This action will permanently remove the rider from active_riders. It cannot be undone.",
+            icon: "warning",
+            iconColor: "#CAEB66",
+            showCancelButton: true,
+            confirmButtonColor: "#03373D",
+            cancelButtonColor: "#CAEB66",
+            confirmButtonText: "Yes, delete!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await axiosSecure.delete(`/admin/active-riders/${email}`);
+
+                    // ✅ Update local state (remove from riders list)
+                    setRiders(riders.filter((r) => r.email !== email));
+
+                    Swal.fire("Deleted!", res.data.message, "success");
+                } catch (err) {
+                    console.error("Error deleting rider:", err);
+                    Swal.fire("Error", "Failed to delete rider.", "error");
+                }
+            }
+        });
+    };
+
+
+
+
 
     return (
         <>
-            {/* Page Heading section: Rider Managemnet alongwith refresh button and lottie animation (will be showed just beside the heading typo)   */}
-            <div>
+            {/* Part 1: Page Heading Section */}
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-0">
+                    <h2 className="text-xl md:text-3xl font-bold text-[#03373D]">
+                        Rider Management
+                    </h2>
+                    <div className="w-20 h-20 ">
+                        <Lottie animationData={RiderLotieAnimation} loop={true} />
+                    </div>
+                </div>
 
+                <button onClick={handleRefresh} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                    <LuRefreshCw className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                </button>
             </div>
 
-            {/* Content Section 1: Activer RIder List showed  */}
+
+            {/* part 2:  Activer RIder List showed with all theree actions buttons  */}
             <section>
+                {/* use proper heading for this section */}
+                <h3 className="text-xl font-bold text-[#03373D] mb-4">👥 Active Riders <span className="text-sm font-medium">({riders.length})</span></h3>
+
+
                 {/* for larger screen table deisgn  */}
+                <div className="hidden lg:block border border-gray-300 rounded-lg overflow-x-auto">
+                    <table className="min-w-[1200px] w-full border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                        <thead className="bg-[#03373D] text-white">
+                            <tr>
+                                <th className="px-4 py-2 text-center">Photo</th>
+                                <th className="px-4 py-2 text-center">Name</th>
+                                <th className="px-4 py-2 text-center">Email</th>
+                                <th className="px-4 py-2 text-center">Age</th>
+                                <th className="px-4 py-2 text-center">Gender</th>
+                                <th className="px-4 py-2 text-center">Region</th>
+                                <th className="px-4 py-2 text-center">District</th>
+                                <th className="px-4 py-2 text-center">License</th>
+                                <th className="px-4 py-2 text-center">Vehicle</th>
+                                <th className="px-4 py-2 text-center">Status</th>
+                                <th className="px-4 py-2 text-center">Rider Email</th>
+                                <th className="px-4 py-2 text-center">Assigned</th>
+                                <th className="px-4 py-2 text-center">Pending</th>
+                                <th className="px-4 py-2 text-center">Completed</th>
+                                <th className="px-4 py-2 text-center">Role</th>
+                                <th className="px-4 py-2 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {riders.map((rider) => (
+                                <tr key={rider._id}
+                                    className={`border-b border-gray-300 hover:bg-[#CAEB6620]
+                                ${rider.isRiderRestricted ? 'text-red-500' : ''}
+                                `}>
+                                    <td className="px-4 py-2">
+                                        <img src={rider.photoURL} alt="User" className="w-13 h-13 rounded-full" />
+                                    </td>
+                                    <td className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">{rider.name}</td>
+                                    <td className="px-4 py-2 text-center">{rider.email}</td>
+                                    <td className="px-4 py-2 text-center">{rider.age}</td>
+                                    <td className="px-4 py-2 text-center">{rider.gender}</td>
+                                    <td className="px-4 py-2 text-center">{rider.region}</td>
+                                    <td className="px-4 py-2 text-center">{rider.district}</td>
+                                    <td className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">{rider.licenseType}</td>
+                                    <td className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">{rider.vehicleType}</td>
+                                    <td className="px-4 py-2 text-center">{rider.riderStatus}</td>
+                                    <td className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">{rider.RiderEmail}</td>
+                                    <td className="px-4 py-2 text-center">{rider.assignedParcelsForDelivery ?? 0}</td>
+                                    <td className="px-4 py-2 text-center">{rider.pendingParcelsToDelivery ?? 0}</td>
+                                    <td className="px-4 py-2 text-center">{rider.completedParcelDelivery ?? 0}</td>
+                                    <td className="px-4 py-2 text-center">
+                                        <select
+                                            value={rider.role}
+                                            onChange={(e) => handleRiderRoleChange(rider.email, e.target.value)}
+                                            className="bg-transparent font-bold cursor-pointer rounded px-2 py-1"
+                                        >
+                                            <option value="merchant">Merchant</option>
+                                            <option value="rider">Rider</option>
+                                        </select>
+                                    </td>
+                                    <td className="px-4 py-2 text-center">
+                                        <div className="flex gap-2 justify-center">
+                                            <button
+                                                onClick={() => handleEditRider(rider)}
+                                                className="px-2 cursor-pointer py-2 border-1 border-[#03373D] text-[#03373D] rounded-full hover:bg-blue-100">
+                                                <MdModeEdit />
+                                            </button>
+                                            <button
+                                                onClick={() => handleRiderRestriction(rider.email, rider.isRiderRestricted, rider.role)}
+                                                className="p-2 cursor-pointer rounded-full border text-[#03373D] hover:bg-[#CAEB6650]"
+                                            >
+                                                {rider.isRiderRestricted ? <BsFillUnlockFill /> : <FaBan />}
+                                            </button>
+                                            <button
+                                                onClick={() => handleRiderDelete(rider.email, rider.role)}
+                                                className="p-2 cursor-pointer rounded-full border border-red-500 text-red-600 hover:bg-red-100"
+                                            >
+                                                <FaTrashAlt />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+
+                {/* For smnaller screen card design */}
+                <div className="lg:hidden flex flex-col gap-4">
+                    {riders.map((rider) => (
+                        <div key={rider._id}
+                            className={`p-4 border-l-8 rounded-xl border-[#CAEB66] shadow-sm bg-white space-y-2
+                        ${rider.isRiderRestricted ? "text-red-500 border-red-500" : ""}
+                        `}>
+                            <div className="flex justify-center mb-4">
+                                <img
+                                    src={rider.photoURL}
+                                    alt="User"
+                                    className="w-18 h-18 rounded-full border-2 border-[#CAEB66] object-cover"
+                                />
+                            </div>
+                            <p className="font-bold text-[#03373D] mb-1">{rider.name} ({rider.email})</p>
+                            <p><span className="font-semibold">Age:</span> {rider.age}</p>
+                            <p><span className="font-semibold">Gender:</span> {rider.gender}</p>
+                            <p><span className="font-semibold">Region:</span> {rider.region}</p>
+                            <p><span className="font-semibold">District:</span> {rider.district}</p>
+                            <p><span className="font-semibold">License:</span> {rider.licenseType}</p>
+                            <p><span className="font-semibold">Vehicle:</span> {rider.vehicleType}</p>
+                            <p><span className="font-semibold">Status:</span> {rider.riderStatus}</p>
+                            <p><span className="font-semibold">Rider Email:</span> {rider.RiderEmail}</p>
+                            <p><span className="font-semibold">Assigned:</span> {rider.assignedParcelsForDelivery ?? 0}</p>
+                            <p><span className="font-semibold">Pending:</span> {rider.pendingParcelsToDelivery ?? 0}</p>
+                            <p><span className="font-semibold">Completed:</span> {rider.completedParcelDelivery ?? 0}</p>
+
+                            <div className="mb-2 flex justify-between items-center">
+                                <p className="font-semibold text-[#03373D]">Role:</p>
+                                <select
+                                    value={rider.role}
+                                    onChange={(e) => handleRiderRoleChange(rider.email, e.target.value)}
+                                    className="bg-transparent font-bold rounded px-2 py-1"
+                                >
+                                    <option value="merchant">Merchant</option>
+                                    <option value="rider">Rider</option>
+                                </select>
+                            </div>
+                            <div className="flex justify-start gap-3 mt-7">
+                                <button
+                                    onClick={() => handleEditRider(rider)}
+                                    className="px-2 cursor-pointer py-2 border-1 border-[#03373D] text-[#03373D] rounded-full hover:bg-blue-100">
+                                    <MdModeEdit />
+                                </button>
+                                <button
+                                    onClick={() => handleRiderRestriction(rider.email, rider.isRiderRestricted, rider.role)}
+                                    className="p-2 cursor-pointer rounded-full border text-[#03373D] hover:bg-[#CAEB6650]"
+                                >
+                                    {rider.isRiderRestricted ? <BsFillUnlockFill /> : <FaBan />}
+                                </button>
+                                <button
+                                    onClick={() => handleRiderDelete(rider.email, rider.role)}
+                                    className="p-2 cursor-pointer rounded-full border border-red-500 text-red-600 hover:bg-red-100"
+                                >
+                                    <FaTrashAlt />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+            </section>
+
+            {/* part 3:  assigning parcels to Activer RIders  */}
+            <section>
+                {/* use proper heading for this section */}
+                {/* larger screen table deisgn: showed all parcel with statys   */}
                 <div></div>
 
                 {/* For smnaller screen card design */}
                 <div></div>
             </section>
 
-            {/* Content Section 2: assigning parcels to Activer RIders  */}
+            {/* part 4:  tracking parcels section with actions buttons */}
             <section>
-                {/* drop down of merchant's email and beside show button   */}
-                <div></div>
+                {/* use proper heading for this section */}
 
                 {/* larger screen table deisgn: showed all parcel with statys   */}
                 <div></div>
@@ -34,6 +433,14 @@ const ManageRiders = () => {
                 {/* For smnaller screen card design */}
                 <div></div>
             </section>
+
+            {/* part 5: rider overview section    */}
+            <section>
+                {/* follow instruction pdf for this design  */}
+                <div></div>
+            </section>
+
+            {/* all be necessary modal can be done here bellow if needed  */}
 
         </>
     );
