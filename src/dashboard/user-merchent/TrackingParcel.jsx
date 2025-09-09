@@ -151,6 +151,7 @@ const TrackingParcel = () => {
     setLogs([]);
     setTrackingId('');
   };
+  
   const currentStatus = logs[logs.length - 1]?.status || "Pending";
   const currentMessage = logs[logs.length - 1]?.message || "No updates yet";
 

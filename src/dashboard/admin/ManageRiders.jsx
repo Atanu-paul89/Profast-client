@@ -11,12 +11,17 @@ import { BsFillUnlockFill } from "react-icons/bs";
 import withReactContent from "sweetalert2-react-content";
 import { MdEdit } from "react-icons/md";
 import { FaIdCard, FaBirthdayCake, FaPhone, FaMapMarkerAlt, FaCar } from "react-icons/fa";
+import dayjs from 'dayjs';
+import '../../index.css'
 
 const ManageRiders = () => {
     // const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [riders, setRiders] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [parcels, setParcels] = useState([]);
+    const [selectedParcel, setSelectedParcel] = useState(null);
+    const [assignToEmail, setAssignToEmail] = useState("");
 
 
     const fetchRiders = async () => {
@@ -238,7 +243,92 @@ const ManageRiders = () => {
         });
     };
 
+    // ***** functions of assigned parcels section ***** // 
+    const fetchAssignableParcels = async () => {
+        try {
+            const res = await axiosSecure.get("/admin/parcels-to-assign");
+            setParcels(res.data);
+        } catch (err) {
+            console.error("Error fetching parcels:", err);
+        }
+    };
 
+    useEffect(() => {
+        fetchAssignableParcels();
+    }, []);
+
+    const openAssignModal = (parcel) => {
+        const matchedRiders = riders.filter(r =>
+            r.region?.toLowerCase() === parcel.receiverRegion?.toLowerCase()
+        );
+
+        if (matchedRiders.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                iconColor: '#CAEB66',
+                title: "No Riders Available",
+                text: `No riders found for region "${parcel.receiverRegion}". Please onboard riders in this region first.`,
+                confirmButtonColor: '#03373D'
+            });
+            return;
+        }
+        setSelectedParcel(parcel);
+        setAssignToEmail("");
+    };
+
+    const handleAssign = async () => {
+
+        if (selectedParcel.status !== "In Transit") {
+            Swal.fire({
+                icon: "info",
+                iconColor: '#CAEB66',
+                title: "Parcel Not Ready",
+                text: "This parcel has not arrived at the local hub yet. Please wait until its status is 'In Transit' before assigning a rider.",
+                confirmButtonColor: '#03373D'
+            });
+            return;
+        }
+
+        try {
+            await axiosSecure.patch(`/admin/assign-parcel/${selectedParcel._id}`, {
+                riderEmail: assignToEmail,
+                riderName: riders.find(r => r.email === assignToEmail)?.name || ""
+            });
+            Swal.fire("Assigned!", "Parcel successfully assigned to rider.", "success");
+            setSelectedParcel(null);
+            fetchAssignableParcels();
+            fetchRiders(); // update rider stats
+        } catch (err) {
+            console.error("Error assigning parcel:", err);
+            Swal.fire("Error", "Failed to assign parcel.", "error");
+        }
+    };
+
+    const handleStatusChange = async (parcelId, newStatus) => {
+        const confirm = await Swal.fire({
+            title: "Change Status?",
+            text: `Are you sure you want to mark this parcel as "${newStatus}"?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#03373D",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, change it"
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                await axiosSecure.patch(`/admin/parcels/${parcelId}/status`, {
+                    newStatus,
+                    updatedBy: "Admin Panel"
+                });
+                fetchAssignableParcels();
+                Swal.fire("Updated!", "Parcel status has been changed.", "success");
+            } catch (err) {
+                console.error("Error updating status:", err);
+                Swal.fire("Error", "Failed to update status.", "error");
+            }
+        }
+    };
 
 
 
@@ -414,12 +504,101 @@ const ManageRiders = () => {
             </section>
 
             {/* part 3:  assigning parcels to Activer RIders  */}
-            <section>
+            <section className='mt-10 border-t-1 border-gray-400 border-dashed pt-10'>
                 {/* use proper heading for this section */}
+                <h3 className="text-xl font-bold text-[#03373D] mb-4">📦 Assign Parcels to Riders</h3>
+
                 {/* larger screen table deisgn: showed all parcel with statys   */}
-                <div></div>
+                <div className="hidden lg:block border border-gray-300 rounded-lg overflow-x-auto">
+                    <table className="min-w-[1200px] w-full">
+                        <thead className="bg-[#03373D] text-white ">
+                            <tr>
+                                <th className="px-4 py-2 text-center">Tracking ID</th>
+                                <th className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">Created Date</th>
+                                <th className="px-4 py-2 text-center ">Created By</th>
+                                <th className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">Receiver Region</th>
+                                <th className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">Receiver Address</th>
+                                <th className="px-4 py-2 text-center">Status</th>
+                                <th className="px-4 py-2 text-center">Fare</th>
+                                <th className="px-4 py-2 text-center">Assign</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {parcels.map((parcel) => (
+                                <tr key={parcel._id} className="border-b border-gray-300 hover:bg-[#CAEB6620]">
+                                    <td className="text-center px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.trackingId}</td>
+                                    <td className="text-center px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{dayjs(parcel.createdAt).format("DD MMM YYYY")}</td>
+                                    <td className="text-center px-4 py-2">{parcel.createdBy.name} <br /> {parcel.createdBy.email}</td>
+                                    <td className="text-center px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.receiverRegion}</td>
+                                    <td className=" px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.receiverAddress}. {parcel.receiverWarehouse}</td>
+                                    <td className="text-center px-4 py-2  whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <select
+                                            value={parcel.status}
+                                            onChange={(e) => handleStatusChange(parcel._id, e.target.value)}
+                                            className="px-2 py-1 cursor-pointer border rounded-md bg-white"
+                                        >
+                                            {["Pending", "Picked Up", "In Transit", "Out for Delivery", "Delivered"].map((status) => (
+                                                <option key={status} value={status}>{status}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+
+                                    <td className="text-center px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.fare} Tk. </td>
+                                    <td className="px-4 py-2 text-center">
+                                        <button
+                                            disabled={parcel.isAssigned === true}
+                                            onClick={() => openAssignModal(parcel)}
+                                            className={`px-3 py-1 text-sm font-semibold border border-green-500  rounded-md 
+                                        ${parcel.isAssigned ? 'cursor-not-allowed bg-[#BAEC66] text-[#03373D]' : 'cursor-pointer text-green-600 hover:bg-green-100'}
+                                        `}
+                                        >
+                                            {parcel.isAssigned ? 'Assigned' : 'Assign'}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
                 {/* For smnaller screen card design */}
+                <div className="lg:hidden flex flex-col gap-4">
+                    {parcels.map((parcel) => (
+                        <div key={parcel._id} className="p-4 border-l-8 rounded-xl border-[#CAEB66] shadow-sm bg-white">
+                            <p className="font-bold text-[#03373D] mb-1">Tracking ID: {parcel.trackingId}</p>
+                            <p>Created: {dayjs(parcel.createdAt).format("DD MMM YYYY")}</p>
+                            <p>Created By: {parcel.createdBy?.name} ({parcel.createdBy?.email})</p>
+                            <p>Receiver Region: {parcel.receiverRegion}</p>
+                            <p>Receiver Address: {parcel.receiverAddress}, {parcel.receiverWarehouse}</p>
+                            <div className="mb-2">
+                                <p className="font-bold text-[#03373D]">Status:</p>
+                                <select
+                                    value={parcel.status}
+                                    onChange={(e) => handleStatusChange(parcel._id, e.target.value)}
+                                    className="px-2 py-1 border rounded-md bg-white"
+                                >
+                                    {["Pending", "Picked Up", "In Transit", "Out for Delivery", "Delivered"].map((status) => (
+                                        <option key={status} value={status}>{status}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <p>Fare: ৳{parcel.fare}</p>
+                            <div className="flex justify-end mt-2">
+                                <button
+                                    disabled={parcel.isAssigned === true}
+                                    onClick={() => openAssignModal(parcel)}
+                                    className={`px-3 py-2 text-sm font-semibold   rounded-md 
+                                        ${parcel.isAssigned ? 'cursor-not-allowed bg-[#BAEC66] text-[#03373D]' : 'cursor-pointer text-green-600 hover:bg-green-100 border border-green-500'}
+                                        `}
+                                >
+                                    {parcel.isAssigned ? 'Assigned' : 'Assign'}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 <div></div>
             </section>
 
@@ -441,6 +620,54 @@ const ManageRiders = () => {
             </section>
 
             {/* all be necessary modal can be done here bellow if needed  */}
+            {/* modal for assigning parcels */}
+            {selectedParcel && (
+                <div className="fixed inset-0  backdrop-blur-xs bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="bg-[#03373D] p-6 rounded-xl text-white md:w-full max-w-md shadow-lg">
+                        <h3 className="text-lg font-bold text-white mb-4">Assign Parcel</h3>
+                        <p className="mb-2">Tracking ID: <strong>{selectedParcel.trackingId}</strong></p>
+                        <label className="block mb-4">
+                            <span className="text-sm font-semibold text-[#03373D]">Select Rider</span>
+
+                            <select
+                                value={assignToEmail}
+                                onChange={(e) => setAssignToEmail(e.target.value)}
+                                className="w-full px-3 py-2 border bg-[#03373D] text-[#CAEB66] cursor-pointer rounded-md mt-1"
+                            >
+                                <option value="" disabled>-- Select Rider --</option>
+                                {riders
+                                    .filter(r => r.region?.toLowerCase() === selectedParcel.receiverRegion?.toLowerCase())
+                                    .map(r => (
+                                        <option key={r.email} value={r.email} >
+                                            {r.name} ({r.district}, {r.region})
+                                        </option>
+                                    ))}
+                            </select>
+
+                            {riders.filter(r => r.region?.toLowerCase() === selectedParcel.receiverRegion?.toLowerCase()).length === 0 && (
+                                <p className="text-sm text-red-500 mt-2">No available riders in this region.</p>
+                            )}
+
+                        </label>
+
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setSelectedParcel(null)}
+                                className="px-4 py-2 border-1 border-[#BAEC66] border-dashed bg-[#03373D] cursor-pointer text-white rounded-md hover:bg-[#CAEB66] hover:text-[#03373D] "
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleAssign}
+                                disabled={!assignToEmail}
+                                className="px-4 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-bold rounded-md hover:bg-[#d9f27c]"
+                            >
+                                Confirm Assign
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </>
     );
