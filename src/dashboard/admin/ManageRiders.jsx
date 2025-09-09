@@ -5,7 +5,9 @@ import RiderLotieAnimation from "../../assets/json/rider.json";
 import Lottie from "lottie-react";
 import { LuRefreshCw } from 'react-icons/lu';
 import { FaBan, FaTrashAlt } from 'react-icons/fa';
-import { MdModeEdit } from 'react-icons/md';
+import { MdAssignmentTurnedIn, MdModeEdit } from 'react-icons/md';
+import { MdOutlineProductionQuantityLimits } from "react-icons/md";
+import { RiMotorbikeFill } from "react-icons/ri";
 import Swal from 'sweetalert2';
 import { BsFillUnlockFill } from "react-icons/bs";
 import withReactContent from "sweetalert2-react-content";
@@ -22,6 +24,10 @@ const ManageRiders = () => {
     const [parcels, setParcels] = useState([]);
     const [selectedParcel, setSelectedParcel] = useState(null);
     const [assignToEmail, setAssignToEmail] = useState("");
+    const [parcelStatusSummary, setParcelStatusSummary] = useState([]);
+    const [selectedRiderEmail, setSelectedRiderEmail] = useState('');
+    const [riderOverview, setRiderOverview] = useState(null);
+    const [allRiderOverview, setAllRiderOverview] = useState([]);
 
 
     const fetchRiders = async () => {
@@ -330,12 +336,67 @@ const ManageRiders = () => {
         }
     };
 
+    const fetchParcelStatusSummary = async () => {
+        try {
+            const res = await axiosSecure.get("/admin/parcel-status-summary");
+            setParcelStatusSummary(res.data);
+        } catch (err) {
+            console.error("Error fetching parcel status summary:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchParcelStatusSummary();
+    }, []);
+
+    const fetchRiderOverview = async () => {
+        if (!selectedRiderEmail) return;
+        try {
+            const res = await axiosSecure.get(`/admin/rider-parcel-overview?email=${selectedRiderEmail}`);
+            setRiderOverview(res.data);
+        } catch (err) {
+            console.error("Error fetching rider overview:", err);
+            if (err.response?.status === 404) {
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: '#CAEB66',
+                    title: 'Rider Not Found',
+                    text: `${selectedRiderEmail} is not registered. Please insert a valid email.`,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    iconColor: '#CAEB66',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again later.',
+                });
+            }
+        }
+    };
+
+    const fetchAllRiderOverview = async () => {
+        try {
+            const res = await axiosSecure.get('/admin/all-rider-parcel-overview');
+            setAllRiderOverview(res.data);
+        } catch (err) {
+            console.error("Error fetching all rider overview:", err);
+        }
+    };
+
+    const handleClearRiderOverview = () => {
+        setSelectedRiderEmail('');
+        setRiderOverview(null);
+        setAllRiderOverview([]);
+    };
+
+
+
 
 
     return (
         <>
             {/* Part 1: Page Heading Section */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-6">
                 <div className="flex items-center gap-0">
                     <h2 className="text-xl md:text-3xl font-bold text-[#03373D]">
                         Rider Management
@@ -344,10 +405,43 @@ const ManageRiders = () => {
                         <Lottie animationData={RiderLotieAnimation} loop={true} />
                     </div>
                 </div>
-
-                <button onClick={handleRefresh} className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
-                    <LuRefreshCw className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
-                </button>
+                <div className='flex items-center gap-1'>
+                    <button
+                        onClick={() => {
+                            const section = document.getElementById("assignParcels");
+                            if (section) {
+                                section.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }}
+                        className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                        <MdAssignmentTurnedIn className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                    </button>
+                    <button
+                        onClick={() => {
+                            const section = document.getElementById("parcelsOverview");
+                            if (section) {
+                                section.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }}
+                        className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                        <MdOutlineProductionQuantityLimits className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                    </button>
+                    <button
+                        onClick={() => {
+                            const section = document.getElementById("ridersOverview");
+                            if (section) {
+                                section.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }}
+                        className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                        <RiMotorbikeFill className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                    </button>
+                    <button
+                        onClick={handleRefresh}
+                        className="px-3 py-2 bg-[#03373D] text-white hover:text-red-500 font-semibold rounded-lg hover:bg-[#1C4B50] cursor-pointer text-sm lg:text-base">
+                        <LuRefreshCw className="text-white text-sm hover:text-[#CAEB66] cursor-pointer" />
+                    </button>
+                </div>
             </div>
 
 
@@ -504,8 +598,8 @@ const ManageRiders = () => {
             </section>
 
             {/* part 3:  assigning parcels to Activer RIders  */}
-            <section className='mt-10 border-t-1 border-gray-400 border-dashed pt-10'>
-                {/* use proper heading for this section */}
+            <section id='assignParcels' className='mt-10 border-t-1 border-gray-400 border-dashed pt-10'>
+                {/*  heading for this section */}
                 <h3 className="text-xl font-bold text-[#03373D] mb-4">📦 Assign Parcels to Riders</h3>
 
                 {/* larger screen table deisgn: showed all parcel with statys   */}
@@ -602,21 +696,85 @@ const ManageRiders = () => {
                 <div></div>
             </section>
 
-            {/* part 4:  tracking parcels section with actions buttons */}
-            <section>
-                {/* use proper heading for this section */}
 
-                {/* larger screen table deisgn: showed all parcel with statys   */}
-                <div></div>
-
-                {/* For smnaller screen card design */}
-                <div></div>
+            {/* part 4: Parcels overview section    */}
+            <section id='parcelsOverview' className='mt-10 border-t-1 border-gray-400 border-dashed pt-10'>
+                <h2 className="text-xl font-bold text-[#03373D] mb-6">📊 Parcels Summary</h2>
+                {/* chart pie  */}
+                <div className="grid lg:grid-cols-4 gap-6 mb-8">
+                    {parcelStatusSummary.map((item) => (
+                        <div key={item._id} className="p-4 bg-white rounded-lg shadow-md border-l-8 border-[#CAEB66]">
+                            <h4 className="text-lg font-bold text-[#03373D]">{item._id}</h4>
+                            <p className="text-2xl font-semibold">{item.count}</p>
+                        </div>
+                    ))}
+                </div>
             </section>
 
-            {/* part 5: rider overview section    */}
-            <section>
-                {/* follow instruction pdf for this design  */}
-                <div></div>
+            {/* part 5: rider overview  section */}
+            <section id='ridersOverview' className='mt-10 border-t-1 border-gray-400 border-dashed pt-10 mb-10' >
+                <div className=" space-y-6">
+                    <h3 className="text-xl font-bold text-[#03373D] mb-4">🚴 Rider's Overview</h3>
+                    <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
+                        <input
+                            type="email"
+                            placeholder="Enter rider email"
+                            value={selectedRiderEmail}
+                            onChange={(e) => setSelectedRiderEmail(e.target.value)}
+                            className="px-4 py-2 border rounded-md w-full md:w-1/2"
+                        />
+                        <div className='flex flex-col md:flex-row items-center gap-2'>
+                            <div className='flex items-center gap-2'>
+                                <button onClick={fetchRiderOverview} className="px-4 py-2 bg-[#03373D] text-white font-semibold rounded-md hover:bg-[#1C4B50]">
+                                    Show Overview
+                                </button>
+                                <button onClick={handleClearRiderOverview} className="px-4 py-2 bg-[#03373D] text-white font-semibold rounded-md hover:bg-[#1C4B50]">
+                                    Clear All
+                                </button>
+                            </div>
+                            <button onClick={fetchAllRiderOverview} className="px-4 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]">
+                                Show Overview of All Riders
+                            </button>
+                        </div>
+                    </div>
+
+                    {riderOverview && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="bg-white border-l-8 border-[#CAEB66] p-4 rounded-lg shadow-sm">
+                                <p className="font-bold text-[#03373D]">Assigned Parcels</p>
+                                <p className="text-2xl font-extrabold">{riderOverview.assigned}</p>
+                            </div>
+                            <div className="bg-white border-l-8 border-red-500 p-4 rounded-lg shadow-sm">
+                                <p className="font-bold text-[#03373D]">Pending</p>
+                                <p className="text-2xl font-extrabold">{riderOverview.pending}</p>
+                            </div>
+                            <div className="bg-white border-l-8 border-green-500 p-4 rounded-lg shadow-sm">
+                                <p className="font-bold text-[#03373D]">Delivered</p>
+                                <p className="text-2xl font-extrabold">{riderOverview.delivered}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {allRiderOverview.length > 0 && (
+                        <div className="mt-6 space-y-4">
+                            <h3 className="text-xl font-bold text-[#03373D]">📊 All Riders Overview</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {allRiderOverview.map((rider) => (
+                                    <div key={rider.email} className="bg-white border-l-8 border-[#CAEB66] p-4 rounded-lg shadow-sm">
+                                        <p className="font-bold text-[#03373D] mb-1">{rider.name} ({rider.email})</p>
+                                        <p>Region: <span className="font-bold">{rider.region || "—"}</span></p>
+                                        <p>Assigned: <span className="font-bold">{rider.assigned}</span></p>
+                                        <p>Pending: <span className="text-red-600 font-bold">{rider.pending}</span></p>
+                                        <p>Delivered: <span className="text-green-600 font-bold">{rider.delivered}</span></p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+
+
             </section>
 
             {/* all be necessary modal can be done here bellow if needed  */}
