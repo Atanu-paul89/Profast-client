@@ -36,6 +36,7 @@ import MessageCenter from "../dashboard/MessageCenter";
 import ManageRiders from "../dashboard/admin/ManageRiders";
 import ManageParcels from "../dashboard/admin/ManageParcels";
 import AssignedParcels from "../dashboard/rider/AssignedParcels";
+import RiderEarnings from "../dashboard/rider/RiderEarnings";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -158,6 +159,10 @@ export const router = createBrowserRouter([
       {
         path: 'assigned-parcels',
         Component: AssignedParcels,
+      },
+      {
+        path: 'earnings',
+        Component: RiderEarnings,
       },
 
 

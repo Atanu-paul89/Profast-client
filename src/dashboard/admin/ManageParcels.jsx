@@ -212,8 +212,17 @@ const ManageParcels = () => {
                             <th className="px-4 py-2 text-left">Receiver Details</th>
                             <th className="px-4 py-2 text-left">Fare</th>
                             <th className="px-4 py-2 text-left">Status</th>
-                            <th className="px-4 py-2 text-left">Delivered At</th>
-                            <th className="px-4 py-2 text-left">Delivered By</th>
+                            {
+                                filter === "Pending" ? (
+                                    <th className="px-4 py-2 text-left">Assigned to</th>
+                                ) : (<th className="px-4 py-2 text-left">Delivered By</th>)
+                            }
+                            {
+                                filter === "Pending" ? (
+                                    <th className="px-4 py-2 text-left">Assigned At</th>
+                                ) : (<th className="px-4 py-2 text-left">Delivered At</th>)
+                            }
+
                             <th className="px-4 py-2 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -224,8 +233,8 @@ const ManageParcels = () => {
                                 <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.parcelName}</td>
                                 <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{dayjs(parcel.createdAt).format("DD MMM YYYY")}</td>
                                 <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.createdBy.email}</td>
-                                <td className="px-4 py-2 ">{parcel.senderName}, <br /> {parcel.senderAddress}, <br /> {parcel.senderWarehouse}, {parcel.senderRegion} </td>
-                                <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.receiverName}</td>
+                                <td className="px-4 py-2 ">{parcel.senderName}, <br />{parcel.senderPhone} <br /> {parcel.senderAddress}, <br /> {parcel.senderWarehouse}, {parcel.senderRegion} </td>
+                                <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">{parcel.receiverName}, <br /> {parcel.receiverPhone}  <br /> {parcel.receiverAddress}, <br /> {parcel.receiverWarehouse}, {parcel.receiverRegion}</td>
                                 <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">৳{parcel.fare}</td>
                                 <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
                                     <select
@@ -238,14 +247,28 @@ const ManageParcels = () => {
                                         ))}
                                     </select>
                                 </td>
-                                <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                                    {parcel.deliveredAt ? dayjs(parcel.deliveredAt).format("DD MMM YYYY h:mm A") : "Not Delivered yet"}
-                                </td>
-                                <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                                    {parcel.updated_by && parcel.updated_by !== "System"
-                                        ? `${parcel.updated_by.name} (${parcel.updated_by.email})`
-                                        : "Not out for delivery yet"}
-                                </td>
+                                {
+                                    filter === "Pending" ? (
+                                        <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">
+                                            {parcel.assignedTo ? parcel.assignedTo.name : 'Not Assigned Yet' }
+                                        </th>
+                                    ) : (
+                                        <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                                            {parcel.updated_by && parcel.updated_by !== "System"
+                                                ? `${parcel.updated_by.name} (${parcel.updated_by.email})`
+                                                : "Not out for delivery yet"}
+                                        </td>
+                                    )
+                                }
+                                {
+                                    filter === "Pending" ? (
+                                        <td className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">{parcel.assignedAt ? dayjs(parcel.assignedAt).format("DD MMM YYYY h:mm A") : 'Not Assigned Yet'}</td>
+                                    ) : (
+                                        <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
+                                            {parcel.deliveredAt ? dayjs(parcel.deliveredAt).format("DD MMM YYYY h:mm A") : "Not Delivered yet"}
+                                        </td>)
+                                }
+
                                 <td className="px-4 py-2 text-center">
                                     <div className="flex gap-2 justify-center">
                                         {/* edit parcel  */}
@@ -407,7 +430,7 @@ const ManageParcels = () => {
                 <div id='overview' className='py-7'>
                     <h3 className="text-xl lg:text-2xl  font-bold text-[#03373D] mb-4">📦 Parcel Status Overview</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                        {["Pending", "PickedUp", "InTransit", "OutForDelivery", "Delivered"].map((status) => (
+                        {["Pending", "PickedUp", "InTransit", "OutforDelivery", "Delivered"].map((status) => (
                             <div key={status} className="bg-[#CAEB66] text-[#03373D] p-4 rounded-lg shadow-sm text-center">
                                 <p className="font-bold text-lg">{status.replace(/([A-Z])/g, ' $1')}</p>
                                 <p className="text-2xl font-extrabold">{statusCounts[status] ?? 0}</p>
