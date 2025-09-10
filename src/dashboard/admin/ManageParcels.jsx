@@ -254,8 +254,8 @@ const ManageParcels = () => {
                                         </th>
                                     ) : (
                                         <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">
-                                            {parcel.updated_by && parcel.updated_by !== "System"
-                                                ? `${parcel.updated_by.name} (${parcel.updated_by.email})`
+                                            {parcel.deliveredBy
+                                                ? `${parcel.deliveredBy.name} (${parcel.deliveredBy.email})`
                                                 : "Not out for delivery yet"}
                                         </td>
                                     )
