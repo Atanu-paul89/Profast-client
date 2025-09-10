@@ -615,6 +615,7 @@ const ManageRiders = () => {
                                 <th className="px-4 py-2 text-center">Status</th>
                                 <th className="px-4 py-2 text-center">Fare</th>
                                 <th className="px-4 py-2 text-center">Assign</th>
+                                <th className="px-4 py-2 text-center whitespace-nowrap overflow-hidden text-ellipsis">Assigned Rider</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -648,6 +649,17 @@ const ManageRiders = () => {
                                         >
                                             {parcel.isAssigned ? 'Assigned' : 'Assign'}
                                         </button>
+                                    </td>
+
+                                    <td className="px-4 py-2 text-center">
+                                        {
+                                            parcel.assignedTo ?
+                                                <>
+                                                    {parcel.assignedTo.name}
+                                                </>
+                                                :
+                                                '-'
+                                        }
                                     </td>
                                 </tr>
                             ))}
@@ -689,6 +701,14 @@ const ManageRiders = () => {
                                     {parcel.isAssigned ? 'Assigned' : 'Assign'}
                                 </button>
                             </div>
+                            <p className='mt-2'>Assigned Rider:                                         {
+                                parcel.assignedTo ?
+                                    <span className='text-[#03373D] font-bold italic'>
+                                        {parcel.assignedTo.name}
+                                    </span>
+                                    :
+                                    '-'
+                            }</p>
                         </div>
                     ))}
                 </div>

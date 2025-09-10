@@ -35,6 +35,7 @@ import RiderNotifications from "../dashboard/rider/RiderNotifications";
 import MessageCenter from "../dashboard/MessageCenter";
 import ManageRiders from "../dashboard/admin/ManageRiders";
 import ManageParcels from "../dashboard/admin/ManageParcels";
+import AssignedParcels from "../dashboard/rider/AssignedParcels";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -154,6 +155,12 @@ export const router = createBrowserRouter([
         path: 'rider-notifications',
         Component: RiderNotifications,
       },
+      {
+        path: 'assigned-parcels',
+        Component: AssignedParcels,
+      },
+
+
       // admin path started // 
       {
         path: 'manage-users',

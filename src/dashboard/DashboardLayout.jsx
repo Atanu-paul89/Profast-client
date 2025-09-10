@@ -351,11 +351,6 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/dashboard/live-tracking" className={navClass}>
-                  🗺️ Live Tracking
-                </NavLink>
-              </li>
-              <li>
                 <NavLink to="/dashboard/performance" className={navClass}>
                   📊 Performance Stats
                 </NavLink>
@@ -373,11 +368,6 @@ const DashboardLayout = () => {
 
                     )}
                   </div>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/dashboard/support" className={navClass}>
-                  🛠️ Support Center
                 </NavLink>
               </li>
             </>
