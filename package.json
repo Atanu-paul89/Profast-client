@@ -39,6 +39,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-scroll": "^1.9.3",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.2.0",
     "sweetalert2": "^11.22.5",
     "sweetalert2-react-content": "^5.1.0",
     "swiper": "^11.2.10",

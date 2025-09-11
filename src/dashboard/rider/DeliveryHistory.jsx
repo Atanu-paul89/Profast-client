@@ -128,7 +128,7 @@
 
 import React, { useEffect, useState } from 'react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
-import { MdDeliveryDining } from 'react-icons/md';
+import { MdDeliveryDining, MdOutlineLocalShipping } from 'react-icons/md';
 import { format } from 'date-fns';
 
 const DeliveryHistory = () => {
@@ -195,8 +195,8 @@ const DeliveryHistory = () => {
                         key={range}
                         onClick={() => applyFilter(range)}
                         className={`px-4 py-2 rounded-xl font-medium cursor-pointer transition ${activeRange === range
-                                ? 'bg-[#BAEC66] text-[#03373D] border-b-4'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? 'bg-[#BAEC66] text-[#03373D] border-b-4'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
                         {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -215,17 +215,20 @@ const DeliveryHistory = () => {
 
             {/* Responsive Grid */}
             {filteredDeliveries.length === 0 ? (
-                <p className="text-center text-lg lg:text-2xl text-[#03373D] mt-10">
-                    {activeRange === 'today'
-                        ? 'No Parcels Delivered Today'
-                        : 'No Deliveries Found For This Range.'}
-                </p>
+                <div className="flex flex-col items-center justify-center mt-20 text-center">
+                    <MdOutlineLocalShipping className="text-6xl text-[#03373D] mb-3" />
+                    <p className="text-lg font-medium text-[#03373D]">
+                        {activeRange === 'today'
+                            ? 'No Parcels Delivered Today'
+                            : 'No Deliveries Found For This Range.'}
+                    </p>
+                </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredDeliveries.map((parcel) => (
                         <div
                             key={parcel._id}
-                            className="border-l-4 border-green-500 bg-white shadow-md rounded-lg p-4 flex flex-col"
+                            className="border-l-7 border-[#CAEB66] bg-white shadow-md rounded-xl p-4 flex flex-col"
                         >
                             <h3 className="font-bold text-[#03373D] mb-2 break-words">
                                 Tracking ID: {parcel.trackingId}

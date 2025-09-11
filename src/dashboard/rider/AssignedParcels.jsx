@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
+import { MdOutlineLocalShipping } from 'react-icons/md';
 
 const AssignedParcels = () => {
     const axiosSecure = useAxiosSecure();
@@ -68,7 +69,15 @@ const AssignedParcels = () => {
 
         <section>
             <h2 className="text-xl font-bold text-[#03373D] mb-6">📦 Assigned Parcels</h2>
-
+            {assignedParcels.length === 0 ? (
+                // ✅ Empty state UI
+                <div className="flex flex-col items-center justify-center text-center mt-16 text-gray-500">
+                    <MdOutlineLocalShipping className="text-6xl text-[#03373D] mb-4" />
+                    <p className="text-lg font-semibold">No parcels have been assigned yet.</p>
+                    <p className="text-sm">You’ll see assigned deliveries here once they are allocated to you.</p>
+                </div>
+            ) : (
+<>
             {/* Table View for Large Screens */}
             <div className="hidden lg:block overflow-x-auto border border-gray-300 rounded-lg">
                 <table className="min-w-[1000px] w-full">
@@ -143,7 +152,8 @@ const AssignedParcels = () => {
                     </div>
                 ))}
             </div>
-
+</> 
+)}
 
         </section>
     );

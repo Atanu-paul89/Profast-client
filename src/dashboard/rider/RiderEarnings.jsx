@@ -68,25 +68,25 @@ const RiderEarnings = () => {
                     <div className="flex flex-wrap gap-3 mb-6">
                         <button
                             onClick={() => setBreakdownType("month")}
-                            className="px-4 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]"
+                            className="px-4 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]"
                         >
                             This Month
                         </button>
                         <button
                             onClick={() => setBreakdownType("year")}
-                            className="px-4 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]"
+                            className="px-4 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]"
                         >
                             This Year
                         </button>
                         <button
                             onClick={() => setBreakdownType("total")}
-                            className="px-4 py-2 bg-[#CAEB66] text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]"
+                            className="px-4 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-semibold rounded-md hover:bg-[#d9f27c]"
                         >
                             All-Time
                         </button>
                         <button
                             onClick={() => setBreakdownType(null)}
-                            className="px-4 py-2 bg-[#03373D] text-white font-semibold rounded-md hover:bg-[#1C4B50]"
+                            className="px-4 py-2 bg-[#03373D] cursor-pointer text-white font-semibold rounded-md hover:bg-[#1C4B50]"
                         >
                             Clear
                         </button>
