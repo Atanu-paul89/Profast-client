@@ -15,36 +15,6 @@ axiosSecure.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ Response interceptor: catch 401/403
-axiosSecure.interceptors.response.use(
-  response => response,
-  error => {
-    const status = error.response?.status;
-
-    if (status === 401 || status === 403) {
-      // Clear token
-      localStorage.removeItem("access-token");
-     
-
-      // Optional: show alert
-      Swal.fire({
-        icon: 'warning',
-        iconColor: '#CAEB66',
-        title: 'Session Expired',
-        text: 'Please log in again to continue.',
-        confirmButtonText: 'Sign In',
-        confirmButtonColor: '#03373D',
-        allowOutsideClick: false,
-      });
-
-       window.location.href = '/auth/signin';
-
-
-    }
-
-    return Promise.reject(error);
-  }
-);
 // ----- x jwt logic ended x ----- // 
 
 const useAxiosSecure = () => {
@@ -52,3 +22,5 @@ const useAxiosSecure = () => {
 };
 
 export default useAxiosSecure;
+
+

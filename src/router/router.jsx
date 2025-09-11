@@ -37,6 +37,8 @@ import ManageRiders from "../dashboard/admin/ManageRiders";
 import ManageParcels from "../dashboard/admin/ManageParcels";
 import AssignedParcels from "../dashboard/rider/AssignedParcels";
 import RiderEarnings from "../dashboard/rider/RiderEarnings";
+import DeliveryHistory from "../dashboard/rider/DeliveryHistory";
+import PerformanceStats from "../dashboard/rider/PerformanceStats";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -161,8 +163,16 @@ export const router = createBrowserRouter([
         Component: AssignedParcels,
       },
       {
+        path: 'delivery-history',
+        Component: DeliveryHistory,
+      },
+      {
         path: 'earnings',
         Component: RiderEarnings,
+      },
+      {
+        path: 'performance',
+        Component: PerformanceStats, 
       },
 
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router';
 import Swal from 'sweetalert2';
-import lockerAnimation from "../../src/assets/json/Locker.json"
 import { useLocation } from 'react-router';
 
 
