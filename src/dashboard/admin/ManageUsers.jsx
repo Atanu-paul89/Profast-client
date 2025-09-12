@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { FaTrashAlt, FaBan } from "react-icons/fa";
 import { LuRefreshCw } from "react-icons/lu";
+import { BsFillUnlockFill } from "react-icons/bs";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -112,11 +113,12 @@ const ManageUsers = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span>
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Users Data... </span>
             </div>
         );
     }
+
 
     if (!loading && users.length === 0) {
         return (
@@ -195,7 +197,7 @@ const ManageUsers = () => {
                                             onClick={() => handleRestriction(u.email, u.isRestricted, u.role)}
                                             className="p-2 cursor-pointer rounded-full border text-[#03373D] hover:bg-[#CAEB6650]"
                                         >
-                                            <FaBan />
+                                            {u.isRestricted ? <BsFillUnlockFill /> : <FaBan />}
                                         </button>
                                         <button
                                             onClick={() => handleDelete(u.email, u.role)}

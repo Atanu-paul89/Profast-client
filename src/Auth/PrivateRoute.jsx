@@ -91,13 +91,13 @@ const PrivateRoute = ({ children }) => {
   }
 
 
-  if ((loading || !minLoadingTimePassed) && path.startsWith('/dashboard')) {
-    return (
-      <div className="flex  justify-center bg-[#03373D] items-center min-h-screen">
-        <p className=" flex items-center gap-2"><span className="text-[#CAEB66] text-xl lg:text-2xl"> Loading Dashboard </span><span className="loading loading-dots mt-3  text-[#CAEB66] loading-sm"></span></p>
-      </div>
-    );
-  }
+  // if ((loading || !minLoadingTimePassed) && path.startsWith('/dashboard')) {
+  //   return (
+  //     <div className="flex  justify-center bg-[#03373D] items-center min-h-screen">
+  //       <p className=" flex items-center gap-2"><span className="text-[#CAEB66] text-xl lg:text-2xl"> Loading Dashboard </span><span className="loading loading-dots mt-3  text-[#CAEB66] loading-sm"></span></p>
+  //     </div>
+  //   );
+  // }
 
   if (!user) {
     return null;

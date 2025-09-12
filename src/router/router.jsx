@@ -39,6 +39,7 @@ import AssignedParcels from "../dashboard/rider/AssignedParcels";
 import RiderEarnings from "../dashboard/rider/RiderEarnings";
 import DeliveryHistory from "../dashboard/rider/DeliveryHistory";
 import PerformanceStats from "../dashboard/rider/PerformanceStats";
+import ReportsAndStats from "../dashboard/admin/Reports & Stats/ReportsAndStats";
 // import MigratePayments from "./MigratePayments";
 
 export const router = createBrowserRouter([
@@ -57,7 +58,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "services",
-        Component: Services, //81263 //45689 //01840425475
+        Component: Services, 
       },
       {
         path: "pricing",
@@ -204,6 +205,10 @@ export const router = createBrowserRouter([
       {
         path: 'all-parcels',
         Component: ManageParcels,
+      },
+      {
+        path: 'reports',
+        Component: ReportsAndStats,
       },
       // {
       //   path: 'admn-messages',

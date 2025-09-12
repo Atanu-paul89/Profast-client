@@ -8,6 +8,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 const ManageParcels = () => {
     const axiosSecure = useAxiosSecure();
+    const [loading, setLoading] = useState(true);
     const [parcels, setParcels] = useState([]);
     const [filter, setFilter] = useState('Pending');
     const [statusCounts, setStatusCounts] = useState({});
@@ -21,11 +22,13 @@ const ManageParcels = () => {
 
     const fetchParcels = async () => {
         try {
+            setLoading(true);
             const res = await axiosSecure.get(`/admin/parcels-by-status?status=${filter}`);
             setParcels(res.data);
+            setLoading(false);
         } catch (err) {
             console.error("Error fetching parcels:", err);
-        }
+        } 
     };
 
     useEffect(() => {
@@ -89,16 +92,20 @@ const ManageParcels = () => {
     // over view section -2 functions //
     const fetchStatusCounts = async () => {
         try {
+            // setLoading(true);
             const res = await axiosSecure.get('/admin/parcel-status-counts');
             setStatusCounts(res.data);
         } catch (err) {
             console.error("Error fetching status counts:", err);
+        } finally {
+            setLoading(false);
         }
     };
 
     const fetchUserOverview = async () => {
         if (!selectedEmail) return;
         try {
+            // setLoading(true);
             const res = await axiosSecure.get(`/admin/user-parcel-overview?email=${selectedEmail}`);
             setUserOverview(res.data);
         } catch (err) {
@@ -119,6 +126,8 @@ const ManageParcels = () => {
                     text: 'Something went wrong. Please try again later.',
                 });
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -134,6 +143,7 @@ const ManageParcels = () => {
 
     const fetchAllUserOverview = async () => {
         try {
+            
             const res = await axiosSecure.get('/admin/all-user-parcel-overview');
             setAllUserOverview(res.data);
         } catch (err) {
@@ -153,6 +163,15 @@ const ManageParcels = () => {
         fetchStatusCounts();
         // fetchUserList();
     }, []);
+
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Parcels Data... </span>
+            </div>
+        );
+    }
+
 
     return (
         <div className='lg:px-5 lg:mt-5' >
@@ -250,7 +269,7 @@ const ManageParcels = () => {
                                 {
                                     filter === "Pending" ? (
                                         <th className="px-4 py-2 text-left whitespace-nowrap overflow-hidden text-ellipsis">
-                                            {parcel.assignedTo ? parcel.assignedTo.name : 'Not Assigned Yet' }
+                                            {parcel.assignedTo ? parcel.assignedTo.name : 'Not Assigned Yet'}
                                         </th>
                                     ) : (
                                         <td className="px-4 py-2 whitespace-nowrap overflow-hidden text-ellipsis">

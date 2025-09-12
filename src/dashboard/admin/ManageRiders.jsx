@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import useAuth from '../../hooks/useAuth';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import RiderLotieAnimation from "../../assets/json/rider.json";
 import Lottie from "lottie-react";
@@ -17,7 +16,6 @@ import dayjs from 'dayjs';
 import '../../index.css'
 
 const ManageRiders = () => {
-    // const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [riders, setRiders] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -390,7 +388,13 @@ const ManageRiders = () => {
     };
 
 
-
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Riders Data... </span>
+            </div>
+        );
+    }
 
 
     return (

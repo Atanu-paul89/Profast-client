@@ -10,14 +10,17 @@ const MySwal = withReactContent(Swal);
 
 const MyProfile = () => {
     const { user, updateUserProfile, updateUserPassword } = useAuth();
+    const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
     const [refresh, setRefresh] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
+        setLoading(true);
         axiosSecure.get(`/users/${user.email}`).then(res => {
             setProfile(res.data);
+            setLoading(false);
         });
     }, [user.email, refresh]);
 
@@ -100,10 +103,18 @@ const MyProfile = () => {
         }
 
     };
+    
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Profile... </span>
+            </div>
+        );
+    }
 
     return (
         <>
-        {/* this loading basically will give a loader animation /  window to show while upadating the profile data  */}
+            {/* this loading basically will give a loader animation /  window to show while upadating the profile data  */}
             {isUpdating && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#03373D] bg-opacity-80">
                     <p className="text-2xl font-semibold text-[#CAEB66] animate-pulse">Updating...</p>
@@ -148,7 +159,7 @@ const ProfileRow = ({ label, value, onEdit, disabled }) => (
                 onClick={onEdit}
                 className="text-sm text-[#CAEB66] cursor-pointer  font-extrabold hover:underline"
             >
-               <MdModeEditOutline size={23}  />
+                <MdModeEditOutline size={23} />
             </button>
         )}
     </div>

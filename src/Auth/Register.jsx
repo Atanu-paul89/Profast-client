@@ -25,7 +25,7 @@ const Register = () => {
         const formData = new FormData();
         formData.append("photo", file);
 
-        const res = await fetch("http://localhost:5000/upload-photo", {
+        const res = await fetch(import.meta.env.VITE_BACKEND_URL, {
             method: "POST",
             body: formData
         });

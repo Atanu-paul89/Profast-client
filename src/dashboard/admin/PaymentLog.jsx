@@ -27,6 +27,42 @@ const PaymentLog = () => {
         fetchUsers();
     }, [axiosSecure]);
 
+    const fetchAllPayments = async () => {
+        setHasFetched(true);
+        setLoading(true);
+
+        try {
+            const res = await axiosSecure.get(`/admin/payments`); // 👈 endpoint should return ALL payments
+            const allPayments = res.data.payments || [];
+
+            if (allPayments.length === 0) {
+                setPayments([]);
+                return Swal.fire({
+                    title: "No Payments Found",
+                    text: "No payment records available yet.",
+                    icon: "info",
+                    iconColor: '#CAEB66',
+                    confirmButtonColor: "#03373D",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+
+            setPayments(allPayments);
+            setLastFetchedEmail(''); // reset since this is all data
+        } catch (err) {
+            console.error("Error fetching all payments:", err);
+            Swal.fire({
+                title: "Error",
+                text: "Failed to fetch all payment data.",
+                icon: "error",
+                iconColor: '#CAEB66',
+                confirmButtonColor: "#03373D"
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const fetchPayments = async (forceRefresh = false) => {
         if (!selectedEmail || selectedEmail === "Select User Email") {
@@ -139,11 +175,12 @@ const PaymentLog = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span>
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Payments Info... </span>
             </div>
         );
     }
+
 
     return (
         <div className="px-1 lg:px-4 py-6">
@@ -171,12 +208,21 @@ const PaymentLog = () => {
                         </option>
                     ))}
                 </select>
-                <button
-                    onClick={fetchPayments}
-                    className="flex items-center gap-1 px-4 py-2 cursor-pointer bg-[#CAEB66] text-[#03373D] text-base font-bold rounded-lg hover:opacity-90"
-                >
-                    <MdRemoveRedEye size={25} className='pt-1' />  Show
-                </button>
+                <div className='flex items-center gap-2'>
+                    <button
+                        onClick={fetchPayments}
+                        className="flex items-center gap-1 px-4 py-2 cursor-pointer bg-[#CAEB66] text-[#03373D] text-base font-bold rounded-lg hover:opacity-90"
+                    >
+                        <MdRemoveRedEye size={25} className='pt-1' />  Show
+                    </button>
+                    <button
+                    onClick={fetchAllPayments}
+                        className="flex items-center gap-1 px-4 py-2 cursor-pointer bg-[#CAEB66] text-[#03373D] text-base font-bold rounded-lg hover:opacity-90"
+                    >
+                        <MdRemoveRedEye size={25} className='pt-1' />  See All
+                    </button>
+                </div>
+
             </div>
 
             {/* Table view for larger screen */}
@@ -206,7 +252,7 @@ const PaymentLog = () => {
                                     <td className="px-4 py-2 text-center">{pay.payerEmail}</td>
                                     <td className="px-4 py-2 text-center">Tk. {pay.amount}</td>
                                     <td className="px-4 py-2 text-center">{pay.trackingId}</td>
-                                    <td className="px-4 py-2 text-center">{dayjs(pay.paidAt).format("DD MMM YYYY")}</td>
+                                    <td className="px-4 py-2 text-center">{dayjs(pay.paidAt).format("DD MMM YYYY hh:mm A")}</td>
                                     <td className="px-4 py-2 text-center">
                                         <button
                                             onClick={() => handleDeletePayment(pay._id)}
@@ -234,7 +280,7 @@ const PaymentLog = () => {
                                 ["Email", pay.payerEmail],
                                 ["Amount", `$${pay.amount}`],
                                 ["Tracking ID", pay.trackingId],
-                                ["Paid At", dayjs(pay.paidAt).format("DD MMM YYYY")]
+                                ["Paid At", dayjs(pay.paidAt).format("DD MMM YYYY hh:mm A")]
                             ].map(([label, value]) => (
                                 <div key={label} className="mb-2">
                                     <p className="font-bold text-[#03373D]">{label}:</p>

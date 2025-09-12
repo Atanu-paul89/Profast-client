@@ -10,8 +10,9 @@ import { FaMessage } from "react-icons/fa6";
 
 
 const DashboardLayout = () => {
-  const { user, logOut} = useAuth();
+  const { user, logOut } = useAuth();
   const axiosSecure = useAxiosSecure();
+  const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
   const [hasUnseenLogs, setHasUnseenLogs] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
@@ -69,18 +70,18 @@ const DashboardLayout = () => {
   }, [axiosSecure]);
 
 
-  const logoutToast = () =>
-    toast.success('Successfully Signed Out!', {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      // transition: Slide,
-    });
+  // const logoutToast = () =>
+  //   toast.success('Successfully Signed Out!', {
+  //     position: "top-right",
+  //     autoClose: 1000,
+  //     hideProgressBar: false,
+  //     closeOnClick: true,
+  //     pauseOnHover: true,
+  //     draggable: true,
+  //     progress: undefined,
+  //     theme: "light",
+  //     // transition: Slide,
+  //   });
 
   const handleLogout = () => {
     Swal.fire({
@@ -102,7 +103,7 @@ const DashboardLayout = () => {
         logOut()
           .then(() => {
             navigate("/");
-            logoutToast();
+            // logoutToast();
           })
           .catch((err) => {
             console.error("Logout failed:", err);
@@ -115,10 +116,11 @@ const DashboardLayout = () => {
   // Fetch user role from backend
   useEffect(() => {
     if (user?.email) {
-      axiosSecure
-        .get(`/users/${user.email}`)
+      setLoading(true);
+      axiosSecure.get(`/users/${user.email}`)
         .then((res) => {
           setUserRole(res.data.role);
+          setLoading(false);
         })
         .catch((err) => {
           console.error("Error fetching user role:", err);
@@ -138,6 +140,14 @@ const DashboardLayout = () => {
 
 
   const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1);
+
+  if (loading ) {
+    return (
+      <div className="flex  justify-center bg-[#03373D] items-center min-h-screen">
+        <p className=" flex items-center gap-2"><span className="text-[#CAEB66] text-xl lg:text-2xl"> Loading Dashboard </span><span className="loading loading-dots mt-3  text-[#CAEB66] loading-sm"></span></p>
+      </div>
+    );
+  }
 
   return (
     <div className="drawer lg:drawer-open min-h-screen bg-[#F7F9F9]">
@@ -295,7 +305,8 @@ const DashboardLayout = () => {
                   💳 Payment Logs
                 </NavLink>
               </li>
-              <li>
+              {/* can enable Notification  bellow by uncommenting */}
+              {/* <li>
                 <NavLink to="/dashboard/admn-notifications" className={navClass}>
                   <div className="flex gap-27  ">
                     <p>🔔 Notifications</p>
@@ -308,7 +319,7 @@ const DashboardLayout = () => {
                     )}
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
 
               <li>
                 <NavLink to="/dashboard/activity-log" className={navClass}>

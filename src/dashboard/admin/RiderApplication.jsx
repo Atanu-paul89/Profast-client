@@ -329,11 +329,12 @@ const RiderApplication = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64">
-                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span>
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Rider Applications... </span>
             </div>
         );
     }
+
 
     if (!loading && applications.length === 0) {
         return (

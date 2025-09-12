@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 const MessageCenter = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth(); // contains email and role
+    const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
     const [replyMap, setReplyMap] = useState({});
     const [form, setForm] = useState({
@@ -58,9 +59,13 @@ const MessageCenter = () => {
         const fetchMessages = async () => {
             let res;
             if (userRole === 'admin') {
+                setLoading(true);
                 res = await axiosSecure.get('/admin/notifications');
-            } else {
+                setLoading(false);
+            } else { 
+                setLoading(true);
                 res = await axiosSecure.get('/notifications');
+                setLoading(false);
             }
             const filtered = res.data.filter(n => ['Message', 'Reply'].includes(n.type));
             setMessages(filtered);
@@ -160,6 +165,14 @@ const MessageCenter = () => {
             });
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Please Wait. It Might take a bit longer. </span>
+            </div>
+        );
+    }
 
     return (
         <div className="px-4 py-6 space-y-6">

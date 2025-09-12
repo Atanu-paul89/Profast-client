@@ -7,16 +7,20 @@ import dayjs from 'dayjs';
 
 const ActivityLog = () => {
   const axiosSecure = useAxiosSecure();
+  const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState([]);
   const [currentTime, setCurrentTime] = useState(dayjs());
 
   useEffect(() => {
     const fetchLogs = async () => {
       try {
+        setLoading(true);
         const res = await axiosSecure.get('/admin/logs');
         setLogs(res.data);
       } catch (err) {
         console.error("Error fetching logs:", err);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -48,6 +52,15 @@ const ActivityLog = () => {
     if (type.includes("Rejected")) return <MdError className="text-yellow-600 text-xl" />;
     return <MdAccessTime className="text-[#03373D] text-xl" />;
   };
+
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Activity Logs... </span>
+            </div>
+        );
+    }
+
 
   return (
     <div className="lg:px-4  space-y-6">
