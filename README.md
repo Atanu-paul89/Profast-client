@@ -7,7 +7,7 @@ Welcome to **Profast**, a modern logistics and parcel delivery platform built fo
 
 ## 🌐 Live Demo & Backend
 
-🔗 [Visit Profast Live](https://profast.vercel.app) 
+🔗 [Visit Profast Live](https://profast-7fb3a.web.app/) 
 
 🔗 [Link to Backend](https://github.com/Atanu-paul89/Profast-server)  
 
