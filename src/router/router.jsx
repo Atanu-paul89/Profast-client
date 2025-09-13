@@ -4,7 +4,6 @@ import Home from "../pages/Home/Home/Home";
 import ErrorPage from "../pages/Shared/ErrorPage";
 import Coverage from "../pages/Coverage/Coverage";
 import Services from "../pages/Services/Services";
-
 import BeARider from "../pages/Be a Rider/BeARider";
 import AboutUs from "../pages/About_Us/AboutUs";
 import FaqPage from "../pages/FAQ/FaqPage";
@@ -31,7 +30,6 @@ import AdminNotifications from "../dashboard/admin/AdminNotifications";
 import PaymentLog from "../dashboard/admin/PaymentLog";
 import ActivityLog from "../dashboard/admin/ActivityLog";
 import RiderNotifications from "../dashboard/rider/RiderNotifications";
-// import AdminMessageInbox from "../dashboard/admin/AdminMessageInbox";
 import MessageCenter from "../dashboard/MessageCenter";
 import ManageRiders from "../dashboard/admin/ManageRiders";
 import ManageParcels from "../dashboard/admin/ManageParcels";

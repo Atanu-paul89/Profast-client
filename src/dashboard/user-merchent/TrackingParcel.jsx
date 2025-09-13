@@ -173,13 +173,13 @@ const TrackingParcel = () => {
         />
         <button
           onClick={handleSearch}
-          className="flex items-center gap-2 bg-[#CAEB66] text-[#03373D] font-semibold px-6 py-2 rounded-md hover:bg-[#b6d85a] transition"
+          className="flex cursor-pointer items-center gap-2 bg-[#CAEB66] text-[#03373D] font-semibold px-6 py-2 rounded-md hover:bg-[#b6d85a] transition"
         >
           <FaSearch /> Track Parcel
         </button>
         <button
           onClick={handleTrackAll}
-          className="flex items-center gap-2 bg-[#03373D] text-white font-semibold px-6 py-2 rounded-md hover:bg-[#022c30] transition"
+          className="flex cursor-pointer items-center gap-2 bg-[#03373D] text-white font-semibold px-6 py-2 rounded-md hover:bg-[#022c30] transition"
         >
           <FaTruckMoving /> Track All Undelivered Parcels
         </button>

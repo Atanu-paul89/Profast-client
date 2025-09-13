@@ -17,7 +17,6 @@ const MyProfile = () => {
     const axiosSecure = useAxiosSecure();
 
     useEffect(() => {
-        setLoading(true);
         axiosSecure.get(`/users/${user.email}`).then(res => {
             setProfile(res.data);
             setLoading(false);

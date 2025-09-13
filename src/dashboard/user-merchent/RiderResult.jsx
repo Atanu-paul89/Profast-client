@@ -70,7 +70,11 @@ const RiderResult = () => {
   };
 
   if (loading) {
-    return <p className="text-center text-2xl mt-10 text-[#CAEB66]">Loading...</p>;
+    return (
+      <div className="flex justify-center  h-64">
+        <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span>
+      </div>
+    );
   }
 
   return (
@@ -118,7 +122,7 @@ const RiderResult = () => {
 
             <button
               onClick={() => navigate("/be-a-rider")}
-              className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
+              className="mt-4 px-6 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-bold rounded hover:opacity-90"
             >
               Re-Apply
             </button>
@@ -201,7 +205,7 @@ const RiderResult = () => {
               {riderForm?.status === "Rejected" || riderForm?.status === "Canceled" ? (
                 <button
                   onClick={() => navigate("/be-a-rider")}
-                  className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
+                  className="mt-4 px-6 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-bold rounded hover:opacity-90"
                 >
                   Re-Apply
                 </button>
@@ -244,7 +248,7 @@ const RiderResult = () => {
 
                 <button
                   onClick={() => navigate("/be-a-rider")}
-                  className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
+                  className="mt-4 px-6 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-bold rounded hover:opacity-90"
                 >
                   Re-Apply
                 </button>
@@ -316,7 +320,7 @@ const RiderResult = () => {
 
                     <button
                       onClick={() => navigate("/be-a-rider")}
-                      className="mt-4 px-6 py-2 bg-[#CAEB66] text-[#03373D] font-bold rounded hover:opacity-90"
+                      className="mt-4 px-6 py-2 bg-[#CAEB66] cursor-pointer text-[#03373D] font-bold rounded hover:opacity-90"
                     >
                       Re-Apply
                     </button>

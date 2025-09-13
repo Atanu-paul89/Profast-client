@@ -9,6 +9,7 @@ import {
 
 const PerformanceStats = () => {
     const axiosSecure = useAxiosSecure();
+    const [loading, setloading] = useState(true);
     const [deliveries, setDeliveries] = useState([]);
     const [monthlyData, setMonthlyData] = useState([]);
     const [totalDeliveries, setTotalDeliveries] = useState(0);
@@ -27,6 +28,7 @@ const PerformanceStats = () => {
                 const total = data.reduce((sum, entry) => sum + (entry.amount || 0), 0);
                 setTotalEarnings(total);
                 setEarningsPerDelivery((total / data.length).toFixed(2));
+                setloading(false);
             });
     }, [axiosSecure]);
 
@@ -70,6 +72,14 @@ const PerformanceStats = () => {
 
         setMonthlyData(monthlyArray);
     };
+
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Performance Data... </span>
+            </div>
+        );
+    }
 
     return (
         <div className="px-4 py-6">

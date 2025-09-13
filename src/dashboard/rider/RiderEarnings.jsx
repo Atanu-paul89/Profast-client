@@ -5,6 +5,7 @@ import { MdDeliveryDining } from 'react-icons/md';
 
 const RiderEarnings = () => {
     const axiosSecure = useAxiosSecure();
+    const [loading, setLoading] = useState(true);
     const [summary, setSummary] = useState(null);
     const [earnings, setEarnings] = useState([]);
     const [breakdownType, setBreakdownType] = useState(null);
@@ -17,12 +18,22 @@ const RiderEarnings = () => {
             setEarnings(res.data.earnings);
         } catch (err) {
             console.error("Error fetching rider earnings:", err);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchEarnings();
     }, []);
+
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Earning History... </span>
+            </div>
+        );
+    }
 
     return (
         <section className="space-y-8">

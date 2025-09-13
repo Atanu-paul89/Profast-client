@@ -5,7 +5,6 @@ import useAuth from "../hooks/useAuth";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { MdAttachMoney, MdDirectionsBike } from "react-icons/md";
 import Swal from "sweetalert2";
-import { toast } from "react-toastify";
 import { FaMessage } from "react-icons/fa6";
 
 
@@ -70,18 +69,6 @@ const DashboardLayout = () => {
   }, [axiosSecure]);
 
 
-  // const logoutToast = () =>
-  //   toast.success('Successfully Signed Out!', {
-  //     position: "top-right",
-  //     autoClose: 1000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //     theme: "light",
-  //     // transition: Slide,
-  //   });
 
   const handleLogout = () => {
     Swal.fire({
@@ -103,7 +90,6 @@ const DashboardLayout = () => {
         logOut()
           .then(() => {
             navigate("/");
-            // logoutToast();
           })
           .catch((err) => {
             console.error("Logout failed:", err);
@@ -116,7 +102,6 @@ const DashboardLayout = () => {
   // Fetch user role from backend
   useEffect(() => {
     if (user?.email) {
-      setLoading(true);
       axiosSecure.get(`/users/${user.email}`)
         .then((res) => {
           setUserRole(res.data.role);
@@ -141,7 +126,7 @@ const DashboardLayout = () => {
 
   const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1);
 
-  if (loading ) {
+  if (loading) {
     return (
       <div className="flex  justify-center bg-[#03373D] items-center min-h-screen">
         <p className=" flex items-center gap-2"><span className="text-[#CAEB66] text-xl lg:text-2xl"> Loading Dashboard </span><span className="loading loading-dots mt-3  text-[#CAEB66] loading-sm"></span></p>
@@ -418,6 +403,7 @@ const DashboardLayout = () => {
 
         </ul>
       </div>
+
     </div>
   );
 };

@@ -133,6 +133,7 @@ import { format } from 'date-fns';
 
 const DeliveryHistory = () => {
     const axiosSecure = useAxiosSecure();
+    const [loading, setLoading] = useState(true); 
     const [deliveries, setDeliveries] = useState([]);
     const [filteredDeliveries, setFilteredDeliveries] = useState([]);
     const [activeRange, setActiveRange] = useState('today'); // ✅ default "today"
@@ -142,6 +143,7 @@ const DeliveryHistory = () => {
             setDeliveries(res.data);
             // ✅ apply default filter = today
             applyFilter('today', res.data);
+            setLoading(false);
         });
     }, [axiosSecure]);
 
@@ -172,6 +174,14 @@ const DeliveryHistory = () => {
         setFilteredDeliveries(filtered);
         setActiveRange(range);
     };
+
+    if (loading) {
+        return (
+            <div className="flex gap-1 justify-center items-center h-64">
+                <span className="loading loading-spinner text-[#CAEB66] loading-xl"></span><span className='font-bold text-lg text-[#03373D]'>Loading Delivery History... </span>
+            </div>
+        );
+    }
 
     return (
         <div className="px-4 py-6">
