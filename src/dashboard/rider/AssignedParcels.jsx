@@ -22,10 +22,6 @@ const AssignedParcels = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetchAssignedParcels();
-    // }, []);
-
     const fetchRider = async () => {
         if (!user?.email) return;
         try {
@@ -98,10 +94,7 @@ const AssignedParcels = () => {
             </div>
         );
     }
-    // ✅ check restriction
-    // if (rider?.isRiderRestricted) {
-    //     return <p>🚫 Admin has restricted your activity for a while</p>;
-    // } 
+
 
     if (rider?.isRiderRestricted) {
         return (

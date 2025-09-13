@@ -9,7 +9,7 @@ const RiderNotifications = () => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const res = await axiosSecure.get('/notifications'); // assumes backend filters by rider email
+      const res = await axiosSecure.get('/notifications'); 
       setNotifications(res.data);
       setLoading(false);
     };
