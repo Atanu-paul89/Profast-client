@@ -20,7 +20,7 @@ const RootLayout = () => {
         });
     }, []);
 
-    // Refresh AOS when the route changes (important for Router apps)
+    // Refresh AOS when the route changes 
     useEffect(() => {
         AOS.refresh();
     }, [location.pathname]);

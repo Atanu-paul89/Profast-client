@@ -3,7 +3,7 @@ import React from 'react';
 import Swal from 'sweetalert2';
 
 const axiosSecure = axios.create({
-  baseURL: 'https://zap-shift-server-delta.vercel.app/',
+  baseURL: import.meta.env.VITE_SERVER_URL,
 });
 
 // JWT interceptor to attach token to every request // 

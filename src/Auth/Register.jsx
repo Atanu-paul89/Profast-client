@@ -37,7 +37,6 @@ const Register = () => {
         }
 
         const data = await res.json();
-        // return data.secure_url;
         return data.url;
     };
 

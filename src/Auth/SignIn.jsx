@@ -23,7 +23,7 @@ const SignIn = () => {
 
             // added jwt token request after login user // 
             .then(async () => {
-                // by this try catch blick it will send token + check if user is restrcited or not // 
+                // by this try catch block it will send token + check if user is restrcited or not // 
                 try {
                     const res = await axiosSecure.post("/jwt", { email: data.email });
                     localStorage.setItem("access-token", res.data.token);
