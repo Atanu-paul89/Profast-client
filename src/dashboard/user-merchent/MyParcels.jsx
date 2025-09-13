@@ -152,7 +152,7 @@ const MyParcels = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="lg:p-4">
       <h2 className="text-2xl font-bold text-[#03373D] mb-4">My Parcels</h2>
 
       {/* Large screens: table view */}

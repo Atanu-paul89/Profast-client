@@ -156,7 +156,7 @@ const TrackingParcel = () => {
   const currentMessage = logs[logs.length - 1]?.message || "No updates yet";
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="md:p-4 p-2 max-w-6xl mx-auto">
       {/* Heading */}
       <h2 className="text-2xl font-bold text-[#03373D] mb-4 flex items-center gap-2">
         <FaSearch /> Track Your Parcel
@@ -179,9 +179,9 @@ const TrackingParcel = () => {
         </button>
         <button
           onClick={handleTrackAll}
-          className="flex cursor-pointer items-center gap-2 bg-[#03373D] text-white font-semibold px-6 py-2 rounded-md hover:bg-[#022c30] transition"
+          className="flex text-sm md:text-base cursor-pointer items-center gap-2 bg-[#03373D] text-white font-semibold px-6 py-2 rounded-md hover:bg-[#022c30] transition"
         >
-          <FaTruckMoving /> Track All Undelivered Parcels
+          <FaTruckMoving size={18} className='pt-1' /> Track All Undelivered Parcels
         </button>
       </div>
 
@@ -233,7 +233,7 @@ const TrackingParcel = () => {
       {/* All Undelivered Parcels */}
       {allParcels.length > 0 && (
         <>
-          <h2 className="text-xl font-bold text-[#03373D] mb-4 flex items-center gap-2">
+          <h2 className="md:text-xl font-bold text-[#03373D] mb-4 flex items-center gap-2">
             <FaTruckMoving /> Undelivered Parcels Overview
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

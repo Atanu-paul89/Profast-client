@@ -146,7 +146,7 @@ const BeARider = () => {
     }, [user?.email, axiosSecure]);
 
     if (loading) {
-        return <p className="text-center mt-10 text-[#CAEB66]">Loading...</p>;
+        return <p className="text-center mt-10 h-64 text-[#CAEB66]"><span className="loading loading-spinner  text-[#CAEB66] loading-xl"></span></p>;
     }
 
     // This ui will be rendered if user already submitted a form and it is pending // 

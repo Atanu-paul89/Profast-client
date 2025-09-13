@@ -77,26 +77,9 @@ const Navbar = () => {
         <div className="rounded-xl  lg:px-4 lg:py-1  navbar bg-base-100 shadow-sm">
             {/* Left section */}
             <div className="navbar-start">
-                {/* dropdown for mobile/small device */}
-                <div className="dropdown">
-                    <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
-                    </div>
-                    <ul
-                        tabIndex={0}
-                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-                        <ul className="menu menu-vertical px-1 gap-5">
-                            <NavLink className="text-[#03373D]" to="/services"><a>Services</a></NavLink>
-                            <NavLink className="text-[#03373D]" to="/coverage"><a>Coverage</a></NavLink>
-                            <NavLink className="text-[#03373D]" to="/aboutus"><a>About us</a></NavLink>
-                            <NavLink className="text-[#03373D]" to="/pricing"><a>Pricing</a></NavLink>
-                            <NavLink className="text-[#03373D]" to="/be-a-rider"><a>Be a Rider</a></NavLink>
-                            <NavLink className="text-[#03373D]" to="/dashboard/profile"><a>Dashboard</a></NavLink>
-                        </ul>
-                    </ul>
-                </div>
+                
                 <NavLink to="/" className="flex items-center text-[#03373D] gap-2 hover:opacity-80 transition-opacity">
-                    <div className='flex items-center text-[#03373D]'>
+                    <div className='flex ml-2 items-center text-[#03373D]'>
                         <ProfastLogo></ProfastLogo>
                     </div>
                 </NavLink>
@@ -109,7 +92,7 @@ const Navbar = () => {
                     <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/services"><a>Services</a></NavLink>
                     <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/coverage"><a>Coverage</a></NavLink>
                     <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/aboutus"><a>About us</a></NavLink>
-                    <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/pricing"><a>Pricing</a></NavLink>
+                    <NavLink className={({ isActive }) => (isActive ? 'bg-[#D5EF85] rounded-md px-2 py-[3px] font-semibold text-sm' : 'font-semibold text-[#03373D] hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]')} to="/send-parcel"><a>Send Parcels</a></NavLink>
 
                     {/* show be a rider to all visitor and user except rider */}
                     {(!user || ["merchant", "admin"].includes(userRole)) && (
@@ -127,7 +110,7 @@ const Navbar = () => {
                     {/* show to only logged in users */}
                     {user ? (
                         <NavLink className='  font-bold hover:border-2  hover:px-2 hover:rounded-2xl hover:border-[#D5EF85]' to="/dashboard/profile"><a>Dashboard</a></NavLink>
-                    ): ''}
+                    ) : ''}
 
 
 
@@ -144,7 +127,22 @@ const Navbar = () => {
 
                             {/* avatar */}
                             <div className="dropdown dropdown-end">
-                                <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                {/* larger screen */}
+                                <NavLink to="/dashboard/profile">
+                                    <div tabIndex={0} role="button" className="btn hidden md:flex btn-ghost btn-circle avatar">
+                                        <div className="w-10 rounded-full ">
+                                            <img
+                                                alt={user?.displayName || 'No Name'}
+
+                                                src={user?.photoURL || "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-circle-black-icon.png"} />
+
+
+                                        </div>
+                                    </div>
+                                </NavLink>
+
+                                {/* smaller screen */}
+                                <div tabIndex={0} role="button" className="btn md:hidden btn-ghost btn-circle avatar">
                                     <div className="w-10 rounded-full ">
                                         <img
                                             alt={user?.displayName || 'No Name'}
@@ -154,17 +152,42 @@ const Navbar = () => {
 
                                     </div>
                                 </div>
+
                                 <ul
                                     tabIndex={0}
-                                    className="menu menu-sm dropdown-content  bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                                    className="menu  lg:hidden menu-sm dropdown-content  bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                                     <div className='font-semibold italic px-2 text-blue-600 space-y-1 mb-2 border-l-4 rounded-lg py-1 border-[#CAEB66]'>
                                         <li>{user?.displayName}</li>
                                         <li>{user?.email}</li>
                                         <li>Role: {formattedRole}</li>
                                     </div>
 
+                                    <NavLink to="/">
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>🏠 Home</a></li>
+                                    </NavLink>
+
+                                    <NavLink to="/services">
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>🛠️ Services</a></li>
+                                    </NavLink>
+
+                                    <NavLink to="/coverage">
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>🌍 Coverage</a></li>
+                                    </NavLink>
+
+                                    <NavLink to="/aboutus">
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>👥 About us</a></li>
+                                    </NavLink>
+
+                                    <NavLink to="/send-parcel">
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>📦 Send Parcel</a></li>
+                                    </NavLink>
+
+                                    <NavLink to="/be-a-rider">
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>🚴 Be a Rider</a></li>
+                                    </NavLink>
+
                                     <NavLink to="/dashboard/profile">
-                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-bold'><a>Dashboard</a></li>
+                                        <li className='hover:bg-[#CAEB6615] text-[#03373D] font-semibold border-b-1 mt-[4px] border-[#CAEB6670] rounded-md'><a>📊 Dashboard</a></li>
                                     </NavLink>
 
                                 </ul>

@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
         Component: Services, 
       },
       {
-        path: "pricing",
+        path: "send-parcel",
         element: <PrivateRoute> <Pricing></Pricing> </PrivateRoute>,
       },
       {

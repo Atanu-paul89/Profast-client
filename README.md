@@ -1,12 +1,101 @@
-# React + Vite
+# 📦 Profast — Smart Logistics Platform
+![alt text](image.png)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to **Profast**, a modern logistics and parcel delivery platform built for speed, transparency, and operational excellence. Designed for merchants, riders, and admins, Profast offers real-time tracking, secure workflows, and intuitive dashboards.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌐 Live Demo & Backend
 
-## Expanding the ESLint configuration
+🔗 [Visit Profast Live](https://profast.vercel.app) 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🔗 [Link to Backend](https://github.com/Atanu-paul89/Profast-server)  
+
+---
+
+## 🚀 Features
+
+- 📍 Real-time parcel tracking with status updates  
+- 🧾 Rider earnings breakdown and performance metrics  
+- 📊 Admin analytics dashboard with visual insights  
+- 🔐 Secure authentication and role-based access  
+- 🎉 Welcome animation on first visit using Lottie  
+- 📦 Parcel management with payment integration  
+- 💬 Customer reviews and FAQ section  
+- 🧠 AOS-powered animations for smooth UX transitions  
+
+---
+
+## 👥 Role-Based Functionality
+
+| Role      | Capabilities                                                                   |
+|-----------|------------------------------------------------------------------------------- |
+| 🧑‍💼 Merchant | Create & Manager parcels, Apply to be Rider, Make Payment & track payments, Manage Profile  |
+| 🚴 Rider     | View assigned parcels, track earnings, update delivery status, Manage Profile|
+| 🛡️ Admin     | Manage users, monitor system logs, view analytics, approve rider requests, restrict riders |
+
+---
+
+## 🖼️ Screenshots
+
+### 📊 Reports & Analytics  
+![alt text](image-1.png)
+
+### 🚴 Rider Stats  
+![alt text](image-2.png)
+
+### 💰 Payment Overview  
+![alt text](image-3.png)
+
+### 👥 User Stats  
+![alt text](image-4.png)
+
+### 🎉 Welcome Animation  
+![alt text](image-5.png)
+
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React, Tailwind CSS, DaisyUI, Framer Motion, AOS, Axios
+- **Backend**: Express.js, MongoDB, Cloudinary   
+- **Auth**: Firebase Authentication  
+- **Animation**: Lottie  
+- **State Management**: TanStack Query  
+- **Routing**: React Router v6  
+
+---
+
+## ⚙️ Installation & Setup
+
+```bash
+git clone https://github.com/Atanu-paul89/Profast-client
+cd profast
+npm install
+npm run dev
+
+*** Make sure to configure your .env file with Firebase and MongoDB credentials. 
+
+📁 Folder Structure
+Code
+src/
+├── assets/              # Images, Lottie files
+├── components/          # Reusable UI components
+├── pages/               # Route-based views
+├── router/              # React Router setup
+├── Auth/                # AuthProvider and context, firebase
+├── hooks/               # Custom hooks
+└── main.jsx             # Entry point 
+
+🧠 Developer Notes
+- AOS animations are refreshed on route change via RootLayout.jsx
+- Welcome animation shows only once per session using sessionStorage
+- All stats components are modular and API-driven
+- Admin dashboard is fully responsive and scalable 
+
+📞 Contact
+📧 shatadru5689@gmail.com 
+📍 Chattogram, Bangladesh 
+
+✨ Thank you for exploring Profast. Let’s deliver smarter, faster, and better.
