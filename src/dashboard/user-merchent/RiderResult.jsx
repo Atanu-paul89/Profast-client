@@ -109,12 +109,6 @@ const RiderResult = () => {
                   </span>
                 </p>) : ``
             }
-            {/* <p className="mt-1 text-sm font-semibold text-[#03373D]">
-              Last Canceled on:{" "}
-              <span className="font-normal">
-                {formatDate(riderForm?.firstSubmittedAt || riderForm?.canceledAt || 'no date')}
-              </span>
-            </p> */}
 
             <p className="mt-1 font-semibold text-sm text-[#03373D]">
               Total Applied: <span className="font-normal">{userData.AppliedToBeRider} {userData.AppliedToBeRider === 1 ? "time" : "times"}</span>
@@ -163,25 +157,13 @@ const RiderResult = () => {
                   )
               }
 
-              {/* <p className="mt-1 font-semibold text-sm text-[#03373D]">
-            Last Applied on:{" "}
-            <span className="font-normal">
-              {formatDate(riderForm?.firstSubmittedAt || riderForm?.submittedAt)}
-            </span>
-          </p> */}
+
 
               <p className="mt-1 font-semibold text-sm text-[#03373D]">
                 Total Applied: <span className="font-normal">{userData.AppliedToBeRider} {userData.AppliedToBeRider === 1 ? "time" : "times"}</span>
               </p>
 
-              {/* {["Rejected", "Approved"].includes(riderForm?.status) && (
-                <div className="mt-4 mx-4 lg:mx-0 bg-white border-t-6 border-[#CAEB66] p-4 rounded-xl shadow-sm">
-                  <h3 className="text-lg font-bold text-[#03373D] mb-2">📩 Feedback</h3>
-                  <p className="whitespace-pre-line text-sm md:text-base text-[#03373D] font-medium italic">
-                    {riderForm?.feedback}
-                  </p>
-                </div>
-              )} */}
+
               {riderForm?.status === "Approved" && (
                 <div className="mt-4 mx-4 lg:mx-0 bg-white border-t-6 border-[#CAEB66] p-4 rounded-xl shadow-sm">
                   <h3 className="text-lg font-bold text-[#03373D] mb-2">📩 Feedback</h3>

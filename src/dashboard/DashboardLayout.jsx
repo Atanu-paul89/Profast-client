@@ -141,7 +141,7 @@ const DashboardLayout = () => {
 
       {/* Main content */}
       <div className="drawer-content flex flex-col">
-        {/* Top bar for mobile */}
+        {/* Top bar for small device */}
 
         <div className="flex sticky top-0 items-center justify-between p-4 shadow-md lg:hidden bg-[#03373D] text-white">
           <h2 className="font-bold text-lg">📦 Dashboard</h2>
