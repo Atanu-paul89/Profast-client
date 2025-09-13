@@ -3,22 +3,12 @@ import { motion } from 'framer-motion';
 import {
     MdPhone, MdEmail, MdBusinessCenter, MdLocationOn, MdWork, MdSearch
 } from 'react-icons/md';
-// import officelocationData from "../../assets/data/profast_offices.json";
 import officelocationData from "../../assets/data/profast_offices_full.json";
 import { useLocation } from 'react-router';
 
 const ContactUs = () => {
     const [district, setDistrict] = useState('');
     const [searchResult, setSearchResult] = useState(null);
-
-    // const handleSearch = () => {
-    //     const key = district.toLowerCase().trim();
-    //     if (officelocationData[key]) {
-    //         setSearchResult(officelocationData[key]);
-    //     } else {
-    //         setSearchResult('invalid');
-    //     }
-    // };
 
     const normalize = (str = "") =>
         str.toLowerCase().replace(/[\s'.-]/g, "");

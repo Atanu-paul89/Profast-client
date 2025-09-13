@@ -17,31 +17,6 @@ const customIcon = new L.Icon({
     popupAnchor: [0, -30],
 });
 
-// const districtLocations = [
-//     { name: 'Dhaka', coords: [23.8103, 90.4125] },
-//     { name: 'Chattogram', coords: [22.3569, 91.7832] },
-//     { name: 'Barishal', coords: [22.7010, 90.3535] },
-//     { name: 'Khulna', coords: [22.8456, 89.5403] },
-//     { name: 'Rajshahi', coords: [24.3745, 88.6042] },
-//     { name: 'Rangpur', coords: [25.7439, 89.2752] },
-//     { name: 'Mymensingh', coords: [24.7471, 90.4203] },
-//     { name: 'Sylhet', coords: [24.8949, 91.8687] },
-//     { name: 'Cox’s Bazar', coords: [21.4272, 91.9798] },
-//     { name: 'Comilla', coords: [23.4607, 91.1809] },
-//     { name: 'Narayanganj', coords: [23.6238, 90.5000] },
-//     { name: 'Gazipur', coords: [23.9999, 90.4203] },
-//     { name: 'Jessore', coords: [23.1664, 89.2080] },
-//     { name: 'Bogura', coords: [24.8465, 89.3773] },
-//     { name: 'Dinajpur', coords: [25.6276, 88.6332] },
-//     { name: 'Pabna', coords: [24.0064, 89.2372] },
-//     { name: 'Noakhali', coords: [22.8696, 91.0995] },
-//     { name: 'Faridpur', coords: [23.6070, 89.8420] },
-//     { name: 'Panchagarh', coords: [26.3411, 88.5542] },
-//     { name: 'Habiganj', coords: [24.3740, 91.4155] },
-//     { name: 'Sunamganj', coords: [25.0658, 91.3950] },
-//     { name: 'Bandarban', coords: [22.1953, 92.2184] },
-//     { name: 'Rangamati', coords: [22.7324, 92.2985] },
-// ];
 
 const Coverage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -50,8 +25,8 @@ const Coverage = () => {
 
     // Transform warehouseData to same shape you used before
     const districtLocations = warehouseData.map(item => ({
-        name: item.district,                        // district name
-        coords: [item.latitude, item.longitude],    // leaflet needs [lat, lng]
+        name: item.district,                       
+        coords: [item.latitude, item.longitude],    
     }));
 
     const handleSearch = () => {

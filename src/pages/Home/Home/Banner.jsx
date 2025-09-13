@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 
 const Banner = () => {
     return (
-
+        <Link to="services">
             <Carousel className=' mt-2 lg:mt-6 mb-5' autoPlay={true} infiniteLoop={true} showThumbs={false} showStatus={false} interval={1500} >
                 <div>
                     <img src={ban1} />
@@ -21,6 +21,7 @@ const Banner = () => {
                     <img src={ban3} />
                 </div>
             </Carousel>
+        </Link>
 
     );
 };

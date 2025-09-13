@@ -4,11 +4,7 @@ import lg from "../../../assets/bookingIcon.png"
 
 
 const How_It_Works = () => {
-    // const location = useLocation();
 
-    // useEffect(() => {
-    //     AOS.refresh();
-    // }, [location]);
     return (
         <div
             data-aos="fade-up"
