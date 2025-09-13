@@ -32,7 +32,7 @@ Welcome to **Profast**, a modern logistics and parcel delivery platform built fo
 |-----------|------------------------------------------------------------------------------- |
 | 🧑‍💼 Merchant | Create & Manager parcels, Apply to be Rider, Make Payment & track payments, Manage Profile  |
 | 🚴 Rider     | View assigned parcels, track earnings, update delivery status, Manage Profile|
-| 🛡️ Admin     | Manage users, monitor system logs, view analytics, approve rider requests, restrict riders |
+| 🛡️ Admin     | Manage users, monitor system logs, view analytics, approve/reject rider requests, restrict riders, manage parcels and full control of database  |
 
 ---
 

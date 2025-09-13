@@ -208,10 +208,7 @@ export const router = createBrowserRouter([
         path: 'reports',
         Component: ReportsAndStats,
       },
-      // {
-      //   path: 'admn-messages',
-      //   Component: AdminMessageInbox,
-      // },
+
     ]
   }
 ]);

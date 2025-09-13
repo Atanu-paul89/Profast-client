@@ -56,7 +56,7 @@ const Navbar = () => {
         });
     };
 
-    // Fetch user role from backend
+    // Fetching user role from backend
     useEffect(() => {
         if (user?.email) {
             axiosSecure
@@ -70,7 +70,7 @@ const Navbar = () => {
         }
     }, [user?.email, axiosSecure]);
 
-    const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1);
+    const formattedRole = userRole?.charAt(0).toUpperCase() + userRole?.slice(1); // formating text
 
 
     return (
@@ -127,7 +127,7 @@ const Navbar = () => {
 
                             {/* avatar */}
                             <div className="dropdown dropdown-end">
-                                {/* larger screen */}
+                                {/* for larger screen */}
                                 <NavLink to="/dashboard/profile">
                                     <div tabIndex={0} role="button" className="btn hidden md:flex btn-ghost btn-circle avatar">
                                         <div className="w-10 rounded-full ">
@@ -141,7 +141,7 @@ const Navbar = () => {
                                     </div>
                                 </NavLink>
 
-                                {/* smaller screen */}
+                                {/*for smaller screen */}
                                 <div tabIndex={0} role="button" className="btn md:hidden btn-ghost btn-circle avatar">
                                     <div className="w-10 rounded-full ">
                                         <img

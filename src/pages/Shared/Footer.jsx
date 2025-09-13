@@ -28,7 +28,7 @@ const Footer = () => {
                     <Link className='hover:text-xl hover:text-[#CAEB66] hover:font-bold' to="/coverage"><a>Coverage</a></Link>
                     <Link className='hover:text-xl hover:text-[#CAEB66] hover:font-bold' to="/aboutus"><a>About us</a></Link>
                     <Link className='hover:text-xl hover:text-[#CAEB66] hover:font-bold' to="/calculate-fare"><a>Pricing</a></Link>
-                    <Link className='hover:text-xl hover:text-[#CAEB66] hover:font-bold' to="/contact-us"><a>Contact Us</a></Link>
+                    <Link className='hover:text-xl hover:text-[#CAEB66] hover:font-bold' to="/send-parcel"><a>Parcel</a></Link>
                     <Link className='hover:text-xl hover:text-[#CAEB66] hover:font-bold' to="/contact-us"><a>Contact</a></Link>
                 </div>
             </div>
